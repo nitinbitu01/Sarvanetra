@@ -1,0 +1,73 @@
+{
+  "clip_id": "crowd_negative_gradual_growth_06",
+  "detector": "crowd",
+  "camera_id": "CAM-EVAL-CROWD-NEG-GRADUAL",
+  "description": "Count grows organically from 2 to 10 over 160s then plateaus. Because the rolling baseline grows in step with the live count, the surge ratio never crosses CROWD_SURGE_MULTIPLIER \u2014 should never fire. This is the rolling-baseline design falling out naturally, not a special-cased negative.",
+  "ticks": [
+    {
+      "video_time": 0,
+      "count": 2
+    },
+    {
+      "video_time": 20,
+      "count": 3
+    },
+    {
+      "video_time": 40,
+      "count": 4
+    },
+    {
+      "video_time": 60,
+      "count": 5
+    },
+    {
+      "video_time": 80,
+      "count": 6
+    },
+    {
+      "video_time": 100,
+      "count": 7
+    },
+    {
+      "video_time": 120,
+      "count": 8
+    },
+    {
+      "video_time": 140,
+      "count": 9
+    },
+    {
+      "video_time": 160,
+      "count": 10
+    },
+    {
+      "video_time": 180,
+      "count": 10
+    },
+    {
+      "video_time": 200,
+      "count": 10
+    },
+    {
+      "video_time": 220,
+      "count": 10
+    },
+    {
+      "video_time": 240,
+      "count": 10
+    },
+    {
+      "video_time": 260,
+      "count": 10
+    },
+    {
+      "video_time": 280,
+      "count": 10
+    },
+    {
+      "video_time": 300,
+      "count": 10
+    }
+  ],
+  "expected_alerts": []
+}

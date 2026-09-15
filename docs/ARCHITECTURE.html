@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>img{max-width:100%}body{margin:0}</style>
+<title>Sarvanetra Architecture Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap">
+
+<style>
+  :root {
+    --ground:      #f4f5f7;
+    --surface:     #ffffff;
+    --surface-2:   #eceef2;
+    --rule:        #d3d7e0;
+    --rule-soft:   #e3e6ec;
+    --ink:         #14181f;
+    --ink-2:       #464e5c;
+    --ink-3:       #6d7686;
+    --accent:      #9a5b00;   /* signal amber, darkened for light ground */
+    --accent-soft: #fdf3e2;
+    --ok:          #16624a;
+    --ok-soft:     #e3f2ec;
+    --warn:        #8a5a00;
+    --warn-soft:   #fbf0da;
+    --stop:        #98261f;
+    --stop-soft:   #fbe9e7;
+    --code-bg:     #eceef2;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0e1218;
+      --surface:     #151b23;
+      --surface-2:   #1c232d;
+      --rule:        #2b3542;
+      --rule-soft:   #212a35;
+      --ink:         #e7ecf3;
+      --ink-2:       #a9b4c4;
+      --ink-3:       #7d8899;
+      --accent:      #f0b45a;
+      --accent-soft: #2a2010;
+      --ok:          #5ec79c;
+      --ok-soft:     #10261e;
+      --warn:        #e0a94e;
+      --warn-soft:   #262010;
+      --stop:        #f08b82;
+      --stop-soft:   #2a1614;
+      --code-bg:     #0b1016;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #0e1218;
+    --surface:     #151b23;
+    --surface-2:   #1c232d;
+    --rule:        #2b3542;
+    --rule-soft:   #212a35;
+    --ink:         #e7ecf3;
+    --ink-2:       #a9b4c4;
+    --ink-3:       #7d8899;
+    --accent:      #f0b45a;
+    --accent-soft: #2a2010;
+    --ok:          #5ec79c;
+    --ok-soft:     #10261e;
+    --warn:        #e0a94e;
+    --warn-soft:   #262010;
+    --stop:        #f08b82;
+    --stop-soft:   #2a1614;
+    --code-bg:     #0b1016;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 28px 96px;
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: minmax(0,1fr); gap: 28px; padding: 28px 18px 64px; }
+    nav.toc { position: static !important; }
+  }
+
+  /* ── contents rail ─────────────────────────────────────── */
+  nav.toc {
+    position: sticky;
+    top: 32px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    border-left: 2px solid var(--rule);
+    padding-left: 14px;
+  }
+  nav.toc p {
+    margin: 0 0 12px;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  nav.toc a {
+    display: block;
+    padding: 4px 0;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  nav.toc a:hover, nav.toc a:focus-visible {
+    color: var(--accent);
+    outline: none;
+    border-bottom-color: var(--accent);
+  }
+
+  /* ── masthead ──────────────────────────────────────────── */
+  header.mast { margin-bottom: 8px; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: clamp(30px, 4.4vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.021em;
+    font-weight: 600;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .standfirst {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.66;
+    color: var(--ink-2);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  /* ── scale strip ───────────────────────────────────────── */
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(126px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin: 30px 0 4px;
+  }
+  .scale div {
+    padding: 15px 16px 15px 0;
+    border-right: 1px solid var(--rule-soft);
+  }
+  .scale div:last-child { border-right: 0; }
+  .scale b {
+    display: block;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 21px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .scale span {
+    display: block;
+    font-size: 11.5px;
+    color: var(--ink-3);
+    margin-top: 3px;
+  }
+
+  section { margin-top: 52px; scroll-margin-top: 24px; }
+  h2 {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    margin: 0 0 6px;
+    padding-bottom: 9px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  h2 .num {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    margin: 30px 0 8px;
+    color: var(--ink);
+  }
+  p { max-width: 68ch; }
+  .lede { color: var(--ink-2); margin: 14px 0 0; }
+
+  code, .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.885em;
+  }
+  code {
+    background: var(--code-bg);
+    padding: 0.1em 0.36em;
+    border-radius: 3px;
+  }
+
+  /* ── flow ──────────────────────────────────────────────── */
+  .flow { display: flex; flex-direction: column; gap: 0; margin-top: 20px; }
+  .step {
+    display: grid;
+    grid-template-columns: 30px minmax(0,1fr);
+    gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .step:last-child { border-bottom: 0; }
+  .step .n {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    padding-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .step h4 {
+    margin: 0 0 3px;
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+  .step p { margin: 0; font-size: 13.5px; color: var(--ink-2); max-width: 74ch; }
+  .step .where {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    color: var(--ink-3);
+    margin-top: 5px;
+    display: block;
+  }
+
+  /* ── tables ────────────────────────────────────────────── */
+  .tw { overflow-x: auto; margin-top: 18px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 460px; }
+  th {
+    text-align: left;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+    padding: 0 14px 8px 0;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  td {
+    padding: 9px 14px 9px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+    color: var(--ink-2);
+  }
+  td:first-child { color: var(--ink); font-weight: 500; }
+  td.n {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+  tr:last-child td { border-bottom: 0; }
+
+  /* ── notes ─────────────────────────────────────────────── */
+  .note {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    font-size: 13.5px;
+    color: var(--ink-2);
+  }
+  .note b { color: var(--ink); }
+  .note.ok   { border-left-color: var(--ok);   background: var(--ok-soft); }
+  .note.warn { border-left-color: var(--warn); background: var(--warn-soft); }
+  .note.stop { border-left-color: var(--stop); background: var(--stop-soft); }
+  .note p { margin: 0; max-width: 74ch; }
+  .note p + p { margin-top: 8px; }
+
+  .pill {
+    display: inline-block;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+    vertical-align: 1px;
+  }
+  .pill.ok   { background: var(--ok-soft);   color: var(--ok); }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.stop { background: var(--stop-soft); color: var(--stop); }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--rule-soft);
+    border-radius: 5px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12.5px;
+    line-height: 1.62;
+    color: var(--ink);
+    margin: 16px 0 0;
+  }
+
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 26px; margin-top: 20px; }
+  .cols h3 { margin-top: 0; }
+  .cols ul { margin: 0; padding-left: 17px; font-size: 13.5px; color: var(--ink-2); }
+  .cols li { margin-bottom: 5px; }
+  .cols li b { color: var(--ink); font-weight: 500; }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="toc">
+    <p>Contents</p>
+    <a href="#flow">Frame to alert</a>
+    <a href="#backend">Backend</a>
+    <a href="#models">The models</a>
+    <a href="#data">Data model</a>
+    <a href="#api">API surface</a>
+    <a href="#frontend">Frontend</a>
+    <a href="#screens">The screens</a>
+    <a href="#measured">Measured results</a>
+    <a href="#limits">Known limits</a>
+    <a href="#run">Running it</a>
+  </nav>
+
+  <main>
+    <header class="mast">
+      <p class="eyebrow">Sarvanetra AI &middot; Gujarat Police</p>
+      <h1>How Sarvanetra is built</h1>
+      <p class="standfirst">A traffic-intelligence platform over 30 live CCTV cameras in Junagadh
+      district. Two processes, one database: a GPU ingestion pipeline that turns frames into tracks,
+      plates, speeds and alerts, and an API that serves a React control room. This page is the
+      reference for explaining any part of it.</p>
+
+      <div class="scale">
+        <div><b>30</b><span>live cameras</span></div>
+        <div><b>439</b><span>backend modules</span></div>
+        <div><b>177</b><span>API routes</span></div>
+        <div><b>76</b><span>frontend modules</span></div>
+        <div><b>231,747</b><span>vehicle tracks</span></div>
+        <div><b>5</b><span>neural models</span></div>
+      </div>
+    </header>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="flow">
+      <h2><span class="num">01</span> From a frame to an alert</h2>
+      <p class="lede">The single path everything else hangs off. One camera frame enters at the top;
+      what leaves at the bottom is a row an officer can act on.</p>
+
+      <div class="flow">
+        <div class="step">
+          <span class="n">1</span>
+          <div>
+            <h4>Read the frame</h4>
+            <p>One reader thread per camera pulls from the camera's HLS stream, or from harvested
+            local clips when the stream is unavailable. Sampling is throttled to a target rate so
+            the GPU is never the thing that falls behind.</p>
+            <span class="where">CameraReaderThread &middot; live_24x7_pipeline.py</span>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">2</span>
+          <div>
+            <h4>Detect and track vehicles</h4>
+            <p>YOLOv8s at 1280&nbsp;px finds vehicles, people and two-wheelers. BoT-SORT assigns a
+            track id that survives across frames, and its global motion compensation separates
+            camera shake from vehicle movement.</p>
+            <span class="where">BoTSORTTracker &middot; services/tracker.py</span>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">3</span>
+          <div>
+            <h4>Place the vehicle on the ground</h4>
+            <p>The bottom-centre of the box is the contact point with the road. On a calibrated
+            camera a homography maps that pixel to metres. Points too close to the vanishing line
+            are dropped: one pixel of jitter there is worth hundreds of metres.</p>
+            <span class="where">pixel_to_world_m, pixel_world_resolution_m &middot; services/calibration.py</span>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">4</span>
+          <div>
+            <h4>Read the plate</h4>
+            <p>A second YOLO model finds the plate inside the vehicle crop. Three CRNN networks with
+            CTC decoding read it at 64&times;256 and vote; Indian plate grammar resolves the state
+            code and rejects impossible strings. A temporal voter combines readings across the
+            track.</p>
+            <span class="where">ANPREngine &middot; services/anpr_engine.py</span>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">5</span>
+          <div>
+            <h4>Measure the speed</h4>
+            <p>When the track ends, a Theil&ndash;Sen regression over its world-plane positions gives
+            a speed robust to outliers, with a bootstrap confidence interval. Gates reject anything
+            physically impossible, and pedestrians never receive a traffic speed.</p>
+            <span class="where">estimate_track_speed &middot; services/speed_estimator.py</span>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">6</span>
+          <div>
+            <h4>Match, decide, alert</h4>
+            <p>The plate is checked against the watchlist with one-character tolerance. Congestion is
+            compared against the camera's own learned baseline. A clone check asks whether the same
+            registration has appeared somewhere it could not have reached in time.</p>
+            <span class="where">watchlist_service, traffic_baseline, plate_clone_detector</span>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">7</span>
+          <div>
+            <h4>Persist and publish</h4>
+            <p>Tracks, plates and alerts are written to SQLite. The annotated frame is published to
+            disk atomically for the API process, which serves it to the control room; alerts also go
+            out over WebSocket so the feed updates without polling.</p>
+            <span class="where">output/live_frames/ &middot; ws/dashboard_ws.py</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><b>Why two processes.</b> Ingestion decodes and infers continuously; the API must answer
+        short requests while it does. Measured on this machine with both in one process, the
+        calibration page and <code>/docs</code> both timed out after 30&nbsp;s while it held
+        6.7&nbsp;GB and 1,067&nbsp;s of CPU. They now share only the database and a frame directory.</p>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="backend">
+      <h2><span class="num">02</span> Backend</h2>
+      <p class="lede">FastAPI and SQLAlchemy over SQLite in WAL mode, PyTorch and Ultralytics for
+      inference, OpenCV for everything frame-shaped. 439 Python modules; the ones below carry the
+      weight.</p>
+
+      <h3>The pipeline and the engines</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Module</th><th>Lines</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>live_24x7_pipeline.py</td><td class="n">2,589</td><td>Reader threads, inference loop, tracking, world projection, track flushing, alert raising</td></tr>
+            <tr><td>anpr_engine.py</td><td class="n">1,123</td><td>Plate detection, preprocessing, the CRNN ensemble, grammar decode, temporal voting</td></tr>
+            <tr><td>evidence_capture.py</td><td class="n">1,085</td><td>Cuts the seconds of footage around an alert, hashes them, builds the custody record</td></tr>
+            <tr><td>traffic_baseline.py</td><td class="n">660</td><td>Per-camera speed baselines with Bayesian shrinkage; congestion and shockwave anomalies; O&ndash;D corridors</td></tr>
+            <tr><td>reid_matcher.py</td><td class="n">530</td><td>Re-identification matching across cameras against the FAISS index</td></tr>
+            <tr><td>auto_calibrator.py</td><td class="n">488</td><td>Vanishing-point and homography estimation from observed motion</td></tr>
+            <tr><td>vault_service.py</td><td class="n">412</td><td>Harvests borderline detections as training candidates</td></tr>
+            <tr><td>watchlist_service.py</td><td class="n">281</td><td>Exact and one-character-tolerant plate matching, reloaded from the database every 5&nbsp;s</td></tr>
+            <tr><td>plate_clone_detector.py</td><td class="n">216</td><td>One registration in two places no vehicle could cover in the time</td></tr>
+            <tr><td>speed_estimator.py</td><td class="n">210</td><td>Theil&ndash;Sen speed, bootstrap CI, physical plausibility gates</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Cross-cutting concerns</h3>
+      <div class="cols">
+        <div>
+          <ul>
+            <li><b>Auth</b> &mdash; HS256 JWT, three roles (admin, operator, viewer). Camera visibility is scoped by department, so an operator sees only their own cameras.</li>
+            <li><b>Audit</b> &mdash; every alert view and plate search is logged with the user and IP; 4,198 entries so far.</li>
+            <li><b>Evidence</b> &mdash; SHA-256 over the clip, a chain-of-custody PDF, and an honest failure when no footage exists.</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li><b>Fleet census</b> &mdash; one predicate decides what counts as a camera, so test rigs and deleted rows cannot leak into a count.</li>
+            <li><b>Provenance</b> &mdash; seeded rows are excluded from search by a structural test, not a date cut.</li>
+            <li><b>Heartbeat</b> &mdash; camera liveness polling with a failure threshold, separate from stream health.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="models">
+      <h2><span class="num">03</span> The five neural models</h2>
+      <p class="lede">Each was chosen for a job the others cannot do, and each ships as a trained
+      checkpoint in the repository.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Model</th><th>Architecture</th><th>Job</th><th>Input</th></tr></thead>
+          <tbody>
+            <tr><td>Vehicle detector</td><td>YOLOv8s</td><td>Cars, trucks, buses, two-wheelers, people</td><td class="mono">1280&nbsp;px frame</td></tr>
+            <tr><td>Plate detector</td><td>YOLOv8, <span class="mono">plate_v3_ft</span></td><td>Tight plate box inside a vehicle crop</td><td class="mono">320&nbsp;px crop</td></tr>
+            <tr><td>Plate reader</td><td>3&times; CRNN + CTC</td><td>Reads the characters; the three vote</td><td class="mono">64&times;256 grey</td></tr>
+            <tr><td>Vehicle / person ReID</td><td>OSNet-IBN, fine-tuned</td><td>512-d embedding for cross-camera matching</td><td class="mono">crop &rarr; FAISS</td></tr>
+            <tr><td>Face</td><td>InsightFace buffalo_l</td><td>512-d face embedding for the watchlist</td><td class="mono">face crop</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><b>The plate detector runs on the vehicle crop, not the frame.</b> A common critique is
+        that <code>imgsz=320</code> shrinks a 70&nbsp;px plate to 17&nbsp;px. Measured on 370 real
+        crops, the median vehicle crop is 129&nbsp;px wide and only 5% exceed 320 &mdash; so for most
+        vehicles 320 is a 2.5&times; <em>upscale</em>. Raising it to 640 or 960 finds
+        <em>fewer</em> plates: &minus;7% and &minus;11%.</p>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="data">
+      <h2><span class="num">04</span> Data model</h2>
+      <p class="lede">One SQLite file in WAL mode with a 60-second busy timeout, shared by both
+      processes. Row counts are live.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Table</th><th>Rows</th><th>Holds</th></tr></thead>
+          <tbody>
+            <tr><td>vehicle_track</td><td class="n">231,747</td><td>One row per tracked vehicle: class, frames, speed and CI, path length, heading, plate, confidence, lock state</td></tr>
+            <tr><td>vault_entries</td><td class="n">159,942</td><td>Harvested borderline crops, the pool future training draws from</td></tr>
+            <tr><td>camera_metrics_1m</td><td class="n">15,893</td><td>Per-camera one-minute rollups feeding the baselines</td></tr>
+            <tr><td>audit_log</td><td class="n">4,198</td><td>Who looked at what, and from where</td></tr>
+            <tr><td>journey_events</td><td class="n">1,664</td><td>Plate sightings with camera, time and GPS &mdash; the trajectory substrate</td></tr>
+            <tr><td>alerts</td><td class="n">721</td><td>Every raised alert with severity, rationale and score breakdown</td></tr>
+            <tr><td>officer_reviews</td><td class="n">399</td><td>Human adjudication of flagged events</td></tr>
+            <tr><td>evidence</td><td class="n">157</td><td>Clip paths, hashes, capture windows</td></tr>
+            <tr><td>cameras</td><td class="n">41</td><td>Registry; 30 are live, the rest deleted or test rigs</td></tr>
+            <tr><td>camera_calibrations</td><td class="n">4</td><td>Homographies with their error and quality gate; one is active</td></tr>
+            <tr><td>watchlist_plates</td><td class="n">4</td><td>Registrations of interest, reloaded into the matcher every 5&nbsp;s</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="api">
+      <h2><span class="num">05</span> API surface</h2>
+      <p class="lede">177 routes across 27 router modules. The distribution says what the system is
+      mostly about.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Group</th><th>Routes</th><th>Serves</th></tr></thead>
+          <tbody>
+            <tr><td>analytics</td><td class="n">58</td><td>Calibration studio, macro traffic, congestion, live telemetry, plate reads</td></tr>
+            <tr><td>cameras</td><td class="n">13</td><td>Registry, scope, snapshots, streaming tokens, gap analysis</td></tr>
+            <tr><td>alerts</td><td class="n">13</td><td>Feed, lifecycle, escalation, voice broadcast</td></tr>
+            <tr><td>reid</td><td class="n">11</td><td>Cross-camera identity, review queue, governance</td></tr>
+            <tr><td>journeys</td><td class="n">8</td><td>Trajectories, evidence frames, PDF docket</td></tr>
+            <tr><td>violations</td><td class="n">8</td><td>Triple riding, helmet, red light review</td></tr>
+            <tr><td>vault</td><td class="n">6</td><td>Harvested crops and labelling</td></tr>
+            <tr><td>plate-search</td><td class="n">4</td><td>Search a registration, its sightings and watchlist status</td></tr>
+            <tr><td>evidence</td><td class="n">4</td><td>Clip, manifest, custody PDF, integrity check</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="frontend">
+      <h2><span class="num">06</span> Frontend</h2>
+      <p class="lede">React 19 on Vite, no UI framework &mdash; the styling is hand-written CSS with
+      design tokens, so the control room can be themed to whatever a department already uses.</p>
+
+      <div class="cols">
+        <div>
+          <h3>Libraries, and why</h3>
+          <ul>
+            <li><b>react-leaflet</b> &mdash; the GIS map: camera nodes, corridors, anomaly markers</li>
+            <li><b>hls.js</b> &mdash; plays the camera HLS streams the browser will not decode natively</li>
+            <li><b>TanStack Query</b> &mdash; server state, caching and refetch for the feeds</li>
+            <li><b>TanStack Virtual</b> &mdash; keeps the alert feed fast when it holds thousands of rows</li>
+            <li><b>react-resizable-panels</b> &mdash; the operator lays out their own control room</li>
+            <li><b>focus-trap-react</b> &mdash; modals stay keyboard-navigable</li>
+          </ul>
+        </div>
+        <div>
+          <h3>How data arrives</h3>
+          <ul>
+            <li><b>WebSocket</b> for alerts, so the feed updates the moment one is raised</li>
+            <li><b>Polled snapshots</b> for camera views &mdash; one authenticated JPEG every 800&nbsp;ms, fetched as a blob because an <code>&lt;img&gt;</code> cannot carry a bearer token</li>
+            <li><b>REST</b> for everything else, department-scoped by the same token</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="screens">
+      <h2><span class="num">07</span> The screens</h2>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Screen</th><th>Component</th><th>What an operator does there</th></tr></thead>
+          <tbody>
+            <tr><td>Control Room</td><td class="mono">ControlRoom, CameraGrid</td><td>Watch the live annotated feeds; boxes, track ids, speed and plate drawn on frame</td></tr>
+            <tr><td>Alert Feed</td><td class="mono">AlertFeed</td><td>Triage alerts, acknowledge or escalate, play the spoken broadcast, open the evidence clip</td></tr>
+            <tr><td>Journey Search</td><td class="mono">JourneyView</td><td>Enter a registration, see every sighting on a map with times, gaps and legs</td></tr>
+            <tr><td>Analytics</td><td class="mono">NetworkActivityPanel</td><td>Network map with per-camera speed, congestion index, corridor delay ratios</td></tr>
+            <tr><td>Traffic Heatmap</td><td class="mono">TrafficHeatmap</td><td>Vehicle volume by camera node over a chosen window</td></tr>
+            <tr><td>Calibration Studio</td><td class="mono">LiveCalibrationStudio</td><td>Place ground control points on a frame and solve a camera's homography</td></tr>
+            <tr><td>Review Queue</td><td class="mono">ReviewQueue, OfficerReviewModal</td><td>Adjudicate uncertain matches; the decisions feed retraining</td></tr>
+            <tr><td>Officer PWA</td><td class="mono">OfficerApp</td><td>The field view: assigned alerts, location, dispatch acknowledgement</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><b>The largest component is Journey Search</b> at 1,304 lines, and that is the right
+        shape for this system: following one vehicle across a district is the question police
+        actually bring to it.</p>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="measured">
+      <h2><span class="num">08</span> What has been measured</h2>
+      <p class="lede">Every figure here comes from a held-out run against real footage, with the
+      artifact stored. None is an estimate.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Capability</th><th>Result</th><th>Measured on</th></tr></thead>
+          <tbody>
+            <tr><td>Plate character accuracy</td><td class="n">93.1%</td><td>83 held-out vehicles</td></tr>
+            <tr><td>Plate exact match</td><td class="n">59.0%</td><td>same set, answering for everything</td></tr>
+            <tr><td>Plate exact, at the committed gate</td><td class="n">80.4%</td><td>over 61.4% of vehicles, width &ge;80&nbsp;px &amp; conf &ge;0.85</td></tr>
+            <tr><td>Watchlist recall</td><td class="n">86.5%</td><td>74 vehicles against a 10,000-plate list, zero false hits</td></tr>
+            <tr><td>Journey search precision</td><td class="n">91.1%</td><td>recall 85.0%</td></tr>
+            <tr><td>Speed, end to end</td><td class="n">&plusmn;2.6%</td><td>against a track of known velocity</td></tr>
+            <tr><td>Clone detector</td><td class="n">10 / 10</td><td>known-answer cases; 0 false alarms on 727 real sightings</td></tr>
+            <tr><td>Ingestion, one camera</td><td class="n">0% dropped</td><td>5&nbsp;fps, real time, 1280&nbsp;px inference</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note ok">
+        <p><b>The width curve is the headline, not the average.</b> Plate accuracy is governed by how
+        many pixels wide the plate is: 0% below 40&nbsp;px, 33.3% at 40&ndash;70, 57.5% at
+        70&ndash;90, 75.0% at 90&nbsp;px and above. Quoting one fleet average hides a system that
+        works well wherever the optics allow it.</p>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="limits">
+      <h2><span class="num">09</span> What does not work, and why</h2>
+      <p class="lede">Every system has these. Naming them with numbers is what separates a measured
+      system from a demonstrated one.</p>
+
+      <h3>Speed is reported on one camera, not thirty <span class="pill warn">by design</span></h3>
+      <p>A speed needs a homography, and a homography needs either a survey or road markings.
+      CAM_08 and CAM_11 were calibrated by a vanishing-point method that cannot work at a junction:
+      their own robust refit records &ldquo;only 20% of lines agree&rdquo; and &ldquo;track
+      directions span 113&deg;&rdquo;. Measured against IRC zebra spacing, the result overstated
+      ground distance by about 3&times; &mdash; a vehicle at 30&nbsp;km/h would have been reported at
+      89. Both calibrations are <b>deactivated</b>; those cameras now report no speed, which is the
+      truthful answer.</p>
+
+      <h3>The active calibration's scale is provisional <span class="pill warn">labelled</span></h3>
+      <p>On CAM_09 the geometry is measured &mdash; 26 equally spaced road markings, straight to
+      1.19&nbsp;px, their spacing integer-consistent to within 0.19. The lateral scale is measured
+      too: 57 car widths give 1.83&nbsp;m against a true 1.80. The longitudinal metre is not: it is
+      set from a traffic prior, so the database records
+      <code>calibration_method="provisional_traffic_prior"</code> and
+      <code>speed_validated=false</code>. Ratios between vehicles are sound now; the absolute level
+      moves the moment one distance is measured on the ground.</p>
+
+      <h3>Fleet-wide ANPR is 0.3% per track <span class="pill stop">optics</span></h3>
+      <p>Not a model failure. The median plate this fleet presents is 58&nbsp;px wide and only 3.7%
+      reach 100&nbsp;px, against a 70&nbsp;px floor below which the recogniser is right almost never.
+      Seven approaches were measured and rejected, including logit fusion, self-training on 2,271
+      unlabelled vehicles, and night enhancement &mdash; which made accuracy <em>worse</em>, 42.2% to
+      18.1%, because the recogniser had never seen enhanced images. More real labelled plates is the
+      only lever left.</p>
+
+      <h3>Camera health is a single shared heartbeat <span class="pill stop">known</span></h3>
+      <p>All 30 cameras share one timestamp, so <code>status=ONLINE</code> carries no per-camera
+      information. The fleet map must never be presented as live health.</p>
+
+      <div class="note stop">
+        <p><b>Say this out loud in the demo.</b> A panel of traffic engineers knows no system is
+        perfect. A team that can state its limits in numbers &mdash; and show the guard rails that
+        stop a bad number reaching an officer &mdash; is a team that has measured its own work.</p>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────── -->
+    <section id="run">
+      <h2><span class="num">10</span> Running it</h2>
+
+      <h3>Two processes, started separately</h3>
+<pre>API + control room
+  python scripts/run_server.py            # :8000, no --reload
+  cd frontend &amp;&amp; npm run dev              # :5173
+
+Ingestion, focused on one camera
+  SENTINEL_ONLY_CAMERAS=CAM_09     # give one camera the whole GPU
+  SENTINEL_CLIP_MATCH=0830         # pick the clip, not the 1 a.m. empty road
+  SENTINEL_FORCE_CLIPS=1           # ignore a stream that is merely crawling
+  SENTINEL_READER_FPS=5            # more frames per vehicle
+  python -m backend.scripts.run_pipeline</pre>
+
+      <h3>Before demonstrating</h3>
+<pre>python -m backend.scripts.warm_voice_alerts --limit 20   # speech, offline-safe
+python -m backend.scripts.test_plate_clone_detector      # 10/10 in front of judges
+python -m backend.scripts.detect_plate_clones --stage-demo</pre>
+
+      <div class="note warn">
+        <p><b>Keep 20&ndash;30&nbsp;GB of disk free.</b> With the drive full, the pipeline wrote a
+        0-byte frame, the API served it as a JPEG, and the live camera view rendered black &mdash;
+        looking exactly like a dead camera. Both sides now guard against it, but SQLite writes and
+        even source edits fail on a full disk.</p>
+      </div>
+
+      <h3>Sign in</h3>
+      <p>Use <code>admin</code> for a demonstration: camera visibility is department-scoped, so
+      <code>operator</code> sees 2 cameras and <code>viewer</code> sees 11. That scoping is worth
+      showing deliberately &mdash; it is a security feature &mdash; but not by walking into it.</p>
+    </section>
+
+    <footer>
+      Sarvanetra AI &middot; architecture reference &middot; figures read live from the running
+      system on 9 September 2026.
+    </footer>
+  </main>
+</div>
+</body>
+</html>

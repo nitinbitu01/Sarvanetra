@@ -1,0 +1,43 @@
+﻿index      : 1406 vehicles
+positives  : 120 (unseen vehicles that ARE indexed)
+negatives  : 200 (100 random, 100 near-miss)
+
+  positives 25/120
+  positives 50/120
+  positives 75/120
+  positives 100/120
+  negatives 50/200
+  negatives 100/200
+  negatives 150/200
+  negatives 200/200
+
+==================================================================
+TOP-HIT SCORE DISTRIBUTION
+==================================================================
+                   p10    median       p90
+present         -13.72     -1.22     -0.03
+absent          -65.52    -41.98    -15.81
+
+==================================================================
+OPERATING POINTS  (answer only above the threshold)
+==================================================================
+ threshold   answered   correct   PRECISION    RECALL  false alarms
+------------------------------------------------------------------
+    -78.73        320       114       35.6%     95.0%           200
+    -68.63        312       114       36.5%     95.0%           192
+    -58.54        269       114       42.4%     95.0%           149
+    -48.45        227       114       50.2%     95.0%           107
+    -38.35        215       113       52.6%     94.2%            96
+    -28.26        205       112       54.6%     93.3%            88
+    -18.17        150       111       74.0%     92.5%            35
+     -8.07         93        90       96.8%     75.0%             2
+==================================================================
+
+At score >= -12.11 the system answers with 91.1% precision
+and finds 85.0% of the vehicles that are actually there.
+8 of 200 plates that were never seen produced a false answer;
+the rest correctly returned nothing.
+
+near-miss negatives score -20.04 at the median against
+-58.62 for random ones - the gap between those is how much
+harder a typo is to reject than an unrelated plate.

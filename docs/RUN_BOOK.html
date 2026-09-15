@@ -1,0 +1,688 @@
+﻿<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;font:14px system-ui}img{max-width:100%}</style></head><body><title>Sarvanetra Run Book</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #f4f5f4;
+    --surface: #ffffff;
+    --surface-2: #eceeed;
+    --line: #d6dad8;
+    --line-strong: #b9bfbc;
+    --ink: #14181a;
+    --ink-2: #414a4c;
+    --ink-3: #6b7679;
+    --accent: #b4530f;
+    --accent-soft: #f7ebe0;
+    --ok: #1c6b3f;
+    --ok-bg: #e3f0e8;
+    --warn: #8a5a09;
+    --warn-bg: #f7eeda;
+    --bad: #9c2a21;
+    --bad-bg: #f7e5e3;
+    --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1315;
+      --surface: #161b1e;
+      --surface-2: #1d2427;
+      --line: #2b3438;
+      --line-strong: #3d4a4f;
+      --ink: #e7edee;
+      --ink-2: #b3bfc2;
+      --ink-3: #879497;
+      --accent: #f0913f;
+      --accent-soft: #2a1e13;
+      --ok: #6cc08c;
+      --ok-bg: #16271d;
+      --warn: #d9a441;
+      --warn-bg: #2a2314;
+      --bad: #e88a80;
+      --bad-bg: #2b1917;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1315;
+    --surface: #161b1e;
+    --surface-2: #1d2427;
+    --line: #2b3438;
+    --line-strong: #3d4a4f;
+    --ink: #e7edee;
+    --ink-2: #b3bfc2;
+    --ink-3: #879497;
+    --accent: #f0913f;
+    --accent-soft: #2a1e13;
+    --ok: #6cc08c;
+    --ok-bg: #16271d;
+    --warn: #d9a441;
+    --warn-bg: #2a2314;
+    --bad: #e88a80;
+    --bad-bg: #2b1917;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 0 72px;
+  }
+
+  /* ---- masthead ---- */
+  header.top {
+    border-bottom: 1px solid var(--line);
+    padding-block: 40px 26px;
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 4.4vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -.02em;
+    font-weight: 600;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .standfirst {
+    font-size: 17px;
+    color: var(--ink-2);
+    max-width: 68ch;
+    margin: 0;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .meta b { color: var(--ink-2); font-weight: 500; }
+
+  /* ---- layout ---- */
+  .cols { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 40px; align-items: start; }
+  nav.toc { position: sticky; top: 16px; font-size: 13px; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+  nav.toc a {
+    display: flex; gap: 9px; padding: 5px 8px; border-radius: 5px;
+    color: var(--ink-2); text-decoration: none; line-height: 1.35;
+  }
+  nav.toc a:hover { background: var(--surface-2); color: var(--ink); }
+  nav.toc .n { font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding-top: 2px; min-width: 16px; }
+  nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  section { margin-bottom: 46px; scroll-margin-top: 16px; }
+  h2 {
+    font-size: 23px; font-weight: 600; letter-spacing: -.01em;
+    margin: 0 0 4px; padding-bottom: 8px; border-bottom: 2px solid var(--line-strong);
+    display: flex; align-items: baseline; gap: 11px; text-wrap: balance;
+  }
+  h2 .n { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+  .lede { color: var(--ink-2); margin: 14px 0 20px; max-width: 74ch; }
+  h3 { font-size: 16px; font-weight: 600; margin: 26px 0 8px; letter-spacing: -.005em; }
+  p { margin: 0 0 13px; max-width: 78ch; }
+  ul, ol.body { margin: 0 0 14px; padding-left: 20px; max-width: 78ch; }
+  li { margin-bottom: 6px; }
+  code { font-family: var(--mono); font-size: .87em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; color: var(--ink); }
+  a { color: var(--accent); }
+
+  /* ---- pipeline strip ---- */
+  .strip { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 10px; }
+  .strip span {
+    font-family: var(--mono); font-size: 11px; padding: 5px 9px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .strip span.hot { border-color: var(--accent); color: var(--accent); }
+
+  /* ---- stage card: the six-row contract ---- */
+  .stage {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    margin-bottom: 14px; overflow: hidden;
+  }
+  .stage > .hd {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    padding: 11px 16px; background: var(--surface-2); border-bottom: 1px solid var(--line);
+  }
+  .stage > .hd .tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: .06em; }
+  .stage > .hd .name { font-weight: 600; font-size: 15px; }
+  .stage > .hd .tech { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-left: auto; }
+  .rows { display: grid; grid-template-columns: 104px minmax(0, 1fr); }
+  .rows > dt {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-3); padding: 9px 0 9px 16px; border-top: 1px solid var(--line);
+  }
+  .rows > dd { margin: 0; padding: 9px 16px 9px 10px; border-top: 1px solid var(--line); color: var(--ink-2); }
+  .rows > dt:first-of-type, .rows > dd:first-of-type { border-top: none; }
+  .rows b { color: var(--ink); font-weight: 600; }
+
+  /* ---- tables ---- */
+  .tw { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 9px 13px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); background: var(--surface-2); white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.best td { background: var(--accent-soft); }
+  tr.best td:first-child { font-weight: 600; }
+
+  /* ---- callouts ---- */
+  .note { border-left: 3px solid var(--line-strong); padding: 12px 16px; margin: 0 0 16px; background: var(--surface); border-radius: 0 6px 6px 0; }
+  .note.limit { border-left-color: var(--bad); background: var(--bad-bg); }
+  .note.measured { border-left-color: var(--ok); background: var(--ok-bg); }
+  .note.change { border-left-color: var(--warn); background: var(--warn-bg); }
+  .note p:last-child { margin-bottom: 0; }
+  .note .lbl {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    display: block; margin-bottom: 5px;
+  }
+  .note.limit .lbl { color: var(--bad); }
+  .note.measured .lbl { color: var(--ok); }
+  .note.change .lbl { color: var(--warn); }
+
+  /* ---- command block ---- */
+  pre {
+    font-family: var(--mono); font-size: 12.5px; line-height: 1.65;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; margin: 0 0 16px; color: var(--ink-2);
+  }
+  pre b { color: var(--ink); font-weight: 600; }
+  pre .c { color: var(--ink-3); }
+
+  /* ---- kpi tiles ---- */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 0 0 18px; }
+  .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+  .kpi .v { font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .kpi .k { font-size: 12px; color: var(--ink-3); margin-top: 3px; }
+
+  @media (max-width: 860px) {
+    .cols { grid-template-columns: 1fr; gap: 22px; }
+    nav.toc { position: static; border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: var(--surface); }
+    nav.toc ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .rows { grid-template-columns: 1fr; }
+    .rows > dt { padding: 9px 16px 0; border-top: 1px solid var(--line); }
+    .rows > dd { padding: 2px 16px 10px; border-top: none; }
+    .rows > dd:first-of-type { border-top: none; }
+  }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eyebrow">Sarvanetra AI · operations reference</p>
+  <h1>What happens when you say “start everything”</h1>
+  <p class="standfirst">The end-to-end path from a camera URL to a box on the dashboard — every stage's input, processing, model, output, cost, and failure behaviour. Numbers here were measured on this machine; where the system does not reach the goal, this says so and says why.</p>
+  <div class="meta">
+    <span><b>Hardware</b> RTX 4070 12 GB · i9-13900 (32 threads) · 64 GB</span>
+    <span><b>Measured</b> 12–13 Sep 2026</span>
+    <span><b>Fleet</b> 30 registered · 28 with footage</span>
+  </div>
+</header>
+
+<div class="cols">
+<nav class="toc" aria-label="Contents">
+  <ol>
+    <li><a href="#run"><span class="n">00</span><span>The three commands</span></a></li>
+    <li><a href="#truth"><span class="n">01</span><span>What is real</span></a></li>
+    <li><a href="#connect"><span class="n">02</span><span>Stream connection</span></a></li>
+    <li><a href="#ingest"><span class="n">03</span><span>Ingestion &amp; decode</span></a></li>
+    <li><a href="#arch"><span class="n">04</span><span>Process architecture</span></a></li>
+    <li><a href="#stages"><span class="n">05</span><span>The nine stages</span></a></li>
+    <li><a href="#track"><span class="n">06</span><span>Tracking</span></a></li>
+    <li><a href="#cross"><span class="n">07</span><span>Cross-camera</span></a></li>
+    <li><a href="#anpr"><span class="n">08</span><span>ANPR / OCR</span></a></li>
+    <li><a href="#events"><span class="n">09</span><span>Events</span></a></li>
+    <li><a href="#data"><span class="n">10</span><span>Database</span></a></li>
+    <li><a href="#dash"><span class="n">11</span><span>Dashboard</span></a></li>
+    <li><a href="#rt"><span class="n">12</span><span>Real-time transport</span></a></li>
+    <li><a href="#perf"><span class="n">13</span><span>Monitoring</span></a></li>
+    <li><a href="#fail"><span class="n">14</span><span>Failure handling</span></a></li>
+    <li><a href="#scale"><span class="n">15</span><span>Scalability</span></a></li>
+    <li><a href="#proof"><span class="n">16</span><span>Proof it runs</span></a></li>
+    <li><a href="#replace"><span class="n">17</span><span>What I would replace</span></a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="run">
+  <h2><span class="n">00</span> The three commands</h2>
+  <p class="lede">“Start everything” is not one process. It is three, because the live portal and the fleet cannot both have the machine — and one of them is limited by something no code can fix.</p>
+
+<pre><b>1. API + dashboard</b>
+   python scripts\run_server.py          <span class="c"># FastAPI on :8000, metrics on :9090</span>
+   cd frontend &amp;&amp; npm run dev            <span class="c"># Vite dev server, log in as admin</span>
+
+<b>2. The fleet — 28 cameras, full pipeline, ~9.7 fps each</b>
+   .\start_fleet_demo.ps1                <span class="c"># 8 worker processes, recorded footage</span>
+
+<b>3. One genuinely live camera</b>
+   .\start_cam09_live_demo.ps1           <span class="c"># corp8 portal, ~15 min window, start it last</span></pre>
+
+  <p>Order matters. The fleet takes about two minutes to load eight copies of the models and reach rate. The live camera spends a metered quota from the moment it connects, so it is started immediately before anyone is watching.</p>
+</section>
+
+<section id="truth">
+  <h2><span class="n">01</span> What is real, and what is not</h2>
+  <p class="lede">Everything below is measured. Three claims a viewer might expect are not true of this deployment, and pretending otherwise would not survive a judge reading the screen.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="v">9.69</div><div class="k">processed fps per camera, 28 cameras</div></div>
+    <div class="kpi"><div class="v">261.5</div><div class="k">frames completing the pipeline per second</div></div>
+    <div class="kpi"><div class="v">91%</div><div class="k">GPU utilisation — now the limit</div></div>
+    <div class="kpi"><div class="v">~7</div><div class="k">cameras the portal can feed live</div></div>
+  </div>
+
+  <div class="note limit">
+    <span class="lbl">Limit — 30 live cameras at 10 fps is impossible from this portal</span>
+    <p>The corp8 account is metered on <b>wall-clock watching, account-wide</b>. Fetching all 30 cameras at real-time pace, every one of them was refused with HTTP 403 within a <b>ten-second spread at t+15 minutes</b> — a per-camera limit would have staggered them. A separate HTTP 429 throttle held the account to <b>626 segments in 900 s ≈ 7 seconds of video per wall second</b>. Thirty real-time cameras need thirty. That is roughly <b>seven cameras</b>, for fifteen minutes, after which the cooldown exceeded 15 minutes and had not lifted at 40. This is a supply limit at the source; no architecture change reaches past it. Genuine 30-camera live needs the police RTSP/NVR feed.</p>
+  </div>
+
+  <div class="note limit">
+    <span class="lbl">Limit — plates are readable on one camera</span>
+    <p>Across this fleet plate characters are about <b>7 px</b> tall; that is below what any recogniser can read. ANPR is therefore enabled on <b>CAM_09 only</b>, whose geometry actually resolves plates. The shipped recogniser scores <b>59.0% exact / 93.1% character accuracy</b> on 83 held-out real vehicles, rising to <b>80.4% exact over 61.4% coverage</b> at plate width ≥ 80 px with confidence ≥ 0.85. Quoting a single fleet-wide ANPR accuracy would be dishonest.</p>
+  </div>
+
+  <div class="note limit">
+    <span class="lbl">Limit — camera “health” is not per-camera</span>
+    <p>All 30 registry rows share one heartbeat timestamp, so a green <code>ONLINE</code> badge on the fleet map means the system is up, not that that camera is. The honest liveness evidence is the per-camera row in Fleet Operations — frames processed, fps, last frame age — which comes from the worker that owns the camera.</p>
+  </div>
+
+  <div class="note measured">
+    <span class="lbl">Real — the compute was never the wall</span>
+    <p>Fed from recorded footage, which carries no quota, <b>28 cameras run the complete pipeline at 9.69 fps each</b> (261.5 frames per second completing detection, tracking and appearance) on this one desktop. The fleet target was a supply problem, not a compute problem.</p>
+  </div>
+</section>
+
+<section id="connect">
+  <h2><span class="n">02</span> Stream connection</h2>
+  <p class="lede">Every camera is an independent object with its own thread, its own reconnect state and its own failure counter. Nothing about camera 12 can reach camera 13.</p>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">S1a</span><span class="name">Source resolution &amp; identity</span><span class="tech">SQLAlchemy · Camera registry</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>The <code>cameras</code> table — <code>camera_id</code> (the stable key, e.g. <code>CAM_09</code>), stream URL, zone, district, lat/lon, <code>is_deleted</code>, test-camera flag.</dd>
+      <dt>Processing</dt><dd><code>fleet_supervisor.discover_cameras()</code> reads the registry, excludes deleted and test rows (<code>fleet_census.is_test_camera</code>), sorts for a stable order, and assigns cameras to workers round-robin so the same camera lands on the same worker on every restart.</dd>
+      <dt>Output</dt><dd>A plan: worker → camera list, written to <code>output/fleet/supervisor.json</code>.</dd>
+      <dt>Failure</dt><dd>A camera missing from the registry simply is not started. A camera present but unassigned appears in Fleet Operations as <b>unassigned</b> rather than vanishing from the totals — the count of registered cameras and the count being processed are reported separately, so a gap is visible.</dd>
+    </dl>
+  </div>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">S1b</span><span class="name">Opening the stream</span><span class="tech">OpenCV / FFmpeg · HLS, RTSP, ONVIF, file</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>The camera's URL.</dd>
+      <dt>Processing</dt><dd><code>_detect_source_type()</code> classifies the URL into <code>rtsp</code>, <code>http</code>, <code>onvif</code>, <code>file</code> or <code>clips</code> and opens it with <code>cv2.VideoCapture</code>. This fleet's cameras are <b>AES-128 encrypted HLS</b> behind a login, not raw RTSP: credentials live only in the git-ignored <code>config/corp8_credentials.json</code>, a session is minted once and its cookies reused, and any URL that reaches a log goes through <code>_mask_url()</code> so a password can never be printed.</dd>
+      <dt>Technology</dt><dd>For the one live camera a dedicated relay (<code>cam09_live_relay.py</code>) prefetches HLS segments in parallel, decrypts AES-CBC locally and serves plain MPEG-TS on <code>127.0.0.1:8091</code>. That is what lifts the live rate from the portal's ~1.5 fps of straight streaming to <b>12.5 fps</b>; the wall is request latency, not bandwidth.</dd>
+      <dt>Output</dt><dd>An open capture handle, plus <code>_stream_width/_stream_height</code> for the telemetry.</dd>
+      <dt>Performance</dt><dd>Measured bandwidth for all 30 cameras at real-time pace: <b>~2.0 MB/s</b>. Bandwidth has never been the constraint.</dd>
+      <dt>Failure</dt><dd>A failed first connect increments that camera's own failure counter. With <code>SENTINEL_STRICT_LIVE=0</code> the camera falls back to its recorded clips and is flagged <code>_in_failover</code>, which propagates to the on-screen banner so a failover is never shown as live. With strict live on, it retries and stays dark rather than substituting footage.</dd>
+    </dl>
+  </div>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">S1c</span><span class="name">Reconnection, timeouts, quota</span><span class="tech">per-thread backoff</span></div>
+    <dl class="rows">
+      <dt>Processing</dt><dd>Each loop checks <code>cap.isOpened()</code>; a closed network source enters <code>_handle_network_reconnect()</code> — backoff, re-open, and a reconnect counter that the dashboard shows per camera. TCP connect timeouts are deliberately short so an unreachable host costs <i>that</i> camera a moment, not the fleet.</dd>
+      <dt>Technology</dt><dd>The portal's two refusals are told apart by response body, not status alone: a 403 whose text says <i>watch time limit reached</i> is a quota, and logging in again lifts nothing. The relay therefore <b>sits out the cooldown with no logins</b> (one playlist probe every 150 s). Six workers each sleeping and re-logging in every 20 s was what perpetuated an earlier lockout.</dd>
+      <dt>Output</dt><dd>During a cooldown the dashboard shows the last live frame dimmed, stamped <b>LIVE PAUSED</b> with the reason and the time of the last real frame — not a frozen picture pretending to be current.</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="ingest">
+  <h2><span class="n">03</span> Ingestion and decode</h2>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">S1d</span><span class="name">Frame acquisition</span><span class="tech">CameraReaderThread · one per camera</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>An open capture.</dd>
+      <dt>Processing</dt><dd>Each thread decodes, stamps the frame with a capture timestamp and a <code>FrameOrigin</code> (clip path and frame number, so evidence can later be cut from the exact moment the detector was looking at), then offers it to the worker's shared bounded queue with <code>put_nowait</code>.</dd>
+      <dt>Rate control</dt><dd>Two mechanisms. Network sources sleep to hold <code>target_fps</code> (<code>SENTINEL_READER_FPS</code>). Recorded sources additionally decimate by <code>stride = clip_fps / target_fps</code>, so a 25 fps clip yields 10 fps without decoding frames it will throw away.</dd>
+      <dt>Resolution</dt><dd>Frames are kept at source resolution end to end. Only the detector's own input is scaled — <b>plate crops, ANPR, speed and the training vault all cut from the original frame</b>, never from a resized copy, which is why detector-side resolution knobs cannot damage recognition.</dd>
+      <dt>Isolation</dt><dd>This is the answer to “how does one slow camera not block the others”: a slow camera's thread blocks on <i>its own</i> <code>read()</code>; the queue is bounded, so a fast camera cannot flood it either. When the queue is full <code>put_nowait</code> raises and the frame is <b>counted as dropped and discarded</b> rather than waited on.</dd>
+      <dt>Performance</dt><dd>The drop counter is the fleet's real backpressure signal. It read 26.2% before this week's fixes and <b>18.1%</b> after, at 10 fps asked of 28 cameras.</dd>
+    </dl>
+  </div>
+
+  <div class="note change">
+    <span class="lbl">Read this before quoting any fps number</span>
+    <p>The per-camera <code>fps_now</code> on the dashboard is derived from <code>frames_queued</code>, which counts every <b>decoded</b> frame — and <code>frames_dropped</code> counts only those that could not enter the inference queue. Decode read 9.86 fps per camera while the pipeline was actually completing <b>7.76</b>. Any claim about the fleet must use <code>health.total_frames_processed</code> as a rate. Every figure in this document does.</p>
+  </div>
+</section>
+
+<section id="arch">
+  <h2><span class="n">04</span> Process architecture</h2>
+  <p class="lede">One supervisor process, eight worker processes, and inside each worker four kinds of thread. Python's GIL is the reason the outer layer is processes and not threads.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Unit</th><th>Count</th><th>Runs</th><th>Why this shape</th></tr></thead>
+    <tbody>
+      <tr><td><code>fleet_supervisor</code></td><td class="num">1</td><td>Plan, spawn, watchdog, restart</td><td>Owns nothing on the GPU; if it dies the workers keep running.</td></tr>
+      <tr><td>Worker process</td><td class="num">8</td><td>Models + its share of cameras</td><td>Separate interpreters, so eight inference loops run truly in parallel. Measured: 8 workers beat 6 by 0.8 fps per camera.</td></tr>
+      <tr><td>Reader thread</td><td class="num">per camera</td><td>Decode + rate control</td><td>Decoding releases the GIL, so threads are the right tool inside a worker.</td></tr>
+      <tr><td>Inference thread</td><td class="num">1 per worker</td><td>Detect → embed → track → persist</td><td>Single consumer, so the GPU sees one ordered stream of batches per process.</td></tr>
+      <tr><td>Publisher thread</td><td class="num">1 per worker</td><td>JPEG encode + atomic write</td><td>Added this week. Encoding was 11.8 ms of every frame, on the inference thread.</td></tr>
+      <tr><td>Vault writer thread</td><td class="num">1 per worker</td><td>Training-crop writes</td><td>Keeps a single SQLite writer and keeps commits off the inference path.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>GPU allocation</h3>
+  <p>Each worker calls <code>torch.cuda.set_per_process_memory_fraction()</code> with its share (<code>SENTINEL_WORKER_GPU_FRACTION</code>, 0.1 each for eight). This exists because five workers plus a demo pipeline once reached <b>11,914 MB of a 12,282 MB card</b> and the two processes froze each other for ~1.5 s at a time. A second cap, <code>SENTINEL_INFER_BATCH</code>, bounds how many frames are drained into one batch, because the CUDA allocator holds the peak batch's memory afterwards — capping it took one pipeline from 3.2 GB to 887 MB.</p>
+
+  <h3>How real-time is held</h3>
+  <p>It is held by admission, not by hope: readers produce at a fixed rate, the queue is bounded, and anything that cannot be processed is dropped and counted rather than queued into a growing backlog. Latency therefore stays flat while throughput degrades visibly — the opposite of a system that looks fine until it is minutes behind.</p>
+</section>
+
+<section id="stages">
+  <h2><span class="n">05</span> The nine stages</h2>
+  <p class="lede">One pipeline, not several. ANPR is not a separate service — it is called inline from the frame loop. The strip below is the whole path; the hot stages are the ones that cost GPU time.</p>
+
+  <div class="strip">
+    <span>1 Ingestion</span><span class="hot">2 Vehicle detection</span><span class="hot">3 Tracking</span><span class="hot">4 ANPR</span><span class="hot">5 Identity fusion</span><span>6 Trajectory + speed</span><span>7 Traffic analytics</span><span>8 Alerts</span><span>9 Persistence + UI</span>
+  </div>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">Stage 2</span><span class="name">Vehicle detection</span><span class="tech">YOLOv8 · Ultralytics · CUDA fp16</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>Up to <code>SENTINEL_INFER_BATCH</code> frames drained from the queue across <i>all</i> of that worker's cameras at once.</dd>
+      <dt>Processing</dt><dd>Every frame is letterboxed onto one common canvas so the batch forms a single tensor — aspect ratio preserved, grey padding, and the pad offset kept so boxes map back to each camera's own pixel coordinates. Then one <code>predict()</code> for the whole batch, restricted to COCO vehicle classes.</dd>
+      <dt>Model</dt><dd>YOLOv8s fleet-wide; <b>yolov8m on CAM_09</b>, where the overhead sun-glared view made v8s miss a plain white SUV even at confidence 0.10 (+15% vehicles for 29 vs 14 ms).</dd>
+      <dt>Output</dt><dd>Per frame: boxes, class ids, confidences — plus a flat list of vehicle crops for the next stage.</dd>
+      <dt>Performance</dt><dd>2.80 ms/frame in isolation at batch 16; <b>16.9 ms inside the running fleet</b>, the difference being queuing on a GPU at 91%. A double resize was removed this week (the canvas is now capped at <code>imgsz</code>), which alone took detect from 14.0 to 11.5 ms.</dd>
+      <dt>Failure</dt><dd>A failed batch is logged with the frame count and the whole batch is skipped — one bad frame cannot stop the loop.</dd>
+    </dl>
+  </div>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">Stage 3</span><span class="name">Appearance embedding</span><span class="tech">OSNet-IBN x1.0 · torchreid</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>Every vehicle crop in the batch, pooled across cameras.</dd>
+      <dt>Processing</dt><dd>One <code>extract_batch()</code> for the entire cycle, so the model is called once per batch rather than once per camera. Serves two consumers: the tracker's appearance association, and the per-track running mean that becomes the vehicle's stored signature.</dd>
+      <dt>Model</dt><dd>OSNet-IBN fine-tuned on Market-1501, checkpoint <code>model.pth.tar-250</code>.</dd>
+      <dt>Performance</dt><dd>~1.1–1.3 ms per crop at fleet batch sizes. <code>SENTINEL_EMBED_EVERY=5</code> embeds each track about twice a second instead of every frame; measured worth +0.4 fps per camera and a large cut in drops <i>once the GPU became the constraint</i>.</dd>
+      <dt>Failure</dt><dd>An embedding failure is caught and logged: association falls back to motion only. Degrades the result; does not stop the cameras.</dd>
+    </dl>
+  </div>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">Stage 6</span><span class="name">Speed and trajectory</span><span class="tech">homography · Theil–Sen · OSRM</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>The bottom-centre of each box — the contact point with the road plane — per tracked frame.</dd>
+      <dt>Processing</dt><dd>Where the camera is calibrated, the point is mapped to metres through the homography and the track's speed is fitted with Theil–Sen (robust to the outliers that box jitter produces). Points the geometry cannot actually measure are rejected <i>before</i> entering the buffer, using a bound derived from the homography itself — without it, one bus track produced an 84,445 m path.</dd>
+      <dt>Output</dt><dd>km/h per track; map-matched corridors via OSRM with an offline cache.</dd>
+      <dt>Honesty</dt><dd><b>CAM_09 is the only camera with a validated scale</b> (7.6 m lane-dash pitch, agreeing to 1% across 57 car widths). Earlier CAM_08/CAM_11 calibrations were measured 3× wrong and deactivated. Uncalibrated cameras report no speed rather than a plausible-looking default — a literal 42.0 km/h prior once appeared on 29 cameras labelled “Live Speed”, which is exactly the failure this rule prevents.</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="track">
+  <h2><span class="n">06</span> Tracking</h2>
+  <div class="stage">
+    <div class="hd"><span class="tag">Stage 3</span><span class="name">BoT-SORT, one tracker per camera</span><span class="tech">Kalman + IoU + appearance + GMC</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>That camera's detections for one frame, its appearance features, and the frame itself.</dd>
+      <dt>Processing</dt><dd>Each camera owns an independent <code>BoTSORTTracker</code> keyed by <code>cam_id</code>, constructed with that camera's effective frame rate so the motion model's time step is right. Association combines a Kalman motion prediction, IoU, and the OSNet features. Track ids are camera-local by design.</dd>
+      <dt>Camera motion</dt><dd>Global motion compensation (sparse optical flow, downscale 8) separates a pan from vehicle motion — without it a panning camera reads as every vehicle moving. It is <b>gated</b>: a cheap motion test runs each frame and full GMC only when the camera actually moved (1 run in 55 on a fixed camera).</dd>
+      <dt>Duplicates</dt><dd>The detector often returns two boxes for one motorcycle. A same-class overlap test (IoU ≥ 0.3, or 60% containment) suppresses the second before it is drawn or counted.</dd>
+      <dt>Occlusion</dt><dd>A track that disappears is kept alive for a bounded number of frames and re-associated on reappearance by motion plus appearance. Beyond that it is flushed and persisted.</dd>
+      <dt>Display</dt><dd>BoT-SORT returns only <i>confirmed</i> tracks, and on a panning handheld camera a clearly visible motorcycle went unboxed on 45% of frames. High-confidence unconfirmed detections are therefore drawn too, with the class and <b>no id</b> — an id appears only when the tracker has earned one.</dd>
+      <dt>Performance</dt><dd>1.2–3.4 ms per frame. A known limitation: id switches can split one real vehicle into two or three <code>vehicle_track</code> rows, so a raw row count overstates vehicles.</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="cross">
+  <h2><span class="n">07</span> Cross-camera identity</h2>
+  <p class="lede">The question “is the vehicle on CAM_05 the one that later appears on CAM_20?” is answered by appearance first, plate second, and physics as a veto.</p>
+
+  <div class="stage">
+    <div class="hd"><span class="tag">Stage 5</span><span class="name">Identity fusion</span><span class="tech">OSNet mean vector + plate key + transit prior</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>Each finished track's mean appearance vector, its camera, its time window, and any plate read.</dd>
+      <dt>Processing</dt><dd>A committed plate is an exact key and wins outright. Without one, the track's mean vector is matched against the gallery by cosine similarity, then filtered by whether the journey is physically possible — camera locations and timestamps bound how fast the vehicle could have travelled. Corridors are map-matched with OSRM so a “journey” follows real roads rather than a straight line.</dd>
+      <dt>Output</dt><dd>A stable <code>GV_xxxxxx</code> identity shown on every camera's tile, plus <code>journey_events</code> rows forming the trajectory.</dd>
+      <dt>Guarding against false matches</dt><dd>Three lessons, each learned from a wrong result: <b>(1)</b> the similarity threshold must be calibrated <i>in-domain</i> — calibrating on other cameras' crops silently grouped vehicles by colour; use same-frame pairs as impostors. <b>(2)</b> Budget false links <i>per run</i>, not per comparison. <b>(3)</b> A transit prior is required, because parked vehicles otherwise win every match by sheer number of appearances.</dd>
+      <dt>Evidence</dt><dd>Proven on a controlled set: one motorcycle across four cameras against a ~500-vehicle gallery, leave-one-out <b>Rank-1 4/4</b>; and against a 503-vehicle gallery, <b>Rank-1 100%, mAP 95.8%</b>. That is a clean result on a known subject — not a claim of fleet-wide accuracy, which has no ground truth here.</dd>
+      <dt>Provenance</dt><dd>914 of the journey rows in the database were <i>generated</i>, not observed, and are excluded by a provenance predicate. Events-per-plate is the sanity check (~1.12 for seeded rows against ~8.19 for live ones).</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="anpr">
+  <h2><span class="n">08</span> ANPR — seven sub-stages</h2>
+  <p class="lede">Called inline from the frame loop for cameras on the ANPR list. Every cost guard below already exists in <code>process_vehicle_track</code>; a locked plate returns immediately with no OCR at all.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Step</th><th>What it does</th><th>Model / technique</th></tr></thead>
+    <tbody>
+      <tr><td class="num">4.1</td><td>Lighting normalisation before anything else</td><td>AdaptiveNightEnhancer, four tiers chosen from the crop's own statistics</td></tr>
+      <tr><td class="num">4.2</td><td>Tight plate box inside the vehicle crop</td><td>YOLOv8 plate detector (<code>plate_v3_ft</code>, small variant <code>plate_v4_small</code>), retrained 2026-09-02 — finds 2.6× more plates on live footage</td></tr>
+      <tr><td class="num">4.3</td><td>Lighting-aware crop preprocessing</td><td>PlatePreprocessorV2; geometric rectification present but <b>default OFF</b> — median plate tilt here is 0.00°, so there is nothing to straighten</td></tr>
+      <tr><td class="num">4.4</td><td>Quality gate: sharpness, contrast, minimum width</td><td>PlateFrameSelector — picks the sharpest N views of a track instead of OCR-ing every frame</td></tr>
+      <tr><td class="num">4.5</td><td>Recognition</td><td>EnsembleOCR: three-model CRNN primary with an EasyOCR fallback</td></tr>
+      <tr><td class="num">4.6</td><td>Grammar and state resolution</td><td><code>decode_plate()</code> v2, all-India plate grammar</td></tr>
+      <tr><td class="num">4.7</td><td>Multi-frame agreement</td><td>TemporalPlateVoter — confidence-weighted vote across a track's reads, then the plate locks</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Handling hard plates</h3>
+  <p>Low light is 4.1's job; angle is 4.3's (and measurably unnecessary here); blur and small size are rejected by 4.4 rather than guessed at — a refusal to read is a correct output. Partial occlusion is where the system deliberately does <i>less</i>: <b>double-line slicing is off</b>, because the CRNN was trained on complete single-line plates and hallucinates confidently on half of one (GJ03 → GJ8088). Fixing that needs retraining on strips, not a better gate.</p>
+
+  <h3>Inconsistent reads</h3>
+  <p>Resolved by 4.7's weighted vote, then by the lock — once a track has a committed plate, later frames cost nothing. Cross-track conflicts are handled at stage 5, where the plate is an identity key, and by the clone-plate detector at stage 8, which checks whether one plate's sightings are physically possible (10/10 on known-answer tests, 0 false alerts across 727 real events).</p>
+
+  <div class="note change">
+    <span class="lbl">Measured dead ends — do not re-attempt these</span>
+    <p>Seven approaches to raising plate accuracy have been measured and failed on this footage: logit fusion (−23.6 points), self-training on the unlabelled pool (0 of 300 accepted), plate-scale-from-height, and blending the synthetic corpus into the real one among them. The ceiling is optical, not algorithmic: the lever that remains is more real labelled plates.</p>
+  </div>
+</section>
+
+<section id="events">
+  <h2><span class="n">09</span> Event generation</h2>
+  <div class="stage">
+    <div class="hd"><span class="tag">Stage 8</span><span class="name">From detections to things worth telling someone</span><span class="tech">watchlist fuzzy match · clone physics</span></div>
+    <dl class="rows">
+      <dt>Input</dt><dd>A committed plate, a finished track, or a cross-camera association.</dd>
+      <dt>Processing</dt><dd>Three generators. <b>Watchlist</b>: a committed read is fuzzy-matched against the wanted list — <b>86.5% recall at 0% false alarms</b>, which is the number that matters operationally, not the raw transcription rate. <b>Clone plate</b>: one plate seen in two places too far apart too soon. <b>Journey</b>: a sighting joined to a trajectory.</dd>
+      <dt>Output</dt><dd>Rows in <code>alerts</code> and <code>journey_events</code>, each carrying camera id, vehicle/track, plate, timestamp, the camera's coordinates, and a snapshot reference — plus a danger score on a 0–10 scale.</dd>
+      <dt>Provenance</dt><dd>Every staged or generated row carries <code>is_simulated</code>, and the serializer exposes it. A demo case is staged and marked; the flag was once hidden by the serializer, which is precisely how a simulated row can come to look real.</dd>
+      <dt>Delivery</dt><dd>Pushed to the dashboard over the WebSocket; the alert feed also polls as a backstop so a dropped socket cannot silently stop alerts.</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="data">
+  <h2><span class="n">10</span> Database and write discipline</h2>
+  <p class="lede">SQLite in WAL mode (<code>DATABASE_URL</code> switches the whole stack to PostgreSQL), and the important design decision is <i>when</i> rows are written, not what is in them.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Table</th><th>Written when</th><th>Holds</th></tr></thead>
+    <tbody>
+      <tr><td><code>vehicle_track</code></td><td>On track flush — once per vehicle, not per frame</td><td>Camera, class, first/last seen, speed km/h, plate, box history</td></tr>
+      <tr><td><code>track_appearance</code></td><td>After the track transaction commits</td><td>The track's mean OSNet vector, hash, expiry (180 days)</td></tr>
+      <tr><td><code>journey_events</code></td><td>On cross-camera association</td><td>Sighting chain, corridor, provenance flag</td></tr>
+      <tr><td><code>alerts</code></td><td>On watchlist / clone match</td><td>Reason, score, evidence refs, <code>is_simulated</code></td></tr>
+      <tr><td><code>cameras</code></td><td>Registry, rarely</td><td>Identity, location, zone, calibration link</td></tr>
+      <tr><td>Vault crops</td><td>Writer thread, sampled</td><td>Borderline-confidence crops + embedding, for retraining</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>Avoiding writes that slow the pipeline:</b> nothing is written per frame. Track points accumulate in memory and are persisted once at flush; appearance vectors are a running sum, not a row per frame; the vault has its own writer thread and a bounded queue that drops and counts when it falls behind; and the fleet-wide analytics rollup runs on <b>one</b> worker only (<code>SENTINEL_ROLLUPS</code>) — every worker was running the same whole-database rollup, costing 230 ms per frame on one of them.</p>
+
+  <div class="note change">
+    <span class="lbl">Two persistence bugs worth remembering</span>
+    <p>A variable used before assignment rolled back the transaction on <i>every successful plate read</i> — CAM_09 went from 0 to 36 reads when it was fixed. And a flat homography array never reshaped left <code>speed_kmh</code> NULL on 100% of 227,636 tracks, hidden by a bare <code>except</code>. Both argue the same thing: no silent excepts on the persistence path.</p>
+  </div>
+
+  <p><b>Historical search</b> runs over these tables: plate search, vehicle journey search (<b>91.1% precision / 85.0% recall</b> on the stored artifact), time and camera filters, and appearance search against the embedding column.</p>
+</section>
+
+<section id="dash">
+  <h2><span class="n">11</span> The dashboard</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Surface</th><th>Shows</th><th>Fed by</th></tr></thead>
+    <tbody>
+      <tr><td>Camera grid</td><td>Every camera as a tile; live tiles stream continuously, the rest poll thumbnails</td><td>MJPEG multipart from <code>/analytics</code>; frames written by the publisher thread</td></tr>
+      <tr><td>Camera modal</td><td>One camera full size with boxes, ids, plates, speed, and a RECORDED / LIVE PAUSED badge</td><td>MJPEG + telemetry poll (10 s)</td></tr>
+      <tr><td><b>Fleet Operations</b></td><td>Per-camera fps, stream state, reconnects, dropped frames, last-frame age, owning worker; per-worker ms/frame; GPU, CPU, RAM</td><td><code>GET /api/v1/fleet/status</code>, polled every 2 s</td></tr>
+      <tr><td>Live ANPR / detections</td><td>Reads as they commit, with crop and confidence</td><td>WebSocket + poll</td></tr>
+      <tr><td>Re-ID proof panel</td><td>The same <code>GV_</code> identity on four cameras at once, with match scores</td><td>Live proof tiles</td></tr>
+      <tr><td>Traffic heatmap</td><td>Passage volume per camera; cameras with zero passages are drawn as zero, not as absent</td><td><code>/analytics/traffic-density</code></td></tr>
+      <tr><td>Journey search / watchlist</td><td>Trajectory across cameras; wanted-vehicle hits</td><td>Query endpoints</td></tr>
+      <tr><td>Active Learning Vault</td><td>Harvested borderline crops awaiting labels</td><td>Vault tables</td></tr>
+      <tr><td>Edge inference</td><td>Stages 2–4 running beside a camera, posting metadata only — measured 3,659–4,410× bandwidth reduction</td><td><code>edge/agent.py</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Video reaches the browser as <b>MJPEG multipart</b>, one HTTP connection per visible tile. Two consequences shaped the UI: browsers cap connections per host at six, and a detached <code>&lt;img&gt;</code> keeps its stream open — which took Firefox to 20 open connections and blanked the views. Tiles now clear <code>src</code> on unmount, the modal streams from <code>127.0.0.1</code> to use a second connection pool, all tiles pause while a modal is open, and the server evicts more than two streams per client per camera.</p>
+</section>
+
+<section id="rt">
+  <h2><span class="n">12</span> Real-time transport</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Channel</th><th>Carries</th><th>Why this one</th></tr></thead>
+    <tbody>
+      <tr><td>WebSocket <code>/ws/dashboard</code></td><td>Alerts, system events</td><td>Server-initiated, low frequency, no page refresh</td></tr>
+      <tr><td>WebSocket <code>/ws/detections/{camera_id}</code></td><td>Per-camera detection broadcast</td><td>Subscribers are per camera, so a viewer only receives what they are watching</td></tr>
+      <tr><td>MJPEG multipart</td><td>Annotated video</td><td>No client library, no negotiation, works through the existing auth</td></tr>
+      <tr><td>HTTP polling</td><td>Fleet status (2 s), telemetry (10 s), analytics (60 s)</td><td>These are aggregates; a poll is simpler and cannot leak a subscription</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Handling 30 cameras' update rate:</b> detections are not broadcast per frame to everyone. Video is pulled by whoever is looking, at the rate the publisher produces; aggregates are polled at a fixed rate independent of camera count; and only events — which are rare — are pushed. So dashboard load scales with <i>viewers</i>, not with fleet frame rate.</p>
+</section>
+
+<section id="perf">
+  <h2><span class="n">13</span> Performance monitoring</h2>
+  <p class="lede">Each worker writes <code>output/fleet/worker_&lt;id&gt;.json</code> every second; the API reads those files. Nothing is computed in the API process, so a worker that has died shows as a stale heartbeat instead of quietly vanishing from the totals.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Metric</th><th>Source</th><th>Reading now</th></tr></thead>
+    <tbody>
+      <tr><td>Processed fps, fleet and per camera</td><td><code>total_frames_processed</code> delta</td><td class="num">261.5 / 9.69</td></tr>
+      <tr><td>Decode fps per camera</td><td><code>frames_queued</code> delta</td><td class="num">~10.0</td></tr>
+      <tr><td>Dropped frames</td><td>Queue-full counter</td><td class="num">18.1%</td></tr>
+      <tr><td>Stage latency</td><td><code>ms_per_frame</code> per phase</td><td class="num">detect 16.9 · embed 4.6 · track 7.8</td></tr>
+      <tr><td>Queue depth</td><td>Worker health</td><td class="num">0–1</td></tr>
+      <tr><td>GPU utilisation / memory</td><td><code>nvidia-smi</code>, cached 1 s</td><td class="num">91% / capped per worker</td></tr>
+      <tr><td>CPU, RAM</td><td><code>psutil</code></td><td class="num">32 threads / 64 GB</td></tr>
+      <tr><td>Publisher backlog</td><td><code>publish_pending</code>, <code>publish_superseded</code></td><td class="num">0 pending</td></tr>
+      <tr><td>Reconnects, last-frame age</td><td>Per-camera reader stats</td><td class="num">per row</td></tr>
+      <tr><td>Tracks persisted, vault crops</td><td>Worker counters</td><td class="num">cumulative</td></tr>
+      <tr><td>Process metrics</td><td>Prometheus on <code>:9090</code></td><td class="num">scrapeable</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Phase timers nest, and that has misled this project once already: the <code>track</code> phase wrapped ANPR and flush, so it read 45 ms while the tracker itself cost 1–3 ms. Read the phases as a tree, not a list.</p>
+</section>
+
+<section id="fail">
+  <h2><span class="n">14</span> Failure handling</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Failure</th><th>What happens</th><th>Blast radius</th></tr></thead>
+    <tbody>
+      <tr><td>One camera disconnects</td><td>Its own thread reconnects with backoff; counter increments and shows on its dashboard row; optional clip failover, flagged as failover</td><td>That camera</td></tr>
+      <tr><td>Many cameras disconnect</td><td>Same path, independently, in parallel — there is no shared connect lock</td><td>Those cameras</td></tr>
+      <tr><td>One camera is very slow</td><td>It blocks on its own <code>read()</code>; its frames are dropped at the bounded queue and counted</td><td>That camera</td></tr>
+      <tr><td>Portal quota (403)</td><td>Relay sits out the cooldown with no logins; dashboard shows LIVE PAUSED with the reason and last live time</td><td>Live cameras only</td></tr>
+      <tr><td>GPU memory fills</td><td>Per-worker memory fraction and batch cap prevent it; this is the failure they were added for</td><td>Prevented</td></tr>
+      <tr><td>OCR becomes the bottleneck</td><td>ANPR is restricted to cameras whose plates are readable; a locked plate short-circuits; the quality gate refuses rather than queues</td><td>Bounded by design</td></tr>
+      <tr><td>Model or worker crashes</td><td>Supervisor sees the heartbeat go stale past 45 s and restarts that worker (15 s backoff, 120 s grace for model load); other workers untouched</td><td>That worker's cameras, for ~2 min</td></tr>
+      <tr><td>Overlay or publish fails</td><td>Caught, logged once per camera by name; the pipeline continues. A bare <code>except: pass</code> here once froze a camera view while every counter still reported healthy — hence "once per camera", and never silent</td><td>That camera's picture</td></tr>
+      <tr><td>Dashboard disconnects</td><td>Nothing server-side depends on a viewer; the socket reconnects, MJPEG re-requests, polls resume</td><td>None</td></tr>
+      <tr><td>Backend restart</td><td>Workers are stateless between frames; finished tracks are already persisted. Relaunch the supervisor</td><td>In-flight tracks only</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note change">
+    <span class="lbl">Known operational gotcha</span>
+    <p>On Windows, terminating the supervisor does <b>not</b> kill its worker processes. Leftovers keep writing the same heartbeat files, so the dashboard shows two generations of the fleet at once — it produced readings of “3342 fps” and “detect 572 ms” in testing. <code>start_fleet_demo.ps1</code> kills every <code>run_pipeline</code> before starting.</p>
+  </div>
+</section>
+
+<section id="scale">
+  <h2><span class="n">15</span> Scalability</h2>
+
+  <div class="tw"><table>
+    <thead><tr><th>Configuration</th><th class="num">fps / camera</th><th class="num">Dropped</th><th class="num">GPU</th></tr></thead>
+    <tbody>
+      <tr><td>6 workers · embed every frame · imgsz 640</td><td class="num">7.76</td><td class="num">26.2%</td><td class="num">—</td></tr>
+      <tr><td>6 workers · embed every 5th · imgsz 640</td><td class="num">8.54</td><td class="num">23.0%</td><td class="num">76%</td></tr>
+      <tr><td>6 workers · embed every 5th · imgsz 480</td><td class="num">8.92</td><td class="num">11.8%</td><td class="num">67%</td></tr>
+      <tr><td>8 workers · embed every frame · imgsz 480</td><td class="num">9.29</td><td class="num">23.1%</td><td class="num">91%</td></tr>
+      <tr><td>8 workers · embed every 5th · imgsz 480</td><td class="num">9.45</td><td class="num">15.7%</td><td class="num">88%</td></tr>
+      <tr class="best"><td>8 workers · embed every 5th · imgsz 640</td><td class="num">9.69</td><td class="num">18.1%</td><td class="num">91%</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>imgsz stays at 640.</b> Dropping to 480 bought 0.38 fps at six workers and costs detections on distant vehicles — the wrong trade for a traffic-analytics system. The GPU at 91% is now the ceiling: the last 0.3 fps needs a lighter detector and its recall, or a second card.</p>
+
+  <h3>What runs once, what runs per camera</h3>
+  <ul>
+    <li><b>Once globally:</b> the supervisor, the analytics rollup, the API, the database.</li>
+    <li><b>Once per worker:</b> model weights, the inference loop, the publisher, the vault writer, the GPU allocation.</li>
+    <li><b>Once per camera:</b> the reader thread, the tracker, the track buffers, the environment classifier cache, the published frame.</li>
+  </ul>
+
+  <h3>Adding cameras</h3>
+  <p>Insert a row in <code>cameras</code> and restart the supervisor. Nothing in the pipeline is keyed to a fixed camera list, and the per-camera state above is created on demand — camera-specific behaviour is expressed as environment lists (<code>SENTINEL_ANPR_CAMERAS</code>, <code>SENTINEL_ALIGN_OVERLAY_CAMERAS</code>, <code>SENTINEL_GLOBALID_CAMERAS</code>) rather than branches in code. Beyond this machine, the horizontal unit is the worker process: it already runs with its own GPU share, its own cameras and its own heartbeat file, so moving workers to a second host needs the heartbeat files replaced by a shared store, not a redesign.</p>
+</section>
+
+<section id="proof">
+  <h2><span class="n">16</span> Proving it actually runs</h2>
+  <p class="lede">Thirty moving pictures prove nothing. Each claim below is tied to a number a viewer can watch change.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Claim</th><th>Evidence on screen</th><th>Why it cannot be faked</th></tr></thead>
+    <tbody>
+      <tr><td>All streams are connected</td><td>Per-camera stream state, reconnect count, <b>last-frame age</b> in Fleet Operations</td><td>Age is computed from a timestamp the reader writes; a stalled camera's age climbs in real time</td></tr>
+      <tr><td>Inference is running on each</td><td><b>Processed</b> fps per camera, and the per-worker ms/frame breakdown</td><td>It comes from the frames-completed counter, not the decode counter — the two differ by 18%, and a video player has no second number</td></tr>
+      <tr><td>Vehicles are genuinely detected</td><td>Boxes with class and confidence; counts rising; the <code>processing</code> flag requires a worker reporting <i>and</i> frames arriving</td><td>Overlays are drawn from the same track objects that are persisted</td></tr>
+      <tr><td>Plates are genuinely read</td><td>Live ANPR panel with crop, characters and confidence, on CAM_09</td><td>Every read is logged with track and global id, and stored; a locked plate stops OCR, so reads are traceable to frames</td></tr>
+      <tr><td>Tracking is real</td><td>Stable ids across frames; tracks-persisted counter</td><td>Ids come from the tracker's own state; a restart visibly renumbers them</td></tr>
+      <tr><td>Cross-camera matching is real</td><td>Re-ID proof panel: the same <code>GV_</code> id on four cameras with similarity scores</td><td>Leave-one-out Rank-1 4/4 against a ~500-vehicle gallery, subject discovered not named</td></tr>
+      <tr><td>Nothing is hardcoded</td><td>Uncalibrated cameras show no speed; zero-passage cameras show zero, not absent; simulated rows carry <code>is_simulated</code></td><td>These are the exact failures already found and fixed here — a 42.0 km/h prior on 29 cameras, and a hidden simulation flag</td></tr>
+      <tr><td>It is within its limits</td><td>GPU 91%, dropped 18.1%, queue 0–1, publisher backlog 0</td><td>Published alongside the throughput, so the cost of the claim is visible with the claim</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="lede" style="margin-bottom:0"><b>The demo sentence that is true:</b> “Twenty-eight cameras are running the complete pipeline at 9.7 frames per second each on one desktop GPU — here is the per-camera evidence. One camera is genuinely live from the city portal; the rest run recorded footage because that portal meters one account to roughly seven cameras' worth of video, which we measured.”</p>
+</section>
+
+<section id="replace">
+  <h2><span class="n">17</span> What I would replace, and why</h2>
+  <p class="lede">In the order the measurements justify. Two of these are not optimisations but the difference between a demo and a deployment.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Component</th><th>Change to</th><th>Justification</th></tr></thead>
+    <tbody>
+      <tr><td><b>Video source</b><br>corp8 HLS portal</td><td>Police RTSP / NVR (ONVIF), already supported by the reader</td><td><b>The single highest-value change.</b> Measured: the account gives ~7 camera-seconds of video per second and cuts off at 15 minutes. Every other limit in this document is smaller than this one.</td></tr>
+      <tr><td><b>Decode</b><br>CPU via OpenCV</td><td>NVDEC hardware decode, scaled on the GPU</td><td>Decode is the largest CPU cost left and lands frames already in GPU memory, removing a host→device copy per frame.</td></tr>
+      <tr><td><b>Detector runtime</b><br>PyTorch fp16</td><td>TensorRT — <i>now</i>, not before</td><td>Earlier it would have been wasted: the bottleneck was a JPEG encode on the inference thread. With the GPU at 91% it is finally the binding constraint. Note ONNX-CUDA gave <i>no</i> gain over PyTorch (6.7 vs 6.1 ms), which is itself the evidence that the cost was Python, not GEMMs. TensorRT libraries are not installed (<code>nvinfer_10.dll</code> missing).</td></tr>
+      <tr><td><b>Frame handoff to UI</b><br>JPEG files + MJPEG</td><td>Shared memory in-process; WebRTC to the browser</td><td>Writing and re-reading a JPEG per camera per frame is a filesystem round trip for data that never leaves the machine; WebRTC also removes the six-connection browser cap that already blanked the grid once.</td></tr>
+      <tr><td><b>Database</b><br>SQLite WAL</td><td>PostgreSQL + pgvector (<code>DATABASE_URL</code> already switches it; the models already branch on dialect)</td><td>Not needed at today's write rate — writes are per track, not per frame — but SQLite has one writer, and appearance search wants a real vector index rather than a scan.</td></tr>
+      <tr><td><b>Worker coordination</b><br>Heartbeat JSON files</td><td>Redis or NATS</td><td>Files are honest and dependency-free on one host and should stay until there is a second host. They also cannot express "this worker is gone" — which is exactly the Windows leftover-worker bug above.</td></tr>
+      <tr><td><b>Language / framework</b><br>Python, FastAPI, React</td><td><b>Keep.</b></td><td>The measured costs were a double image resize, a JPEG encode on the wrong thread, and GPU contention — none of which a different language fixes. Rewriting would spend the month before the hackathon re-earning ground already held.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+</main>
+</div>
+</div>
+</body></html>

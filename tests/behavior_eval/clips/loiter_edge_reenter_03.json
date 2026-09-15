@@ -1,0 +1,29 @@
+{
+  "clip_id": "loiter_edge_reenter_03",
+  "detector": "loitering",
+  "camera_id": "CAM-EVAL-LOITER-REENTER",
+  "description": "Person stands in one spot for 40s (segment A, track_id=303), leaves frame (tracker assigns a NEW id on return, modeled here as track_id=304), then stands in the SAME spot again for another 40s (segment B) starting well after segment A ends. Neither 40s period alone reaches the 60s duration threshold, and identity resets on track break, so the two periods must NOT be summed into 80s. Expect no alert from either segment.",
+  "segments": [
+    {
+      "track_id": 303,
+      "positions": [
+        {"video_time": 0,  "cx": 500, "cy": 500},
+        {"video_time": 10, "cx": 505, "cy": 495},
+        {"video_time": 20, "cx": 495, "cy": 505},
+        {"video_time": 30, "cx": 500, "cy": 500},
+        {"video_time": 40, "cx": 505, "cy": 505}
+      ]
+    },
+    {
+      "track_id": 304,
+      "positions": [
+        {"video_time": 100, "cx": 500, "cy": 500},
+        {"video_time": 110, "cx": 505, "cy": 495},
+        {"video_time": 120, "cx": 495, "cy": 505},
+        {"video_time": 130, "cx": 500, "cy": 500},
+        {"video_time": 140, "cx": 505, "cy": 505}
+      ]
+    }
+  ],
+  "expected_alerts": []
+}

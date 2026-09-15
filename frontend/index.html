@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- PWA (Day 15). Without the manifest link Android never offers
+         "Add to Home Screen", and on iOS the home-screen icon falls back to
+         a screenshot of the page. Both break the install step that Web Push
+         on iOS depends on. -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0f1520" />
+
+    <!-- iOS ignores the manifest for standalone display and the icon. These
+         three tags are the iOS-specific equivalents and are NOT redundant:
+         without apple-mobile-web-app-capable the home-screen launch opens a
+         Safari chrome window, which does not count as an installed PWA and
+         therefore cannot receive push. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Sarvanetra AI" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+    <title>SARVANETRA — AI CCTV Surveillance Platform</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

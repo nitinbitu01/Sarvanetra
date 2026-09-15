@@ -1,0 +1,319 @@
+{
+ "fleet": {
+  "fleet": 30,
+  "with_gps": 30,
+  "with_footage": 27,
+  "dark": [
+   "CAM_15",
+   "CAM_17",
+   "CAM_22"
+  ],
+  "unregistered_footage": [],
+  "excluded_deleted": 11,
+  "excluded_test": [
+   "CAM_33"
+  ]
+ },
+ "cameras": [
+  {
+   "camera": "CAM_01",
+   "code": "needs_height",
+   "remedy": "person",
+   "legs": 1,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "mounting height cannot be recovered from this camera's footage \u2014 needs an installation record or a site measurement"
+  },
+  {
+   "camera": "CAM_02",
+   "code": "needs_legs",
+   "remedy": "survey",
+   "legs": 1,
+   "legs_needed": 7,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "has VP1 and height, lacks a focal length; ground points bypass it \u2014 legs would also work but may never arrive"
+  },
+  {
+   "camera": "CAM_03",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_04",
+   "code": "needs_legs",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": 8,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "has VP1 and height, lacks a focal length; ground points bypass it \u2014 legs would also work but may never arrive"
+  },
+  {
+   "camera": "CAM_05",
+   "code": "not_one_road",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "tracks span too many directions for one vanishing point; needs ground control points"
+  },
+  {
+   "camera": "CAM_06",
+   "code": "needs_legs",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": 8,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "has VP1 and height, lacks a focal length; ground points bypass it \u2014 legs would also work but may never arrive"
+  },
+  {
+   "camera": "CAM_07",
+   "code": "needs_height",
+   "remedy": "person",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "mounting height cannot be recovered from this camera's footage \u2014 needs an installation record or a site measurement"
+  },
+  {
+   "camera": "CAM_08",
+   "code": "calibrated",
+   "remedy": "done",
+   "legs": 18,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "in camera_calibrations, speed is live"
+  },
+  {
+   "camera": "CAM_09",
+   "code": "needs_legs",
+   "remedy": "survey",
+   "legs": 2,
+   "legs_needed": 6,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "has VP1 and height, lacks a focal length; ground points bypass it \u2014 legs would also work but may never arrive"
+  },
+  {
+   "camera": "CAM_10",
+   "code": "needs_height",
+   "remedy": "person",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "mounting height cannot be recovered from this camera's footage \u2014 needs an installation record or a site measurement"
+  },
+  {
+   "camera": "CAM_11",
+   "code": "calibrated",
+   "remedy": "done",
+   "legs": 16,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "in camera_calibrations, speed is live"
+  },
+  {
+   "camera": "CAM_12",
+   "code": "not_one_road",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "tracks span too many directions for one vanishing point; needs ground control points"
+  },
+  {
+   "camera": "CAM_13",
+   "code": "needs_height",
+   "remedy": "person",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "mounting height cannot be recovered from this camera's footage \u2014 needs an installation record or a site measurement"
+  },
+  {
+   "camera": "CAM_14",
+   "code": "needs_height",
+   "remedy": "person",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "mounting height cannot be recovered from this camera's footage \u2014 needs an installation record or a site measurement"
+  },
+  {
+   "camera": "CAM_15",
+   "code": "no_footage",
+   "remedy": "deployment",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "zero frames ever; a site visit cannot help \u2014 see reports/ops_ticket_dark_cameras.md"
+  },
+  {
+   "camera": "CAM_16",
+   "code": "needs_legs",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": 8,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "has VP1 and height, lacks a focal length; ground points bypass it \u2014 legs would also work but may never arrive"
+  },
+  {
+   "camera": "CAM_17",
+   "code": "no_footage",
+   "remedy": "deployment",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "zero frames ever; a site visit cannot help \u2014 see reports/ops_ticket_dark_cameras.md"
+  },
+  {
+   "camera": "CAM_18",
+   "code": "needs_height",
+   "remedy": "person",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "mounting height cannot be recovered from this camera's footage \u2014 needs an installation record or a site measurement"
+  },
+  {
+   "camera": "CAM_19",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_20",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_21",
+   "code": "needs_legs",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": 8,
+   "has_vp1": true,
+   "has_height": true,
+   "note": "has VP1 and height, lacks a focal length; ground points bypass it \u2014 legs would also work but may never arrive"
+  },
+  {
+   "camera": "CAM_22",
+   "code": "no_footage",
+   "remedy": "deployment",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "zero frames ever; a site visit cannot help \u2014 see reports/ops_ticket_dark_cameras.md"
+  },
+  {
+   "camera": "CAM_23",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_24",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_25",
+   "code": "needs_height",
+   "remedy": "person",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": true,
+   "has_height": false,
+   "note": "mounting height cannot be recovered from this camera's footage \u2014 needs an installation record or a site measurement"
+  },
+  {
+   "camera": "CAM_26",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_27",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_28",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_29",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  },
+  {
+   "camera": "CAM_30",
+   "code": "no_vp1",
+   "remedy": "survey",
+   "legs": 0,
+   "legs_needed": null,
+   "has_vp1": false,
+   "has_height": false,
+   "note": "no usable direction of travel in the footage; needs ground control points"
+  }
+ ]
+}

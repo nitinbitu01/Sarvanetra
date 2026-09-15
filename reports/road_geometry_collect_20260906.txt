@@ -1,0 +1,108 @@
+﻿camera     tracks  usable  straight  pts/track  width obs  verdict
+--------------------------------------------------------------------------
+CAM_01        841     469        43       11.3        486  calibratable
+CAM_02        419     215        95       24.4       2322  calibratable
+CAM_03         10       3         1        7.0          7  too few tracks
+CAM_04       1192     704        91       15.9       1449  calibratable
+CAM_05        752     442       140       19.5       2730  calibratable
+CAM_06         43      26         9       12.3        111  calibratable
+CAM_07         66      50         2       10.0         20  too few tracks
+CAM_08        595     347        30       13.5        405  calibratable
+CAM_09         58      47        12       12.2        146  calibratable
+CAM_10        238     128         6        9.5         57  marginal
+CAM_11        291     155        10       16.0        160  calibratable
+CAM_12        130      65         1       10.0         10  too few tracks
+CAM_13         69      36         9       11.0         99  calibratable
+CAM_14        148      78         8       10.4         83  calibratable
+CAM_16        633     318        48       10.7        514  calibratable
+CAM_18        531     253        35       12.5        439  calibratable
+CAM_20          2       1         1        9.0          9  too few tracks
+CAM_21        252     176        50       17.0        848  calibratable
+CAM_25         21      14         2        6.5         13  too few tracks
+CAM_27         35      25         0        0.0          0  too few tracks
+CAM_29          7       2         0        0.0          0  too few tracks
+CAM_30         29      23         1       29.0         29  too few tracks
+
+13/22 cameras have enough road geometry to attempt a calibration
+wrote C:\Users\24bcscs031\Downloads\sentinel_gujarat_day8\sentinel gujarat\output\road_geometry
+python : [hevc @ 0000022cea375a00] Invalid NAL unit size (158208 > 14604).
+At line:2 char:1
++ python -m backend.scripts.collect_road_geometry 2>&1 | Tee-Object -Fi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([hevc @ 0000022...58208 > 14604).:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[hevc @ 0000022cea375a00] Error splitting the input into NAL units.
+[hevc @ 0000022cea377780] Could not find ref with POC 0
+[h264 @ 0000022d231de680] missing picture in access unit with size 108
+[h264 @ 0000022d231dd7c0] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce7061cc0] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce7062b80] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f92900] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f921c0] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f92cc0] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022d231de2c0] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022d231dd080] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022d231dd400] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022d231dd7c0] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022d231ddb80] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022d231ddf40] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f937c0] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f90440] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f93b80] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f91e00] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f91a40] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f90080] no frame!
+[h264 @ 0000022d231de680] missing picture in access unit with size 54
+[h264 @ 0000022ce9f90800] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 108
+[h264 @ 0000022ce9cb0e40] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb1200] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb15c0] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb2bc0] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022d231dc280] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022d231dbec0] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022d231dc600] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022d231db3c0] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022d231db740] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022d231dac40] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9caff80] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb1940] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb2800] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb0340] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb0700] no frame!
+[h264 @ 0000022d231dbb00] missing picture in access unit with size 54
+[h264 @ 0000022ce9cb0a80] no frame!
+[h264 @ 0000022ced6fa9c0] missing picture in access unit with size 108
+[h264 @ 0000022ce7063300] no frame!

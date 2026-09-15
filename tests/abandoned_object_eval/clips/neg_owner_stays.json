@@ -1,0 +1,42 @@
+{
+  "clip_id": "neg_owner_stays",
+  "description": "NEGATIVE: Owner sets object down but remains within OWNERSHIP_RADIUS_PX throughout entire clip. Must NOT fire.",
+  "detector": "abandoned_object",
+  "camera_id": "EVAL-CAM-02",
+  "requires_calibration_seed": true,
+  "segments": [
+    {
+      "segment_type": "object",
+      "object_track_id": "EVAL-CAM-02:obj:1",
+      "object_class": "backpack",
+      "is_baseline": false,
+      "ticks": [
+        {"video_time": 0.0,  "cx": 200.0, "cy": 300.0},
+        {"video_time": 5.0,  "cx": 200.1, "cy": 300.0},
+        {"video_time": 10.0, "cx": 200.0, "cy": 300.1},
+        {"video_time": 20.0, "cx": 200.2, "cy": 299.9},
+        {"video_time": 30.0, "cx": 200.0, "cy": 300.0},
+        {"video_time": 40.0, "cx": 200.1, "cy": 300.1},
+        {"video_time": 50.0, "cx": 200.0, "cy": 300.2},
+        {"video_time": 60.0, "cx": 200.1, "cy": 300.0},
+        {"video_time": 70.0, "cx": 200.2, "cy": 300.1},
+        {"video_time": 80.0, "cx": 200.0, "cy": 300.0},
+        {"video_time": 90.0, "cx": 200.1, "cy": 300.0}
+      ]
+    }
+  ],
+  "proximity_events": [
+    {"video_time": 0.0,  "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 5.0,  "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 10.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 20.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 30.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 40.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 50.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 60.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 70.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 80.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]},
+    {"video_time": 90.0, "object_track_ids_nearby": ["EVAL-CAM-02:obj:1"]}
+  ],
+  "expected_alerts": []
+}

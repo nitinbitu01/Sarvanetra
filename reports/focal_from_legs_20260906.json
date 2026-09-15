@@ -1,0 +1,98 @@
+[
+ {
+  "camera": "CAM_08",
+  "legs_total": 18,
+  "n_corridors": 4,
+  "dominant_corridor_share": 0.83,
+  "corridor_speed_spread": 1.0,
+  "corridors": [
+   {
+    "corridor": "CAM_11->CAM_08",
+    "n": 15,
+    "median_kmh": 27.8,
+    "metres": 2361
+   },
+   {
+    "corridor": "CAM_08->CAM_09",
+    "n": 1,
+    "median_kmh": 11.5,
+    "metres": 916
+   },
+   {
+    "corridor": "CAM_08->CAM_11",
+    "n": 1,
+    "median_kmh": 18.2,
+    "metres": 2361
+   },
+   {
+    "corridor": "CAM_09->CAM_08",
+    "n": 1,
+    "median_kmh": 9.9,
+    "metres": 916
+   }
+  ],
+  "tracks_usable": 161,
+  "dv_p10_p50_p90": [
+   16.1,
+   129.1,
+   823.5
+  ],
+  "dv_spread_ratio": 51.1,
+  "legs_fit": 12,
+  "legs_holdout": 6,
+  "focal_px": 1086.6,
+  "focal_ci95": [
+   1016.9,
+   1190.4
+  ],
+  "focal_ci_width_frac": 0.16,
+  "fov_deg": 82.9,
+  "camera_median_kmh_at_f": 27.1,
+  "holdout_median_kmh": 26.3,
+  "holdout_ratio": 1.03,
+  "status": "solved"
+ },
+ {
+  "camera": "CAM_11",
+  "legs_total": 16,
+  "n_corridors": 2,
+  "dominant_corridor_share": 0.94,
+  "corridor_speed_spread": 1.0,
+  "corridors": [
+   {
+    "corridor": "CAM_11->CAM_08",
+    "n": 15,
+    "median_kmh": 27.8,
+    "metres": 2361
+   },
+   {
+    "corridor": "CAM_08->CAM_11",
+    "n": 1,
+    "median_kmh": 18.2,
+    "metres": 2361
+   }
+  ],
+  "tracks_usable": 155,
+  "dv_p10_p50_p90": [
+   40.0,
+   229.5,
+   1002.0
+  ],
+  "dv_spread_ratio": 25.05,
+  "legs_fit": 11,
+  "legs_holdout": 5,
+  "focal_px": 974.4,
+  "focal_ci95": [
+   943.6,
+   1098.5
+  ],
+  "focal_ci_width_frac": 0.159,
+  "fov_deg": 89.1,
+  "camera_median_kmh_at_f": 26.3,
+  "holdout_median_kmh": 27.8,
+  "holdout_ratio": 0.94,
+  "vp2_focal_px": 1028.6,
+  "leg_vs_vp2_ratio": 0.947,
+  "status": "solved"
+ }
+]

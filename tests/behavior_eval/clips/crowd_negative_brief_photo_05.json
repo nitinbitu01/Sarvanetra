@@ -1,0 +1,149 @@
+{
+  "clip_id": "crowd_negative_brief_photo_05",
+  "detector": "crowd",
+  "camera_id": "CAM-EVAL-CROWD-NEG-BRIEF",
+  "description": "A brief ~10s group-photo-style spike to 8 people, immediately back to baseline. Shorter than CROWD_MIN_DURATION_SEC (15s), so the sustained-surge gate must suppress it \u2014 should never fire.",
+  "ticks": [
+    {
+      "video_time": 0,
+      "count": 2
+    },
+    {
+      "video_time": 10,
+      "count": 2
+    },
+    {
+      "video_time": 20,
+      "count": 2
+    },
+    {
+      "video_time": 30,
+      "count": 2
+    },
+    {
+      "video_time": 40,
+      "count": 2
+    },
+    {
+      "video_time": 50,
+      "count": 2
+    },
+    {
+      "video_time": 60,
+      "count": 2
+    },
+    {
+      "video_time": 70,
+      "count": 2
+    },
+    {
+      "video_time": 80,
+      "count": 2
+    },
+    {
+      "video_time": 90,
+      "count": 2
+    },
+    {
+      "video_time": 100,
+      "count": 2
+    },
+    {
+      "video_time": 110,
+      "count": 2
+    },
+    {
+      "video_time": 120,
+      "count": 2
+    },
+    {
+      "video_time": 130,
+      "count": 2
+    },
+    {
+      "video_time": 140,
+      "count": 2
+    },
+    {
+      "video_time": 150,
+      "count": 2
+    },
+    {
+      "video_time": 160,
+      "count": 2
+    },
+    {
+      "video_time": 170,
+      "count": 2
+    },
+    {
+      "video_time": 180,
+      "count": 2
+    },
+    {
+      "video_time": 190,
+      "count": 2
+    },
+    {
+      "video_time": 200,
+      "count": 2
+    },
+    {
+      "video_time": 210,
+      "count": 2
+    },
+    {
+      "video_time": 220,
+      "count": 2
+    },
+    {
+      "video_time": 230,
+      "count": 2
+    },
+    {
+      "video_time": 240,
+      "count": 2
+    },
+    {
+      "video_time": 250,
+      "count": 2
+    },
+    {
+      "video_time": 260,
+      "count": 2
+    },
+    {
+      "video_time": 270,
+      "count": 2
+    },
+    {
+      "video_time": 280,
+      "count": 2
+    },
+    {
+      "video_time": 290,
+      "count": 8
+    },
+    {
+      "video_time": 300,
+      "count": 2
+    },
+    {
+      "video_time": 310,
+      "count": 2
+    },
+    {
+      "video_time": 320,
+      "count": 2
+    },
+    {
+      "video_time": 330,
+      "count": 2
+    },
+    {
+      "video_time": 340,
+      "count": 2
+    }
+  ],
+  "expected_alerts": []
+}

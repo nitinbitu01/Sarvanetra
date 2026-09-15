@@ -1,0 +1,97 @@
+# =============================================================================
+# Dockerfile.backend — Sentinel Gujarat Production Image
+# =============================================================================
+# Multi-stage build:
+#   Stage 1 (builder): install Python deps into a venv
+#   Stage 2 (runtime): copy venv + app source only — no build tools
+#
+# Build args:
+#   INSTALL_TORCHREID=false|true   — set true on GPU hosts
+# =============================================================================
+
+# ── Stage 1: build dependencies ──────────────────────────────────────────────
+FROM python:3.11-slim AS builder
+
+ARG INSTALL_TORCHREID=false
+
+WORKDIR /build
+
+# System deps needed to compile Python packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc \
+        g++ \
+        libpq-dev \
+        libgl1 \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender-dev \
+        curl \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create isolated venv
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Upgrade pip + wheel first
+RUN pip install --upgrade pip wheel setuptools
+
+# Pre-install torch & torchvision CPU wheels (~180MB vs 550MB CUDA bundle)
+RUN pip install --no-cache-dir \
+        --default-timeout=120 \
+        --index-url https://download.pytorch.org/whl/cpu \
+        torch torchvision
+
+# Install main requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir --default-timeout=120 -r requirements.txt
+
+# Optional: torchreid (GPU hosts only)
+RUN if [ "$INSTALL_TORCHREID" = "true" ]; then \
+        pip install --no-cache-dir torchreid>=0.2.5; \
+    fi
+
+# ── Stage 2: runtime image ───────────────────────────────────────────────────
+FROM python:3.11-slim AS runtime
+
+WORKDIR /app
+
+# Runtime-only system libs (no build tools)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libpq5 \
+        libgl1 \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender1 \
+        curl \
+        ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy venv from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Non-root user for security
+RUN addgroup --system sentinel && adduser --system --ingroup sentinel sentinel
+
+# Copy application source with direct ownership
+COPY --chown=sentinel:sentinel . /app
+
+# Ensure writable runtime directories exist with proper ownership
+RUN mkdir -p /app/output /app/models /app/evidence /app/hls /app/logs /app/data /app/data/reid_index /app/reports && \
+    chown -R sentinel:sentinel /app
+
+USER sentinel
+
+# Health-check endpoint
+HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+EXPOSE 8000
+
+# Default: run FastAPI with uvicorn
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", \
+     "--workers", "2", "--proxy-headers", "--forwarded-allow-ips", "*"]

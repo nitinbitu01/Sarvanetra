@@ -1,0 +1,82 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+config/corp8_credentials.json
+config/corp8_session_cache.json
+stream_cookies.json
+watchlist.json
+
+# Datasets & Raw Media
+data/
+datasets/
+training/
+runs/
+debug_crops/
+debug_what_model_sees/
+debug_with_reads/
+debug_fixed_crops/
+diagnostic_frames/
+debug_night_frame_*.jpg
+seek_probe_*.jpg
+cam09_vehicle_event_*.jpg
+night_*_test.jpg
+
+# Recordings, Camera Streams & Forensic Video
+recordings/
+camera_streams/
+evidence/
+hls/
+demo/
+*.mp4
+*.avi
+*.mkv
+*.ts
+*.mov
+temp_segment.ts
+
+# Outputs, Logs, Cache & Temp
+output/
+outputs/
+logs/
+*.log
+*.log.*
+cache/
+temp/
+scratch/
+.pytest_cache/
+.cache/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases & Runtime State
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.db3
+gujarat_map_raw.json
+
+# Heavy Pre-trained Model Weights (> 25MB)
+*.pt
+*.onnx
+models/
+
+# Frontend / Node Build Artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+frontend/coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.oxlint-cache
+
+# OS & Editor Clutter
+.DS_Store
+Thumbs.db
+*.bak
+*.bak_*

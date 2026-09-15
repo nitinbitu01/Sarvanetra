@@ -1,0 +1,75 @@
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+pyyaml>=6.0
+torch>=2.0.0
+
+# Day 2 additions
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+websockets>=13.0
+
+# Day 3 additions
+faiss-cpu>=1.7.4
+numpy>=1.23.0
+
+# Day 4 additions (ANPR OCR)
+easyocr>=1.7.0
+# paddleocr>=2.7.0   # optional: easyocr is default
+# paddlepaddle>=2.6.0
+
+# Day 5 additions
+sqlalchemy>=2.0.0
+python-json-logger>=2.0.0  # backend/core/logging.py — pre-existing Day 5 gap, found while
+                            # verifying Day 8 (structured logging was added but never listed
+                            # here; the app couldn't actually start without it)
+alembic>=1.13.0
+pydantic-settings>=2.0.0
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.9
+slowapi>=0.1.9
+
+# Day 6 additions (ReID engine)
+# torchreid: optional — stub mode is used if not installed (no GPU required for testing)
+# Install with: pip install torchreid
+# torchreid>=0.2.5
+torchvision>=0.15.0     # required by torchreid for image transforms
+apscheduler>=3.10.0     # APScheduler for daily retention job (optional: falls back gracefully)
+pillow>=10.0.0          # PIL image transforms in reid_embedder.py
+
+# Day 7 additions (Face watchlist matching)
+# insightface: optional — stub mode is used if not installed (CPU-only demo works without it)
+insightface>=0.7.3
+onnxruntime>=1.16.0
+
+# Day 8 additions (Behavior engine: loitering + crowd anomaly)
+redis>=5.0.0             # redis.asyncio client — behavior-engine shared state (services/state.py)
+                          # requires a running redis-server; see README Day 8 section for setup.
+                          # Engine degrades gracefully (skip-and-log) if unreachable — not a hard
+                          # dependency for the rest of the app to run.
+
+# Day 13 additions (Evidence Lock: auto clip + chain of custody)
+fpdf2>=2.7.0             # one-page chain-of-custody PDF (services/evidence_capture.py)
+imageio-ffmpeg>=0.4.9    # vendored static ffmpeg used to transcode evidence clips to
+                          # H.264. NOT optional for a browser-facing demo: OpenCV's
+                          # avc1 writer reports success without the OpenH264 DLL and
+                          # silently emits MPEG-4 Part 2, which Chrome/Edge/Safari
+                          # refuse to play. Without this the clip is valid on disk and
+                          # black in the dashboard.
+
+# Day 15 additions (PWA + Web Push)
+pywebpush>=1.14.0        # Web Push protocol (VAPID signing + payload encryption)
+pillow>=10.0.0           # backend/scripts/gen_icons.py — PWA icon generation.
+                          # A manifest referencing a missing icon fails Android's
+                          # install criteria silently: no "Add to Home Screen"
+                          # prompt, no error. On iOS that install step is a hard
+                          # prerequisite for push working at all.
+
+# Production Docker additions (Day 19+)
+asyncpg>=0.29.0              # async PostgreSQL driver for asyncpg URL
+psycopg2-binary>=2.9.9       # sync PostgreSQL driver for alembic + SQLAlchemy sync
+aiosqlite>=0.20.0            # SQLite async fallback (dev/CI only)
+prometheus-fastapi-instrumentator>=6.1.0  # /metrics endpoint for Prometheus scraping
+boto3>=1.34.0                # S3/MinIO SDK (evidence clip upload)
+minio>=7.2.0                 # MinIO client for Python
+pgvector>=0.3.0              # pgvector SQLAlchemy support for Vector(512)

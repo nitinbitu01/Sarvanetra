@@ -1,0 +1,229 @@
+{
+ "_comment": "road_class per camera id. Speed-limit flags use an entry ONLY when confirmed is true; until then the camera counts as unknown and only egregious speeds are flagged. Valid values: EXPRESSWAY, NH_4LANE_DIVIDED, NH_2LANE, STATE_HIGHWAY, URBAN.",
+ "cameras": {
+  "CAM_01": {
+   "camera_name": "Ahmedabad - Chimanbhai Bridge",
+   "department": "transport",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'bridge'"
+  },
+  "CAM_02": {
+   "camera_name": "Ahmedabad - Janpath",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM_03": {
+   "camera_name": "Ahmedabad - O.N.G.C. Office",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM_04": {
+   "camera_name": "Ahmedabad - Paldi Circle",
+   "department": "traffic_police",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'circle'"
+  },
+  "CAM_05": {
+   "camera_name": "Ahmedabad - Visat Teen Rasta",
+   "department": "heritage",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'teen rasta'"
+  },
+  "CAM_06": {
+   "camera_name": "Junagadh - Timbavadi Gate",
+   "department": "highway_patrol",
+   "road_class": "NH_4LANE_DIVIDED",
+   "confirmed": false,
+   "suggested_because": "owned by highway_patrol"
+  },
+  "CAM_07": {
+   "camera_name": "Gir Somnath - Hero Showroom",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM_08": {
+   "camera_name": "Junagadh - Majewadi Gate",
+   "department": "police",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'gate'"
+  },
+  "CAM_09": {
+   "camera_name": "Junagadh - New Bypass Circle",
+   "department": "police",
+   "road_class": "NH_4LANE_DIVIDED",
+   "confirmed": false,
+   "suggested_because": "name contains 'bypass'"
+  },
+  "CAM_10": {
+   "camera_name": "Junagadh - Char Chowk Road",
+   "department": "traffic_police",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'chowk'"
+  },
+  "CAM_11": {
+   "camera_name": "Junagadh - Dolatpara",
+   "department": "municipality",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "owned by municipality"
+  },
+  "CAM_12": {
+   "camera_name": "Gandhinagar - Tri Mandir Adalaj",
+   "department": "highway_patrol",
+   "road_class": "NH_4LANE_DIVIDED",
+   "confirmed": false,
+   "suggested_because": "owned by highway_patrol"
+  },
+  "CAM_13": {
+   "camera_name": "Ahmedabad - CN Vidhyalaya",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM_14": {
+   "camera_name": "Ahmedabad - Delight Chowk",
+   "department": "municipality",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'chowk'"
+  },
+  "CAM_15": {
+   "camera_name": "Ahmedabad - Suvidha Park",
+   "department": "municipality",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "owned by municipality"
+  },
+  "CAM_16": {
+   "camera_name": "Ahmedabad - Visat P2",
+   "department": "traffic_police",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "owned by traffic_police"
+  },
+  "CAM_17": {
+   "camera_name": "Rajkot - Bus Port Main Gate",
+   "department": "transport",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'gate'"
+  },
+  "CAM_18": {
+   "camera_name": "Rajkot - CCTV Station",
+   "department": "police",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'station'"
+  },
+  "CAM_19": {
+   "camera_name": "Navsari - Khaparia Gram Panchayat",
+   "department": "municipality",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "owned by municipality"
+  },
+  "CAM_20": {
+   "camera_name": "Patan - Mohanpura",
+   "department": "municipality",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "owned by municipality"
+  },
+  "CAM_21": {
+   "camera_name": "Patan - Dethali Char Rasta",
+   "department": "highway_patrol",
+   "road_class": "NH_4LANE_DIVIDED",
+   "confirmed": false,
+   "suggested_because": "owned by highway_patrol"
+  },
+  "CAM_22": {
+   "camera_name": "Banaskantha - BK Mervada Tran Rasta",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM_23": {
+   "camera_name": "Sabarkantha - Kheram",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM_24": {
+   "camera_name": "Gandhinagar - Dehgam Circle",
+   "department": "highway_patrol",
+   "road_class": "NH_4LANE_DIVIDED",
+   "confirmed": false,
+   "suggested_because": "owned by highway_patrol"
+  },
+  "CAM_25": {
+   "camera_name": "Navsari - Dhanori Junction",
+   "department": "municipality",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'junction'"
+  },
+  "CAM_26": {
+   "camera_name": "Navsari - Tankal",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM_27": {
+   "camera_name": "Bilimora - Main Chowk",
+   "department": "police",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'chowk'"
+  },
+  "CAM_28": {
+   "camera_name": "Bilimora - Highway Junction",
+   "department": "highway_patrol",
+   "road_class": "NH_4LANE_DIVIDED",
+   "confirmed": false,
+   "suggested_because": "name contains 'highway'"
+  },
+  "CAM_29": {
+   "camera_name": "Bilimora - Railway Overbridge",
+   "department": "railway",
+   "road_class": "URBAN",
+   "confirmed": false,
+   "suggested_because": "name contains 'bridge'"
+  },
+  "CAM_30": {
+   "camera_name": "Gandhidham - Rambaugh P2 Checkpost",
+   "department": "port_authority",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM-RT-A": {
+   "camera_name": "Main Entrance Cam",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  },
+  "CAM-RT-B": {
+   "camera_name": "Parking Lot Cam",
+   "department": "police",
+   "road_class": "STATE_HIGHWAY",
+   "confirmed": false,
+   "suggested_because": "no strong signal \u2014 defaulted, please review"
+  }
+ }
+}

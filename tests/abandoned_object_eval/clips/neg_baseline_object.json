@@ -1,0 +1,26 @@
+{
+  "clip_id": "neg_baseline_object",
+  "description": "NEGATIVE: Object is marked is_baseline=True (was present during warm-up). Must NEVER fire regardless of how long it has been static and unattended.",
+  "detector": "abandoned_object",
+  "camera_id": "EVAL-CAM-04",
+  "requires_calibration_seed": false,
+  "segments": [
+    {
+      "segment_type": "object",
+      "object_track_id": "EVAL-CAM-04:obj:1",
+      "object_class": "suitcase",
+      "is_baseline": true,
+      "ticks": [
+        {"video_time": 0.0,   "cx": 100.0, "cy": 100.0},
+        {"video_time": 30.0,  "cx": 100.1, "cy": 100.0},
+        {"video_time": 60.0,  "cx": 100.0, "cy": 100.1},
+        {"video_time": 90.0,  "cx": 100.0, "cy": 100.0},
+        {"video_time": 120.0, "cx": 100.1, "cy": 100.1},
+        {"video_time": 150.0, "cx": 100.0, "cy": 100.0},
+        {"video_time": 180.0, "cx": 100.2, "cy": 100.0}
+      ]
+    }
+  ],
+  "proximity_events": [],
+  "expected_alerts": []
+}

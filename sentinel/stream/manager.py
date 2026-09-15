@@ -1,0 +1,38 @@
+# sentinel/stream/manager.py
+from backend.stream.manager import (
+    ffmpeg_processes,
+    _spawn_locks,
+    _spawn_lock_guard,
+    _monitor_shutdown,
+    check_ffmpeg_version,
+    _hls_dir,
+    _clear_hls_dir,
+    clear_all_hls_on_startup,
+    _get_spawn_lock,
+    _build_ffmpeg_cmd,
+    spawn_ffmpeg,
+    terminate_ffmpeg,
+    terminate_all_ffmpeg,
+    _read_stderr_safe,
+    monitor_ffmpeg_processes,
+    prewarm_demo_cameras,
+)
+
+__all__ = [
+    "ffmpeg_processes",
+    "_spawn_locks",
+    "_spawn_lock_guard",
+    "_monitor_shutdown",
+    "check_ffmpeg_version",
+    "_hls_dir",
+    "_clear_hls_dir",
+    "clear_all_hls_on_startup",
+    "_get_spawn_lock",
+    "_build_ffmpeg_cmd",
+    "spawn_ffmpeg",
+    "terminate_ffmpeg",
+    "terminate_all_ffmpeg",
+    "_read_stderr_safe",
+    "monitor_ffmpeg_processes",
+    "prewarm_demo_cameras",
+]

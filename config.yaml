@@ -1,0 +1,596 @@
+sentinel_gujarat:
+  version: "3.0.0"
+  mode: "production_30_camera"
+
+workers:
+  num_groups: 3
+  cameras_per_group: 10
+
+
+stream_settings:
+  target_fps: 5
+  batch_size: 8
+  frame_width: 1280
+  frame_height: 720
+  stream_timeout_sec: 10
+  reconnect_attempts: 999
+  reconnect_delay_sec: 5
+  max_consecutive_failures: 5
+  stale_stream_timeout_sec: 15
+
+model:
+  # Held at the fine-tuned Gujarat model until the YOLO26 comparison is in.
+  #
+  # A bare yolo26n.pt / yolo26s.pt is COCO-pretrained: 80 classes, with car=2,
+  # bus=5, truck=7. Everything downstream assumes THIS project's class order
+  # (person=0, car=1, motorcycle=2, bus=3, truck=4) — plate mining filters on
+  # {1,3,4} for four-wheelers, for instance. Against a COCO model that set
+  # means bicycle, motorcycle and aeroplane, so it does not error, it silently
+  # returns the wrong objects. Silent wrongness is worse than a crash.
+  #
+  # A YOLO26 FINE-TUNED on data/detection_train/gujarat.yaml keeps the class
+  # order and is the only YOLO26 weight safe to swap in here. That training is
+  # running now; this path moves only if the size-split evaluation shows it
+  # beating the current model.
+  path: "models_gujarat_yolov8s.pt"
+  # "cuda:0" requires a CUDA torch AND a matching CUDA torchvision - YOLO's
+  # NMS goes through torchvision.ops.nms, so a torchvision +cpu build against
+  # a +cuXXX torch raises NotImplementedError on every frame and is why this
+  # was previously pinned to "cpu". Measured here: cuda 45.9 ms/frame vs cpu
+  # 64.5 ms/frame for detect+track at 1080p. Set back to "cpu" only if a GPU
+  # is genuinely unavailable.
+  device: "cuda:0"
+  # FP16 inference. Measured on gujarat_v2 against the full 909-image val
+  # set, same class space, same IoU-matched scoring as eval_detector.py:
+  #   FP32  23.6 ms/img  F1 0.839 (TP 6421 FP 915 FN 1541)
+  #   FP16  19.6 ms/img  F1 0.840 (TP 6421 FP 914 FN 1541)
+  # Accuracy is unchanged (the tiny F1 delta is 1 fewer FP, identical
+  # TP/FN); speed is a real 1.20x. Ignored on CPU - detector.py only sets
+  # half=True when device starts with "cuda".
+  half: true
+
+detection:
+  confidence_threshold: 0.45
+  class_filter: ["person", "car", "motorcycle", "bus", "truck", "backpack", "handbag", "suitcase"]
+
+tracking:
+  tracker_config: "botsort.yaml"
+  min_confirmation_frames: 3
+
+processing:
+  fps: 5
+  input_width: 1280
+
+motion_gate:
+  # Skip inference when the scene has not changed since the last frame we
+  # actually ran detection on. These are FIXED cameras, so an unchanged
+  # scene re-derives an identical answer at full GPU cost.
+  #
+  # Measured on 200 consecutive LIVE frames per camera with the deployed
+  # model. "err" = absolute difference in object count on skipped frames
+  # vs the last processed frame:
+  #
+  #   camera   scene          diff min/med  skip@0.5  skip@2.0  err@0.5
+  #   CAM_08   busy (23 obj)    2.40 / 3.99      0.0%      0.0%        -
+  #   CAM_12   quiet (1 obj)    0.15 / 0.75     23.0%     74.0%     0.00
+  #   CAM_24   near-static      0.00 / 0.19     68.0%     92.0%     0.07
+  #   CAM_05   distant/wide     0.26 / 0.97     10.9%     65.9%        -
+  #
+  # WHY 0.5 AND NOT 2.0. 2.0 was tried first, reasoning that it sits below
+  # the busiest camera's minimum difference (2.40) and so could never fire
+  # there. It doesn't fire on CAM_08 - but a live run showed CAM_02 and
+  # CAM_05 fall from 255 and 35 confirmed track events to ZERO. The cause
+  # is scale, not noise: on a distant or wide-angle view a walking person
+  # occupies few pixels and moves the frame difference only to ~1-2, which
+  # is UNDER a 2.0 threshold. The gate was skipping real activity.
+  #
+  # So the threshold must clear sensor noise (static scenes sit at
+  # 0.00-0.19 on CAM_24) without reaching the motion signal of a small,
+  # distant subject. 0.5 does that: still 0% on busy cameras, 23-68% on
+  # genuinely static ones, and measured error 0.00-0.07 objects.
+  #
+  # Verified live at 0.5 over a 60s 8-camera run: CAM_02 0.0% skipped,
+  # CAM_04 0.0%, CAM_09 1.8%, CAM_07 3.6% - i.e. effectively inert on
+  # active cameras, and CAM_02 recovered from 0 events (at 2.0) to normal.
+  # Because it skipped 0.0% there, the gate provably cannot be responsible
+  # for any remaining event-count variation on those cameras.
+  #
+  # Be clear about what this buys: on the BUSY demo cameras it is close to
+  # a no-op. The savings are real but land on the quiet end of the fleet
+  # (CAM_12 23%, CAM_24 68%), and grow as more rural/low-traffic cameras
+  # come online. It is a scaling headroom feature, not a demo speed-up.
+  #
+  # A single global value is a compromise - the ideal threshold is
+  # per-camera, since it depends on how much of the frame a moving subject
+  # covers. If tightening this later, re-measure per camera rather than
+  # scaling the global number.
+  #
+  # Note this is measured on CONSECUTIVE frames. It is NOT the same as
+  # bulk_harvest.py's --min-diff (default 8.0), which compares frames ~3
+  # seconds apart; do not copy one value to the other.
+  enabled: true
+  min_diff: 0.5
+  # Never stay blind longer than this many consecutive frames regardless of
+  # pixels. Without it, someone standing perfectly still - exactly the
+  # loitering case - could hold the gate shut indefinitely.
+  max_gated_frames: 15
+
+output:
+  events_file: "output/events.jsonl"
+  crops_dir: "output/crops"
+  crop_save_interval_frames: 15
+  annotated_video: "output/annotated.mp4"
+
+camera:
+  id: "CAM-01"
+  loop_video: true
+
+database:
+  path: "output/sentinel.db"
+
+faiss:
+  index_path: "output/reid.index"
+  id_map_path: "output/reid_id_map.json"
+  embedding_dim: 512
+
+anpr:
+  # Cameras where plate OCR is worth running, from the measured survey in
+  # output/plate_camera_survey.json.
+  #
+  # Elsewhere the plate falls below the ~100px width every ANPR vendor
+  # specifies — CAM_01's median vehicle yields roughly 21px — so OCR could
+  # never succeed there. It was not merely wasteful: the worker saturated its
+  # 100-job queue, logged "Dropping oldest job" continuously, dragged the
+  # pipeline to about a tenth of real time, and produced 400+ `anpr_uncertain`
+  # rows meaning only "a vehicle passed and its plate was unreadable".
+  #
+  # Cameras outside this list still detect, track, and run the behaviour
+  # engine — they skip plate OCR only. Delete this key (or set it to []) to
+  # restore the previous run-on-every-camera behaviour.
+  cameras: [CAM_06, CAM_07, CAM_08, CAM_09, CAM_10, CAM_18, CAM_21, CAM_27]
+  read_interval_frames: 5
+  max_readings_per_track: 10
+  min_readings_before_finalize: 2
+  uncertain_confidence_threshold: 0.60
+  plate_regex: "^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$"
+  ocr_worker_queue_maxsize: 100
+  min_confidence: 0.75
+  plate_region: "IN"
+
+ai_models:
+  detection:
+    # Configured to use YOLO26 Nano (yolo26n.pt)
+    model: "yolo26n.pt"
+    confidence: 0.45
+    iou_threshold: 0.5
+    classes: [0, 2, 3, 5, 7]
+  reid:
+    model: "osnet_ibn_x1_0"
+    embedding_dim: 512
+    thresholds:
+      same_zone: 0.78
+      cross_zone: 0.85
+      watchlist: 0.82
+      general: 0.70
+  anpr:
+    min_confidence: 0.75
+    plate_region: "IN"
+    gpu_accelerated: false
+  behavior:
+    loitering_min_sec: 300
+    crowd_threshold: 8
+    abandoned_object_sec: 120
+  traffic_intelligence:
+    speed_gate_kmh: 10.0
+    speed_max_kmh: 150.0
+    cosine_violation_threshold: -0.50
+    debounce_ms: 800.0
+    track_warmup_frames: 10
+    violation_cooldown_sec: 30.0
+    anpr_min_confidence: 0.75
+
+danger_scoring:
+  base_weights:
+    wanted_person: 4.0
+    stolen_vehicle: 3.5
+    loitering: 1.5
+    crowd_anomaly: 2.0
+    abandoned_object: 2.5
+    cross_zone_movement: 1.8
+    impossible_speed: 3.0
+    restricted_zone_approach: 3.2
+    high_crime_clustering: 2.5
+  multipliers:
+    night_hours: 1.4
+    high_crime_zone: 1.6
+    restricted_area: 1.9
+    repeat_offender: 2.0
+    cross_zone: 1.3
+  alert_threshold:
+    low: 2.0
+    medium: 4.0
+    high: 7.0
+    critical: 9.0
+  alert_cooldown_sec: 30
+
+journey_analysis:
+  max_human_speed_kmh: 150
+  suspicious_zone_visits: 3
+  backtrack_threshold: 2
+  analysis_window_hours: 1
+  history_limit: 50
+
+evidence:
+  storage_path: "data/evidence"
+  max_clip_duration_sec: 30
+  hash_algorithm: "SHA-256"
+  retention_days: 90
+  encrypt_at_rest: true
+
+system:
+  metrics_port: 9090
+  log_format: "json"
+  audit_log_path: "logs/audit.jsonl"
+
+demo_cameras:
+  # â”€â”€ AHMEDABAD ZONE (CAM_01â€“CAM_08) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  - id: "CAM_01"
+    name: "Ahmedabad - Chimanbhai Bridge"
+    url: "https://live.corp8.cloud/stream/1"
+    lat: 23.0395
+    lon: 72.5797
+    district: "Ahmedabad"
+    zone: "Central"
+    crime_level: "high"
+    is_restricted: false
+    department: "traffic_police"
+
+  - id: "CAM_02"
+    name: "Ahmedabad - Janpath"
+    url: "https://live.corp8.cloud/stream/2"
+    lat: 23.0225
+    lon: 72.5714
+    district: "Ahmedabad"
+    zone: "Central"
+    crime_level: "medium"
+    is_restricted: false
+    department: "municipality"
+
+  - id: "CAM_03"
+    name: "Ahmedabad - O.N.G.C. Office"
+    url: "https://live.corp8.cloud/stream/3"
+    lat: 23.0269
+    lon: 72.6019
+    district: "Ahmedabad"
+    zone: "Central"
+    crime_level: "high"
+    is_restricted: false
+    department: "railway"
+
+  - id: "CAM_04"
+    name: "Ahmedabad - Paldi Circle"
+    url: "https://live.corp8.cloud/stream/4"
+    lat: 23.0876
+    lon: 72.6461
+    district: "Ahmedabad"
+    zone: "East"
+    crime_level: "high"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_05"
+    name: "Ahmedabad - Visat Teen Rasta"
+    url: "https://live.corp8.cloud/stream/5"
+    lat: 23.0600
+    lon: 72.5806
+    district: "Ahmedabad"
+    zone: "North"
+    crime_level: "low"
+    is_restricted: true
+    department: "heritage"
+
+  - id: "CAM_06"
+    name: "Junagadh - Timbavadi Gate"
+    # MP4 endpoint returns corrupt h264 / EOF for this camera;
+    # HLS serves the same feed and responds in 2-12s. Verified
+    # 2026-08-25. The site itself plays HLS.
+    url: "https://live.corp8.cloud/live/stream/6/index.m3u8"
+    # re-enabled 2026-08-25: reachable again (see url note)
+
+    enabled: true   # probe 2026-08-23: opens but never delivers a frame
+    lat: 21.5100
+    lon: 70.4400
+    district: "Junagadh"
+    zone: "Saurashtra"
+    crime_level: "medium"
+    is_restricted: false
+    department: "highway_patrol"
+
+  - id: "CAM_07"
+    name: "Gir Somnath - Hero Showroom"
+    url: "https://live.corp8.cloud/stream/7"
+    lat: 20.8950
+    lon: 70.4100
+    district: "Gir Somnath"
+    zone: "Saurashtra"
+    crime_level: "low"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_08"
+    name: "Junagadh - Majewadi Gate"
+    url: "https://live.corp8.cloud/stream/8"
+    lat: 21.5220
+    lon: 70.4579
+    district: "Junagadh"
+    zone: "Saurashtra"
+    crime_level: "medium"
+    is_restricted: false
+    department: "police"
+
+  # â”€â”€ SAURASHTRA ZONE (CAM_09â€“CAM_17) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  - id: "CAM_09"
+    name: "Junagadh - New Bypass Circle"
+    url: "https://live.corp8.cloud/stream/9"
+    lat: 21.5300
+    lon: 70.4600
+    district: "Junagadh"
+    zone: "Saurashtra"
+    crime_level: "high"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_10"
+    name: "Junagadh - Char Chowk Road"
+    url: "https://live.corp8.cloud/stream/10"
+    lat: 21.5250
+    lon: 70.4550
+    district: "Junagadh"
+    zone: "Saurashtra"
+    crime_level: "medium"
+    is_restricted: false
+    department: "traffic_police"
+
+  - id: "CAM_11"
+    name: "Junagadh - Dolatpara"
+    url: "https://live.corp8.cloud/stream/11"
+    lat: 21.5400
+    lon: 70.4700
+    district: "Junagadh"
+    zone: "Saurashtra"
+    crime_level: "low"
+    is_restricted: false
+    department: "municipality"
+
+  - id: "CAM_12"
+    name: "Gandhinagar - Tri Mandir Adalaj"
+    url: "https://live.corp8.cloud/stream/12"
+    lat: 23.1667
+    lon: 72.5800
+    district: "Gandhinagar"
+    zone: "Capital"
+    crime_level: "medium"
+    is_restricted: false
+    department: "highway_patrol"
+
+  - id: "CAM_13"
+    name: "Ahmedabad - CN Vidhyalaya"
+    # MP4 endpoint returns corrupt h264 / EOF for this camera;
+    # HLS serves the same feed and responds in 2-12s. Verified
+    # 2026-08-25. The site itself plays HLS.
+    url: "https://live.corp8.cloud/live/stream/13/index.m3u8"
+    lat: 23.0270
+    lon: 72.5500
+    district: "Ahmedabad"
+    zone: "Central"
+    crime_level: "low"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_14"
+    name: "Ahmedabad - Delight Chowk"
+    # MP4 endpoint returns corrupt h264 / EOF for this camera;
+    # HLS serves the same feed and responds in 2-12s. Verified
+    # 2026-08-25. The site itself plays HLS.
+    url: "https://live.corp8.cloud/live/stream/14/index.m3u8"
+    lat: 23.0150
+    lon: 72.5600
+    district: "Ahmedabad"
+    zone: "Central"
+    crime_level: "low"
+    is_restricted: false
+    department: "municipality"
+
+  - id: "CAM_15"
+    name: "Ahmedabad - Suvidha Park"
+    # MP4 endpoint returns corrupt h264 / EOF for this camera;
+    # HLS serves the same feed and responds in 2-12s. Verified
+    # 2026-08-25. The site itself plays HLS.
+    url: "https://live.corp8.cloud/live/stream/15/index.m3u8"
+    lat: 23.0450
+    lon: 72.5400
+    district: "Ahmedabad"
+    zone: "West"
+    crime_level: "medium"
+    is_restricted: false
+    department: "municipality"
+
+  - id: "CAM_16"
+    name: "Ahmedabad - Visat P2"
+    # MP4 endpoint returns corrupt h264 / EOF for this camera;
+    # HLS serves the same feed and responds in 2-12s. Verified
+    # 2026-08-25. The site itself plays HLS.
+    url: "https://live.corp8.cloud/live/stream/16/index.m3u8"
+    lat: 23.0650
+    lon: 72.5850
+    district: "Ahmedabad"
+    zone: "North"
+    crime_level: "low"
+    is_restricted: false
+    department: "traffic_police"
+
+  - id: "CAM_17"
+    name: "Rajkot - Bus Port Main Gate"
+    url: "https://live.corp8.cloud/stream/17"
+    enabled: false   # probe 2026-08-23: opens but never delivers a frame
+    lat: 22.3100
+    lon: 70.8100
+    district: "Rajkot"
+    zone: "Saurashtra"
+    crime_level: "high"
+    is_restricted: false
+    department: "transport"
+
+  # â”€â”€ KUTCH ZONE (CAM_18â€“CAM_22) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  - id: "CAM_18"
+    name: "Rajkot - CCTV Station"
+    url: "https://live.corp8.cloud/stream/18"
+    lat: 22.3000
+    lon: 70.8000
+    district: "Rajkot"
+    zone: "Saurashtra"
+    crime_level: "high"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_19"
+    name: "Navsari - Khaparia Gram Panchayat"
+    url: "https://live.corp8.cloud/stream/19"
+    lat: 20.8500
+    lon: 72.9200
+    district: "Navsari"
+    zone: "South Gujarat"
+    crime_level: "low"
+    is_restricted: false
+    department: "municipality"
+
+  - id: "CAM_20"
+    name: "Patan - Mohanpura"
+    url: "https://live.corp8.cloud/stream/20"
+    lat: 23.8500
+    lon: 72.1200
+    district: "Patan"
+    zone: "North Gujarat"
+    crime_level: "low"
+    is_restricted: false
+    department: "municipality"
+
+  - id: "CAM_21"
+    name: "Patan - Dethali Char Rasta"
+    url: "https://live.corp8.cloud/stream/21"
+    lat: 23.8600
+    lon: 72.1300
+    district: "Patan"
+    zone: "North Gujarat"
+    crime_level: "low"
+    is_restricted: false
+    department: "highway_patrol"
+
+  - id: "CAM_22"
+    name: "Banaskantha - BK Mervada Tran Rasta"
+    url: "https://live.corp8.cloud/stream/22"
+    lat: 24.1700
+    lon: 72.4300
+    district: "Banaskantha"
+    zone: "North Gujarat"
+    crime_level: "medium"
+    is_restricted: false
+    department: "police"
+
+  # â”€â”€ SOUTH GUJARAT & CAPITAL (CAM_23â€“CAM_30) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  - id: "CAM_23"
+    name: "Sabarkantha - Kheram"
+    url: "https://live.corp8.cloud/stream/23"
+    lat: 23.6000
+    lon: 72.9500
+    district: "Sabarkantha"
+    zone: "North Gujarat"
+    crime_level: "low"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_24"
+    name: "Gandhinagar - Dehgam Circle"
+    url: "https://live.corp8.cloud/stream/24"
+    lat: 23.1700
+    lon: 72.8200
+    district: "Gandhinagar"
+    zone: "Capital"
+    crime_level: "medium"
+    is_restricted: false
+    department: "highway_patrol"
+
+  - id: "CAM_25"
+    name: "Navsari - Dhanori Junction"
+    url: "https://live.corp8.cloud/stream/25"
+    lat: 20.9200
+    lon: 72.9600
+    district: "Navsari"
+    zone: "South Gujarat"
+    crime_level: "low"
+    is_restricted: false
+    department: "municipality"
+
+  - id: "CAM_26"
+    name: "Navsari - Tankal"
+    # MP4 endpoint returns corrupt h264 / EOF for this camera;
+    # HLS serves the same feed and responds in 2-12s. Verified
+    # 2026-08-25. The site itself plays HLS.
+    url: "https://live.corp8.cloud/live/stream/26/index.m3u8"
+    # re-enabled 2026-08-25: reachable again (see url note)
+
+    enabled: true   # probe 2026-08-23: opens but never delivers a frame
+    lat: 20.9300
+    lon: 72.9700
+    district: "Navsari"
+    zone: "South Gujarat"
+    crime_level: "medium"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_27"
+    name: "Bilimora - Main Chowk"
+    url: "https://live.corp8.cloud/stream/27"
+    lat: 20.7686
+    lon: 72.9618
+    district: "Navsari"
+    zone: "South Gujarat"
+    crime_level: "medium"
+    is_restricted: false
+    department: "police"
+
+  - id: "CAM_28"
+    name: "Bilimora - Highway Junction"
+    url: "https://live.corp8.cloud/stream/28"
+    lat: 20.7700
+    lon: 72.9630
+    district: "Navsari"
+    zone: "South Gujarat"
+    crime_level: "medium"
+    is_restricted: false
+    department: "highway_patrol"
+
+  - id: "CAM_29"
+    name: "Bilimora - Railway Overbridge"
+    url: "https://live.corp8.cloud/stream/29"
+    lat: 20.7720
+    lon: 72.9600
+    district: "Navsari"
+    zone: "South Gujarat"
+    crime_level: "low"
+    is_restricted: false
+    department: "railway"
+
+  - id: "CAM_30"
+    name: "Gandhidham - Rambaugh P2 Checkpost"
+    url: "https://live.corp8.cloud/stream/30"
+    # re-enabled 2026-08-25: reachable again (see url note)
+
+    enabled: true   # probe 2026-08-23: opens but never delivers a frame
+    lat: 23.0900
+    lon: 70.1400
+    district: "Kutch"
+    zone: "Kutch"
+    crime_level: "high"
+    is_restricted: true
+    department: "port_authority"

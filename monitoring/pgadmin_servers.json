@@ -1,0 +1,14 @@
+﻿{
+  "Servers": {
+    "1": {
+      "Name": "Sentinel Gujarat",
+      "Group": "Production",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "sentinel",
+      "Username": "sentinel",
+      "SSLMode": "prefer",
+      "SavePassword": false
+    }
+  }
+}

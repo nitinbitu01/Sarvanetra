@@ -1,0 +1,38 @@
+{
+  "clip_id": "neg_owner_picks_up",
+  "description": "NEGATIVE: Owner sets object down at t=0, steps away, then returns and picks it up at t=45 (before ABANDON_DURATION_SEC=60 is reached). Must NOT fire.",
+  "detector": "abandoned_object",
+  "camera_id": "EVAL-CAM-03",
+  "requires_calibration_seed": false,
+  "segments": [
+    {
+      "segment_type": "object",
+      "object_track_id": "EVAL-CAM-03:obj:1",
+      "object_class": "bag",
+      "is_baseline": false,
+      "ticks": [
+        {"video_time": 0.0,  "cx": 400.0, "cy": 300.0},
+        {"video_time": 5.0,  "cx": 400.1, "cy": 300.0},
+        {"video_time": 10.0, "cx": 400.0, "cy": 300.2},
+        {"video_time": 15.0, "cx": 400.1, "cy": 300.1},
+        {"video_time": 20.0, "cx": 400.0, "cy": 300.0},
+        {"video_time": 25.0, "cx": 400.2, "cy": 300.1},
+        {"video_time": 30.0, "cx": 400.0, "cy": 300.0},
+        {"video_time": 35.0, "cx": 400.1, "cy": 300.2},
+        {"video_time": 40.0, "cx": 400.0, "cy": 300.0}
+      ]
+    }
+  ],
+  "proximity_events": [
+    {"video_time": 0.0,  "object_track_ids_nearby": ["EVAL-CAM-03:obj:1"]},
+    {"video_time": 5.0,  "object_track_ids_nearby": []},
+    {"video_time": 10.0, "object_track_ids_nearby": []},
+    {"video_time": 15.0, "object_track_ids_nearby": []},
+    {"video_time": 20.0, "object_track_ids_nearby": []},
+    {"video_time": 25.0, "object_track_ids_nearby": []},
+    {"video_time": 30.0, "object_track_ids_nearby": []},
+    {"video_time": 35.0, "object_track_ids_nearby": ["EVAL-CAM-03:obj:1"]},
+    {"video_time": 40.0, "object_track_ids_nearby": ["EVAL-CAM-03:obj:1"]}
+  ],
+  "expected_alerts": []
+}

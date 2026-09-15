@@ -1,0 +1,16 @@
+﻿hand-labelled vehicles on plate-capable cameras : 416
+unlabelled vehicles on the same cameras         : 2271
+
+==================================================================
+  population        box rate    med px  usable veh  of sampled
+==================================================================
+  hand-labelled          77%     90.3         44          60
+  unlabelled             19%     57.6         11          60
+==================================================================
+
+  The labelled set is the legible subset, already harvested.
+  The remaining pool sits at a median 57.6 px against 90.3 px — the band
+  this project measures at 33.3% exact. Pseudo-labels drawn from it
+  would be wrong about two times in three.
+
+  written -> reports\label_pool_probe_20260906.json

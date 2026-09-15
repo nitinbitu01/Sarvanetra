@@ -1,0 +1,1827 @@
+{
+  "generated": "2026-09-06T19:00:18",
+  "device": "cuda",
+  "ensemble": [
+    "final_m0.pt",
+    "final_m1.pt",
+    "final_m2.pt"
+  ],
+  "input": [
+    64,
+    256
+  ],
+  "split_seed": 1000,
+  "vehicles": {
+    "train": 251,
+    "val": 83,
+    "test": 83
+  },
+  "test_crops": 960,
+  "exact_match": 0.5903614457831325,
+  "within_1_char": 0.8192771084337349,
+  "cer": 0.0,
+  "char_accuracy": 1.0,
+  "ms_per_vehicle": 155.740540963808,
+  "decoder": "greedy",
+  "by_condition": {
+    "w_under40": {
+      "n": 0
+    },
+    "w_40_70": {
+      "n": 15,
+      "exact": 0.3333333333333333,
+      "cer": 0.12,
+      "reliable": true
+    },
+    "w_70_90": {
+      "n": 40,
+      "exact": 0.575,
+      "cer": 0.06565656565656566,
+      "reliable": true
+    },
+    "w_90plus": {
+      "n": 28,
+      "exact": 0.75,
+      "cer": 0.04693140794223827,
+      "reliable": true
+    },
+    "blurry": {
+      "n": 0
+    },
+    "moderate": {
+      "n": 10,
+      "exact": 0.8,
+      "cer": 0.04040404040404041,
+      "reliable": true
+    },
+    "sharp": {
+      "n": 73,
+      "exact": 0.5616438356164384,
+      "cer": 0.07320441988950276,
+      "reliable": true
+    },
+    "dark": {
+      "n": 2,
+      "exact": 0.5,
+      "cer": 0.1,
+      "reliable": false
+    },
+    "dim": {
+      "n": 42,
+      "exact": 0.5952380952380952,
+      "cer": 0.06763285024154589,
+      "reliable": true
+    },
+    "normal": {
+      "n": 36,
+      "exact": 0.6111111111111112,
+      "cer": 0.06963788300835655,
+      "reliable": true
+    },
+    "bright": {
+      "n": 3,
+      "exact": 0.3333333333333333,
+      "cer": 0.06666666666666667,
+      "reliable": false
+    },
+    "tilt_0_2": {
+      "n": 80,
+      "exact": 0.575,
+      "cer": 0.07187894073139975,
+      "reliable": true
+    },
+    "tilt_2_5": {
+      "n": 2,
+      "exact": 1.0,
+      "cer": 0.0,
+      "reliable": false
+    },
+    "tilt_5_15": {
+      "n": 1,
+      "exact": 1.0,
+      "cer": 0.0,
+      "reliable": false
+    },
+    "tilt_15plus": {
+      "n": 0
+    }
+  },
+  "selective_prediction": [
+    {
+      "min_conf": 0.0,
+      "answered": 83,
+      "coverage": 1.0,
+      "accuracy": 0.5903614457831325
+    },
+    {
+      "min_conf": 0.5,
+      "answered": 83,
+      "coverage": 1.0,
+      "accuracy": 0.5903614457831325
+    },
+    {
+      "min_conf": 0.6,
+      "answered": 83,
+      "coverage": 1.0,
+      "accuracy": 0.5903614457831325
+    },
+    {
+      "min_conf": 0.7,
+      "answered": 83,
+      "coverage": 1.0,
+      "accuracy": 0.5903614457831325
+    },
+    {
+      "min_conf": 0.8,
+      "answered": 82,
+      "coverage": 0.9879518072289156,
+      "accuracy": 0.5975609756097561
+    },
+    {
+      "min_conf": 0.85,
+      "answered": 76,
+      "coverage": 0.9156626506024096,
+      "accuracy": 0.6447368421052632
+    },
+    {
+      "min_conf": 0.9,
+      "answered": 53,
+      "coverage": 0.6385542168674698,
+      "accuracy": 0.6981132075471698
+    },
+    {
+      "min_conf": 0.93,
+      "answered": 36,
+      "coverage": 0.43373493975903615,
+      "accuracy": 0.7777777777777778
+    },
+    {
+      "min_conf": 0.95,
+      "answered": 8,
+      "coverage": 0.0963855421686747,
+      "accuracy": 0.875
+    }
+  ],
+  "results": [
+    {
+      "camera": "CAM_09",
+      "track": 37800,
+      "truth": "GJ03ME8894",
+      "raw": "GJ03ME8894",
+      "final": "GJ03ME8894",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8886,
+      "conditions": {
+        "native_w": 83.0,
+        "blur_var": 306.8,
+        "brightness": 109.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "moderate",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_11",
+      "track": 2600,
+      "truth": "GJ03NK3482",
+      "raw": "GJ03HK3482",
+      "final": "GJ03HK3482",
+      "correct": false,
+      "frames": 1,
+      "confidence": 0.8671,
+      "conditions": {
+        "native_w": 118,
+        "blur_var": 1334.3,
+        "brightness": 211.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "bright",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 29438,
+      "truth": "GJ11CL6468",
+      "raw": "GJ11CD6469",
+      "final": "GJ11CD6469",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8197,
+      "conditions": {
+        "native_w": 86.5,
+        "blur_var": 2042.0,
+        "brightness": 70.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37936,
+      "truth": "GJ03HK5669",
+      "raw": "GJ03HK5669",
+      "final": "GJ03HK5669",
+      "correct": true,
+      "frames": 18,
+      "confidence": 0.9394,
+      "conditions": {
+        "native_w": 114.0,
+        "blur_var": 570.4,
+        "brightness": 110.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 260,
+      "truth": "GJ36AC4480",
+      "raw": "GJ36AC4480",
+      "final": "GJ36AC4480",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8933,
+      "conditions": {
+        "native_w": 53.5,
+        "blur_var": 10420.2,
+        "brightness": 118.9,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 36204,
+      "truth": "GJ03CR1091",
+      "raw": "GJ03CR1031",
+      "final": "GJ03CR1031",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8983,
+      "conditions": {
+        "native_w": 89.0,
+        "blur_var": 2576.9,
+        "brightness": 117.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 41393,
+      "truth": "GJ11DB8286",
+      "raw": "GJ11DB8286",
+      "final": "GJ11DB8286",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9301,
+      "conditions": {
+        "native_w": 63.0,
+        "blur_var": 10477.6,
+        "brightness": 155.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37612,
+      "truth": "GJ18Z8793",
+      "raw": "GJ18Z8793",
+      "final": "GJ18Z8793",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9395,
+      "conditions": {
+        "native_w": 83.0,
+        "blur_var": 906.3,
+        "brightness": 109.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 34018,
+      "truth": "GJ02DM6597",
+      "raw": "GJ02DM6591",
+      "final": "GJ02DM6591",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9035,
+      "conditions": {
+        "native_w": 84.0,
+        "blur_var": 5416.1,
+        "brightness": 145.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 1061,
+      "truth": "GJ27EF1184",
+      "raw": "GJ27EF1106",
+      "final": "GJ27EF1106",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9302,
+      "conditions": {
+        "native_w": 57.0,
+        "blur_var": 16275.2,
+        "brightness": 109.9,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 10261,
+      "truth": "GJ24AA9100",
+      "raw": "GJ24AA9100",
+      "final": "GJ24AA9100",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.881,
+      "conditions": {
+        "native_w": 67.0,
+        "blur_var": 2301.8,
+        "brightness": 111.5,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_11",
+      "track": 588,
+      "truth": "GJ03CR8519",
+      "raw": "GJ03CR8516",
+      "final": "GJ03CR8516",
+      "correct": false,
+      "frames": 2,
+      "confidence": 0.9359,
+      "conditions": {
+        "native_w": 138.5,
+        "blur_var": 455.5,
+        "brightness": 218.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "bright",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 39318,
+      "truth": "MP45ZF5796",
+      "raw": "GJ45ZF5796",
+      "final": "GJ45ZF5796",
+      "correct": false,
+      "frames": 9,
+      "confidence": 0.8787,
+      "conditions": {
+        "native_w": 72,
+        "blur_var": 4786.4,
+        "brightness": 87.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37850,
+      "truth": "GJ03LB0535",
+      "raw": "GJ03LB0535",
+      "final": "GJ03LB0535",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.943,
+      "conditions": {
+        "native_w": 132.0,
+        "blur_var": 432.9,
+        "brightness": 95.9,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 10308,
+      "truth": "PB04AE5979",
+      "raw": "GJ04AF5979",
+      "final": "GJ04AF5979",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8876,
+      "conditions": {
+        "native_w": 61.0,
+        "blur_var": 2053.9,
+        "brightness": 121.6,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 33268,
+      "truth": "GJ11CB6539",
+      "raw": "GJ11CH6539",
+      "final": "GJ11CH6539",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9141,
+      "conditions": {
+        "native_w": 78.5,
+        "blur_var": 5058.3,
+        "brightness": 145.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38227,
+      "truth": "GJ37J5465",
+      "raw": "GJ37J5465",
+      "final": "GJ37J5465",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9305,
+      "conditions": {
+        "native_w": 91.5,
+        "blur_var": 1558.3,
+        "brightness": 93.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 33659,
+      "truth": "GJ19AF0911",
+      "raw": "GJ19AF0911",
+      "final": "GJ19AF0911",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9642,
+      "conditions": {
+        "native_w": 97.5,
+        "blur_var": 3722.6,
+        "brightness": 167.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37731,
+      "truth": "GJ01KM2444",
+      "raw": "GJ01KM2444",
+      "final": "GJ01KM2444",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.918,
+      "conditions": {
+        "native_w": 87.0,
+        "blur_var": 2988.0,
+        "brightness": 131.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 35902,
+      "truth": "GJ11CO4563",
+      "raw": "GJ11CO4563",
+      "final": "GJ11CO4563",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9493,
+      "conditions": {
+        "native_w": 88.0,
+        "blur_var": 4311.2,
+        "brightness": 77.6,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38594,
+      "truth": "GJ03JL9703",
+      "raw": "GJ03JL9703",
+      "final": "GJ03JL9703",
+      "correct": true,
+      "frames": 18,
+      "confidence": 0.9388,
+      "conditions": {
+        "native_w": 117.0,
+        "blur_var": 267.0,
+        "brightness": 84.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 32910,
+      "truth": "GJ11DB3476",
+      "raw": "GJ11DO3476",
+      "final": "GJ11DO3476",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8698,
+      "conditions": {
+        "native_w": 78.0,
+        "blur_var": 4190.3,
+        "brightness": 94.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 380,
+      "truth": "GJ11CH2581",
+      "raw": "GJ11CH7581",
+      "final": "GJ11CH7581",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.948,
+      "conditions": {
+        "native_w": 60.0,
+        "blur_var": 9180.4,
+        "brightness": 100.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 32603,
+      "truth": "GJ03MP6035",
+      "raw": "GJ03HP6035",
+      "final": "GJ03HP6035",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9179,
+      "conditions": {
+        "native_w": 85.5,
+        "blur_var": 4162.3,
+        "brightness": 117.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 29583,
+      "truth": "GJ07OB6771",
+      "raw": "GJ07DB6771",
+      "final": "GJ07DB6771",
+      "correct": false,
+      "frames": 18,
+      "confidence": 0.9176,
+      "conditions": {
+        "native_w": 113.0,
+        "blur_var": 930.2,
+        "brightness": 76.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 32451,
+      "truth": "GJ03FK9963",
+      "raw": "GJ03FA9963",
+      "final": "GJ03FA9963",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9095,
+      "conditions": {
+        "native_w": 86.5,
+        "blur_var": 6918.5,
+        "brightness": 125.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 34618,
+      "truth": "GJ01RA3627",
+      "raw": "GJ01RA3627",
+      "final": "GJ01RA3627",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9649,
+      "conditions": {
+        "native_w": 91.5,
+        "blur_var": 3600.9,
+        "brightness": 167.7,
+        "tilt_deg": 3.29,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_2_5"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38547,
+      "truth": "GJ32B3458",
+      "raw": "GJ32B3458",
+      "final": "GJ32B3458",
+      "correct": true,
+      "frames": 13,
+      "confidence": 0.9356,
+      "conditions": {
+        "native_w": 103,
+        "blur_var": 430.7,
+        "brightness": 94.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38403,
+      "truth": "GJ11CH2505",
+      "raw": "GJ11CH2505",
+      "final": "GJ11CH2505",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.955,
+      "conditions": {
+        "native_w": 87.5,
+        "blur_var": 1373.6,
+        "brightness": 91.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_06",
+      "track": 29143,
+      "truth": "GJ18ZT1580",
+      "raw": "GJ182",
+      "final": "GJ182",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8103,
+      "conditions": {
+        "native_w": 74.0,
+        "blur_var": 7446.6,
+        "brightness": 136.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38351,
+      "truth": "GJ11CO0928",
+      "raw": "GJ11CO0928",
+      "final": "GJ11CO0928",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9533,
+      "conditions": {
+        "native_w": 81.0,
+        "blur_var": 1850.3,
+        "brightness": 91.9,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38181,
+      "truth": "GJ10DA0957",
+      "raw": "GJ10DA0957",
+      "final": "GJ10DA0957",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9644,
+      "conditions": {
+        "native_w": 80.5,
+        "blur_var": 2966.8,
+        "brightness": 84.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37997,
+      "truth": "GJ11OB9390",
+      "raw": "GJ11DB9390",
+      "final": "GJ11DB9390",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9359,
+      "conditions": {
+        "native_w": 74.0,
+        "blur_var": 2072.7,
+        "brightness": 113.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38307,
+      "truth": "GJ16AP6477",
+      "raw": "GJ16AP6477",
+      "final": "GJ16AP6477",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9471,
+      "conditions": {
+        "native_w": 117.5,
+        "blur_var": 778.9,
+        "brightness": 83.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38433,
+      "truth": "GJ11CH0533",
+      "raw": "GJ11CH0533",
+      "final": "GJ11CH0533",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9471,
+      "conditions": {
+        "native_w": 84.5,
+        "blur_var": 1726.2,
+        "brightness": 88.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 32649,
+      "truth": "GJ11VV2026",
+      "raw": "GJ11VV2026",
+      "final": "GJ11VV2026",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9361,
+      "conditions": {
+        "native_w": 81.0,
+        "blur_var": 1356.8,
+        "brightness": 68.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 32617,
+      "truth": "GJ11S6409",
+      "raw": "GJ11S6409",
+      "final": "GJ11S6409",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8857,
+      "conditions": {
+        "native_w": 80.0,
+        "blur_var": 2172.0,
+        "brightness": 79.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37992,
+      "truth": "GJ03PJ1771",
+      "raw": "GJ03PJ1771",
+      "final": "GJ03PJ1771",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9494,
+      "conditions": {
+        "native_w": 80.5,
+        "blur_var": 1030.5,
+        "brightness": 119.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 30055,
+      "truth": "GJ38TB0089",
+      "raw": "GJ38TB0089",
+      "final": "GJ38TB0089",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8748,
+      "conditions": {
+        "native_w": 127.5,
+        "blur_var": 3523.3,
+        "brightness": 92.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37835,
+      "truth": "GJ11CO7585",
+      "raw": "GJ11CO7585",
+      "final": "GJ11CO7585",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9443,
+      "conditions": {
+        "native_w": 85.5,
+        "blur_var": 344.2,
+        "brightness": 89.5,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "moderate",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37837,
+      "truth": "GJ06FO2462",
+      "raw": "GJ06FO2462",
+      "final": "GJ06FO2462",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9454,
+      "conditions": {
+        "native_w": 105.0,
+        "blur_var": 263.8,
+        "brightness": 115.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37925,
+      "truth": "GJ01KP7667",
+      "raw": "GJ01KP7667",
+      "final": "GJ01KP7667",
+      "correct": true,
+      "frames": 16,
+      "confidence": 0.9219,
+      "conditions": {
+        "native_w": 103.0,
+        "blur_var": 437.4,
+        "brightness": 111.9,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 36754,
+      "truth": "GJ03JR4856",
+      "raw": "GJ03JK4896",
+      "final": "GJ03JK4896",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8573,
+      "conditions": {
+        "native_w": 79.5,
+        "blur_var": 3131.5,
+        "brightness": 112.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37910,
+      "truth": "GJ03CH7136",
+      "raw": "GJ03CB2138",
+      "final": "GJ03CB2138",
+      "correct": false,
+      "frames": 7,
+      "confidence": 0.8208,
+      "conditions": {
+        "native_w": 108,
+        "blur_var": 183.0,
+        "brightness": 90.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 29672,
+      "truth": "GJ32T4822",
+      "raw": "GJ32T4822",
+      "final": "GJ32T4822",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8724,
+      "conditions": {
+        "native_w": 83.0,
+        "blur_var": 5621.9,
+        "brightness": 95.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37784,
+      "truth": "GJ11BH9104",
+      "raw": "GJ11BH9104",
+      "final": "GJ11BH9104",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.927,
+      "conditions": {
+        "native_w": 87.0,
+        "blur_var": 521.0,
+        "brightness": 118.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 11061,
+      "truth": "GJ08CK0852",
+      "raw": "GJ08CK0852",
+      "final": "GJ08CK0852",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9409,
+      "conditions": {
+        "native_w": 85.0,
+        "blur_var": 1135.3,
+        "brightness": 102.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 10971,
+      "truth": "GJ02OJ0931",
+      "raw": "GJ02DJ0934",
+      "final": "GJ02DJ0934",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9437,
+      "conditions": {
+        "native_w": 68.5,
+        "blur_var": 1875.9,
+        "brightness": 105.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38443,
+      "truth": "GJ03HK9934",
+      "raw": "GJ03HK9934",
+      "final": "GJ03HK9934",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9447,
+      "conditions": {
+        "native_w": 80.0,
+        "blur_var": 1444.8,
+        "brightness": 77.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 1455,
+      "truth": "GJ11LC0747",
+      "raw": "GJ11LC0747",
+      "final": "GJ11LC0747",
+      "correct": true,
+      "frames": 10,
+      "confidence": 0.948,
+      "conditions": {
+        "native_w": 111.0,
+        "blur_var": 2021.5,
+        "brightness": 121.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 10057,
+      "truth": "GJ03HF5557",
+      "raw": "GJ01HF5557",
+      "final": "GJ01HF5557",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9109,
+      "conditions": {
+        "native_w": 71.0,
+        "blur_var": 1782.1,
+        "brightness": 147.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_11",
+      "track": 1962,
+      "truth": "GJ03DD3010",
+      "raw": "GJ03OD301",
+      "final": "GJ03O0301",
+      "correct": false,
+      "frames": 1,
+      "confidence": 0.8787,
+      "conditions": {
+        "native_w": 136,
+        "blur_var": 1746.3,
+        "brightness": 109.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 11407,
+      "truth": "GJ01RW1819",
+      "raw": "GJ01RN1819",
+      "final": "GJ01RN1819",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9306,
+      "conditions": {
+        "native_w": 74.5,
+        "blur_var": 1477.3,
+        "brightness": 102.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 30607,
+      "truth": "GJ14AT1212",
+      "raw": "GJ14AT1212",
+      "final": "GJ14AT1212",
+      "correct": true,
+      "frames": 9,
+      "confidence": 0.9076,
+      "conditions": {
+        "native_w": 135,
+        "blur_var": 1296.2,
+        "brightness": 73.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37659,
+      "truth": "GJ32AA6284",
+      "raw": "GJ32AA6284",
+      "final": "GJ32AA6284",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9673,
+      "conditions": {
+        "native_w": 84.5,
+        "blur_var": 2339.1,
+        "brightness": 119.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38032,
+      "truth": "GJ06HL4646",
+      "raw": "GJ06HL4646",
+      "final": "GJ06HL4646",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9056,
+      "conditions": {
+        "native_w": 90.0,
+        "blur_var": 701.0,
+        "brightness": 111.9,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38629,
+      "truth": "MH01BK5667",
+      "raw": "GJ01BK5667",
+      "final": "GJ01BK5667",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8603,
+      "conditions": {
+        "native_w": 83.0,
+        "blur_var": 768.9,
+        "brightness": 89.4,
+        "tilt_deg": 0.93,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 35286,
+      "truth": "GJ01HZ2636",
+      "raw": "GJ01HZ2636",
+      "final": "GJ01HZ2636",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8644,
+      "conditions": {
+        "native_w": 75.0,
+        "blur_var": 3606.5,
+        "brightness": 48.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dark",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38563,
+      "truth": "GJ13AW3560",
+      "raw": "GJ13AW3560",
+      "final": "GJ13AW3560",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8923,
+      "conditions": {
+        "native_w": 95.5,
+        "blur_var": 267.0,
+        "brightness": 65.6,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "moderate",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 37652,
+      "truth": "GJ03ME5050",
+      "raw": "GJ03ME5050",
+      "final": "GJ03ME5050",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9465,
+      "conditions": {
+        "native_w": 94.0,
+        "blur_var": 2645.3,
+        "brightness": 139.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 32201,
+      "truth": "GJ32AA1182",
+      "raw": "GJ32AA1182",
+      "final": "GJ32AA1182",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9375,
+      "conditions": {
+        "native_w": 84.5,
+        "blur_var": 4938.6,
+        "brightness": 165.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 30194,
+      "truth": "GJ25J4204",
+      "raw": "GJ25J4204",
+      "final": "GJ25J4204",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8908,
+      "conditions": {
+        "native_w": 73.0,
+        "blur_var": 7925.6,
+        "brightness": 81.5,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 35295,
+      "truth": "GJ11BH7524",
+      "raw": "GJ11BH7524",
+      "final": "GJ11BH7524",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8911,
+      "conditions": {
+        "native_w": 68.0,
+        "blur_var": 5638.2,
+        "brightness": 120.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_11",
+      "track": 1634,
+      "truth": "GJ03KP8721",
+      "raw": "GJ03KP8721",
+      "final": "GJ03KP8721",
+      "correct": true,
+      "frames": 2,
+      "confidence": 0.9053,
+      "conditions": {
+        "native_w": 116.5,
+        "blur_var": 827.0,
+        "brightness": 208.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "bright",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 36191,
+      "truth": "GJ36AC2503",
+      "raw": "GJ34AC2509",
+      "final": "GJ34AC2509",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.786,
+      "conditions": {
+        "native_w": 63.0,
+        "blur_var": 4680.3,
+        "brightness": 69.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 33913,
+      "truth": "GJ03FJ8702",
+      "raw": "GJ03PJ8782",
+      "final": "GJ03PJ8782",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8986,
+      "conditions": {
+        "native_w": 69.5,
+        "blur_var": 3471.8,
+        "brightness": 109.2,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 11539,
+      "truth": "GJ24BF0362",
+      "raw": "GJ24BF0382",
+      "final": "GJ24BF0382",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9367,
+      "conditions": {
+        "native_w": 63.5,
+        "blur_var": 2408.5,
+        "brightness": 99.6,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 11052,
+      "truth": "GJ24BC7916",
+      "raw": "GJ24BC7916",
+      "final": "GJ24BC7916",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9406,
+      "conditions": {
+        "native_w": 62.5,
+        "blur_var": 4016.8,
+        "brightness": 111.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 42555,
+      "truth": "MH08C6000",
+      "raw": "GJ08C6000",
+      "final": "GJ08C6000",
+      "correct": false,
+      "frames": 15,
+      "confidence": 0.8338,
+      "conditions": {
+        "native_w": 102,
+        "blur_var": 6191.8,
+        "brightness": 113.9,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38000,
+      "truth": "GJ19BR4294",
+      "raw": "GJ19BR4294",
+      "final": "GJ19BR4294",
+      "correct": true,
+      "frames": 6,
+      "confidence": 0.8759,
+      "conditions": {
+        "native_w": 104.0,
+        "blur_var": 1071.3,
+        "brightness": 93.5,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 30729,
+      "truth": "GJ32AA4018",
+      "raw": "GJ32AA4018",
+      "final": "GJ32AA4018",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9411,
+      "conditions": {
+        "native_w": 88.0,
+        "blur_var": 5169.5,
+        "brightness": 61.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 2262,
+      "truth": "GJ11BH9120",
+      "raw": "GJ11BH9120",
+      "final": "GJ11BH9120",
+      "correct": true,
+      "frames": 11,
+      "confidence": 0.9254,
+      "conditions": {
+        "native_w": 118,
+        "blur_var": 1886.0,
+        "brightness": 139.7,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_09",
+      "track": 38074,
+      "truth": "GJ03DH7859",
+      "raw": "GJ03OH7859",
+      "final": "GJ03OH7859",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9227,
+      "conditions": {
+        "native_w": 81.0,
+        "blur_var": 584.5,
+        "brightness": 112.0,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 30628,
+      "truth": "GJ03ME2031",
+      "raw": "GJ03ME2031",
+      "final": "GJ03ME2031",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9134,
+      "conditions": {
+        "native_w": 75.5,
+        "blur_var": 9596.9,
+        "brightness": 134.1,
+        "tilt_deg": 3.81,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_2_5"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 31383,
+      "truth": "GJ11CD6026",
+      "raw": "GJ11CD6028",
+      "final": "GJ11CD6028",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8828,
+      "conditions": {
+        "native_w": 73.0,
+        "blur_var": 3840.4,
+        "brightness": 109.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 39895,
+      "truth": "GJ04EE6759",
+      "raw": "GJ04EE5759",
+      "final": "GJ04EE5759",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.951,
+      "conditions": {
+        "native_w": 67.0,
+        "blur_var": 7701.8,
+        "brightness": 86.3,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_21",
+      "track": 10349,
+      "truth": "GJ27EC7746",
+      "raw": "GJ27EC2746",
+      "final": "GJ27EC2746",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.9244,
+      "conditions": {
+        "native_w": 66.0,
+        "blur_var": 5952.4,
+        "brightness": 143.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 36883,
+      "truth": "GJ10DM1768",
+      "raw": "GJ10DN1768",
+      "final": "GJ10DN1768",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8977,
+      "conditions": {
+        "native_w": 79.5,
+        "blur_var": 6338.3,
+        "brightness": 75.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_10",
+      "track": 2816,
+      "truth": "GJ03DT9861",
+      "raw": "GJ03BK5861",
+      "final": "GJ03BK5861",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8296,
+      "conditions": {
+        "native_w": 61.0,
+        "blur_var": 8147.8,
+        "brightness": 116.4,
+        "tilt_deg": 0.0,
+        "width_band": "w_40_70",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 33375,
+      "truth": "GJ04CF0981",
+      "raw": "GJ04CF0981",
+      "final": "GJ04CF0981",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.8889,
+      "conditions": {
+        "native_w": 92.5,
+        "blur_var": 5931.4,
+        "brightness": 129.5,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 33926,
+      "truth": "GJ10TT6857",
+      "raw": "GJ10TT0057",
+      "final": "GJ10TT0057",
+      "correct": false,
+      "frames": 12,
+      "confidence": 0.8032,
+      "conditions": {
+        "native_w": 91.5,
+        "blur_var": 1386.8,
+        "brightness": 59.1,
+        "tilt_deg": 0.0,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dark",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_08",
+      "track": 31186,
+      "truth": "GJ11CL8409",
+      "raw": "GJ11CL8409",
+      "final": "GJ11CL8409",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9227,
+      "conditions": {
+        "native_w": 86.0,
+        "blur_var": 5894.2,
+        "brightness": 154.8,
+        "tilt_deg": 0.0,
+        "width_band": "w_70_90",
+        "blur_band": "sharp",
+        "lighting_band": "normal",
+        "tilt_band": "tilt_0_2"
+      }
+    },
+    {
+      "camera": "CAM_07",
+      "track": 29439,
+      "truth": "GJ32AA5158",
+      "raw": "GJ32AA5158",
+      "final": "GJ32AA5158",
+      "correct": true,
+      "frames": 12,
+      "confidence": 0.9525,
+      "conditions": {
+        "native_w": 98.5,
+        "blur_var": 1559.4,
+        "brightness": 90.1,
+        "tilt_deg": 8.61,
+        "width_band": "w_90plus",
+        "blur_band": "sharp",
+        "lighting_band": "dim",
+        "tilt_band": "tilt_5_15"
+      }
+    }
+  ]
+}

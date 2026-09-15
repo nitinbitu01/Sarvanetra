@@ -1,0 +1,239 @@
+{
+  "camera_id": "CAM_04",
+  "frame_width": 1920,
+  "frame_height": 1080,
+  "source_clip": "demo/clips/cam_04_0700.mp4",
+  "zones": [
+    {
+      "id": "exempt_1",
+      "type": "exempt",
+      "label": "exempt_1",
+      "polygon": [
+        [
+          1363,
+          371
+        ],
+        [
+          1122,
+          96
+        ],
+        [
+          1227,
+          11
+        ],
+        [
+          1782,
+          311
+        ],
+        [
+          1801,
+          311
+        ],
+        [
+          1365,
+          368
+        ]
+      ],
+      "threshold_day_sec": null,
+      "threshold_night_sec": null
+    },
+    {
+      "id": "exempt_2",
+      "type": "exempt",
+      "label": "exempt_2",
+      "polygon": [
+        [
+          659,
+          188
+        ],
+        [
+          973,
+          46
+        ],
+        [
+          248,
+          234
+        ],
+        [
+          652,
+          192
+        ],
+        [
+          262,
+          125
+        ],
+        [
+          959,
+          37
+        ],
+        [
+          279,
+          183
+        ],
+        [
+          117,
+          126
+        ],
+        [
+          258,
+          241
+        ],
+        [
+          265,
+          130
+        ],
+        [
+          287,
+          132
+        ],
+        [
+          105,
+          125
+        ]
+      ],
+      "threshold_day_sec": null,
+      "threshold_night_sec": null
+    },
+    {
+      "id": "exempt_3",
+      "type": "exempt",
+      "label": "exempt_3",
+      "polygon": [
+        [
+          1798,
+          378
+        ],
+        [
+          1556,
+          354
+        ],
+        [
+          1588,
+          324
+        ],
+        [
+          1792,
+          377
+        ]
+      ],
+      "threshold_day_sec": null,
+      "threshold_night_sec": null
+    },
+    {
+      "id": "normal_4",
+      "type": "normal",
+      "label": "normal_4",
+      "polygon": [
+        [
+          1046,
+          42
+        ],
+        [
+          931,
+          57
+        ],
+        [
+          850,
+          13
+        ]
+      ],
+      "threshold_day_sec": 600,
+      "threshold_night_sec": 300
+    },
+    {
+      "id": "sensitive_5",
+      "type": "sensitive",
+      "label": "sensitive_5",
+      "polygon": [
+        [
+          542,
+          251
+        ],
+        [
+          36,
+          391
+        ],
+        [
+          32,
+          847
+        ],
+        [
+          1115,
+          1056
+        ],
+        [
+          1165,
+          166
+        ],
+        [
+          550,
+          241
+        ]
+      ],
+      "threshold_day_sec": 180,
+      "threshold_night_sec": 120
+    },
+    {
+      "id": "sensitive_6",
+      "type": "sensitive",
+      "label": "sensitive_6",
+      "polygon": [
+        [
+          19,
+          1056
+        ],
+        [
+          34,
+          858
+        ],
+        [
+          1102,
+          1057
+        ],
+        [
+          1116,
+          1067
+        ],
+        [
+          49,
+          1040
+        ],
+        [
+          96,
+          1032
+        ]
+      ],
+      "threshold_day_sec": 180,
+      "threshold_night_sec": 120
+    },
+    {
+      "id": "sensitive_7",
+      "type": "sensitive",
+      "label": "sensitive_7",
+      "polygon": [
+        [
+          1092,
+          83
+        ],
+        [
+          1012,
+          115
+        ],
+        [
+          805,
+          203
+        ],
+        [
+          1165,
+          156
+        ],
+        [
+          1089,
+          79
+        ]
+      ],
+      "threshold_day_sec": 180,
+      "threshold_night_sec": 120
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "scope": null,
+  "total_cameras": 32,
+  "generated_at": "2026-09-03T18:32:13.994483+00:00",
+  "gaps": {
+    "missing_gps": {
+      "count": 0,
+      "pct": 0.0,
+      "cameras": []
+    },
+    "missing_department": {
+      "count": 0,
+      "pct": 0.0,
+      "cameras": [],
+      "note": "Invisible to every non-admin account — an unassigned department denies access by design."
+    },
+    "offline": {
+      "count": 0,
+      "pct": 0.0,
+      "cameras": [],
+      "note": "Excludes cameras under deliberate maintenance — see under_maintenance below."
+    },
+    "never_health_checked": {
+      "count": 0,
+      "cameras": []
+    },
+    "stale_health": {
+      "count": 0,
+      "threshold_minutes": 15,
+      "cameras": []
+    },
+    "ageing_infrastructure": {
+      "count": 0,
+      "pct": 0.0,
+      "threshold_years": 3,
+      "cameras": [],
+      "unknown_install_date": {
+        "count": 32,
+        "note": "No installed_at on record — cannot be assessed for age; reported separately from confirmed-ageing units so the two are never conflated.",
+        "cameras": [
+          {
+            "id": "CAM_01",
+            "name": "Ahmedabad - Chimanbhai Bridge",
+            "department": "transport",
+            "zone": "Central",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_02",
+            "name": "Ahmedabad - Janpath",
+            "department": "police",
+            "zone": "Central",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_03",
+            "name": "Ahmedabad - O.N.G.C. Office",
+            "department": "police",
+            "zone": "Central",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_04",
+            "name": "Ahmedabad - Paldi Circle",
+            "department": "traffic_police",
+            "zone": "East",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_05",
+            "name": "Ahmedabad - Visat Teen Rasta",
+            "department": "heritage",
+            "zone": "North",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_06",
+            "name": "Junagadh - Timbavadi Gate",
+            "department": "highway_patrol",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_07",
+            "name": "Gir Somnath - Hero Showroom",
+            "department": "police",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_08",
+            "name": "Junagadh - Majewadi Gate",
+            "department": "police",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_09",
+            "name": "Junagadh - New Bypass Circle",
+            "department": "police",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_10",
+            "name": "Junagadh - Char Chowk Road",
+            "department": "traffic_police",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_11",
+            "name": "Junagadh - Dolatpara",
+            "department": "municipality",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_12",
+            "name": "Gandhinagar - Tri Mandir Adalaj",
+            "department": "highway_patrol",
+            "zone": "Capital",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_13",
+            "name": "Ahmedabad - CN Vidhyalaya",
+            "department": "police",
+            "zone": "Central",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_14",
+            "name": "Ahmedabad - Delight Chowk",
+            "department": "municipality",
+            "zone": "Central",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_15",
+            "name": "Ahmedabad - Suvidha Park",
+            "department": "municipality",
+            "zone": "West",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_16",
+            "name": "Ahmedabad - Visat P2",
+            "department": "traffic_police",
+            "zone": "North",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_17",
+            "name": "Rajkot - Bus Port Main Gate",
+            "department": "transport",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_18",
+            "name": "Rajkot - CCTV Station",
+            "department": "police",
+            "zone": "Saurashtra",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_19",
+            "name": "Navsari - Khaparia Gram Panchayat",
+            "department": "municipality",
+            "zone": "South Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_20",
+            "name": "Patan - Mohanpura",
+            "department": "municipality",
+            "zone": "North Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_21",
+            "name": "Patan - Dethali Char Rasta",
+            "department": "highway_patrol",
+            "zone": "North Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_22",
+            "name": "Banaskantha - BK Mervada Tran Rasta",
+            "department": "police",
+            "zone": "North Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_23",
+            "name": "Sabarkantha - Kheram",
+            "department": "police",
+            "zone": "North Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_24",
+            "name": "Gandhinagar - Dehgam Circle",
+            "department": "highway_patrol",
+            "zone": "Capital",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_25",
+            "name": "Navsari - Dhanori Junction",
+            "department": "municipality",
+            "zone": "South Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_26",
+            "name": "Navsari - Tankal",
+            "department": "police",
+            "zone": "South Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_27",
+            "name": "Bilimora - Main Chowk",
+            "department": "police",
+            "zone": "South Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_28",
+            "name": "Bilimora - Highway Junction",
+            "department": "highway_patrol",
+            "zone": "South Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_29",
+            "name": "Bilimora - Railway Overbridge",
+            "department": "railway",
+            "zone": "South Gujarat",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM_30",
+            "name": "Gandhidham - Rambaugh P2 Checkpost",
+            "department": "port_authority",
+            "zone": "Kutch",
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM-RT-A",
+            "name": "Main Entrance Cam",
+            "department": "police",
+            "zone": null,
+            "status": "ONLINE"
+          },
+          {
+            "id": "CAM-RT-B",
+            "name": "Parking Lot Cam",
+            "department": "police",
+            "zone": null,
+            "status": "ONLINE"
+          }
+        ]
+      }
+    }
+  },
+  "under_maintenance": {
+    "count": 0,
+    "cameras": []
+  },
+  "zones": {
+    "camera_count_by_zone": {
+      "Saurashtra": 8,
+      "South Gujarat": 6,
+      "Central": 5,
+      "North Gujarat": 4,
+      "North": 2,
+      "Capital": 2,
+      "(no zone)": 2,
+      "East": 1,
+      "West": 1,
+      "Kutch": 1
+    },
+    "zones_with_gps_gaps": []
+  }
+}

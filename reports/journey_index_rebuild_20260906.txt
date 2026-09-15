@@ -1,0 +1,22 @@
+﻿cameras with metadata : 42
+vehicles to index     : 5596
+ensemble members      : 3
+
+  200/5596  indexed 38  no-plate 162
+  1400/5596  indexed 257  no-plate 1143
+  2000/5596  indexed 387  no-plate 1613
+  2800/5596  indexed 570  no-plate 2230
+  3000/5596  indexed 668  no-plate 2332
+  3600/5596  indexed 961  no-plate 2639
+  4000/5596  indexed 1153  no-plate 2847
+  5400/5596  indexed 1419  no-plate 3981
+
+==========================================================
+vehicles indexed : 1452 of 5596
+no plate found   : 4144
+logits stored    : 25 MB
+with timestamp   : 1452
+with GPS         : 1452
+cameras covered  : 18
+saved -> output\journey_index
+==========================================================

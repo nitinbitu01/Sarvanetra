@@ -1,0 +1,31 @@
+﻿vehicles on the held-out set : 83
+decoder                      : greedy
+unconditional exact match    : 59.0%
+
+====================================================================
+  OPERATING POINTS CLEARING 80% EXACT MATCH
+====================================================================
+  min width  min conf   answered   coverage   accuracy
+  80px       0.85             51      61.4%      80.4%
+  80px       0.88             45      54.2%      84.4%
+  80px       0.90             40      48.2%      85.0%
+  60px       0.93             35      42.2%      80.0%
+  70px       0.92             34      41.0%      88.2%
+  80px       0.92             32      38.6%      93.8%
+  70px       0.93             29      34.9%      89.7%
+  80px       0.93             27      32.5%      96.3%
+  90px       0.85             25      30.1%      84.0%
+  90px       0.88             21      25.3%      90.5%
+  90px       0.90             19      22.9%      89.5%
+  90px       0.92             15      18.1%      93.3%
+====================================================================
+
+  WIDEST COVERAGE AT THE TARGET
+  80.4% exact match over 61% of vehicles (51 of 83), gating on
+  native width >= 80 and confidence >= 0.85.
+
+  Both halves must be quoted together. The vehicles below the
+  gate are not read wrongly — they are not claimed at all, and
+  the watchlist matcher still sees their partial reads.
+
+  written -> reports/operating_points_20260906.json

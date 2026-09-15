@@ -1,0 +1,34 @@
+{
+  "clip_id": "neg_lighting_change",
+  "description": "NEGATIVE: Simulates a camera auto-exposure/lighting shift that causes a sudden centroid jump on a truly static object (the real-world FP mode). The detector's STATIC_MOVEMENT_PX_THRESHOLD should cause this to register as 'OBJECT_MOVED', resetting the window. Must NOT fire. The large centroid jump at t=30 simulates the lighting-shift false detection.",
+  "detector": "abandoned_object",
+  "camera_id": "EVAL-CAM-05",
+  "requires_calibration_seed": false,
+  "segments": [
+    {
+      "segment_type": "object",
+      "object_track_id": "EVAL-CAM-05:obj:1",
+      "object_class": "box",
+      "is_baseline": false,
+      "ticks": [
+        {"video_time": 0.0,  "cx": 250.0, "cy": 250.0},
+        {"video_time": 5.0,  "cx": 250.1, "cy": 250.0},
+        {"video_time": 10.0, "cx": 250.0, "cy": 250.1},
+        {"video_time": 15.0, "cx": 250.2, "cy": 250.0},
+        {"video_time": 20.0, "cx": 250.0, "cy": 250.0},
+        {"video_time": 25.0, "cx": 250.1, "cy": 250.1},
+        {"video_time": 30.0, "cx": 285.0, "cy": 270.0},
+        {"video_time": 35.0, "cx": 285.1, "cy": 270.0},
+        {"video_time": 40.0, "cx": 285.0, "cy": 270.1},
+        {"video_time": 45.0, "cx": 285.2, "cy": 270.0},
+        {"video_time": 50.0, "cx": 285.0, "cy": 270.0},
+        {"video_time": 55.0, "cx": 285.1, "cy": 270.0},
+        {"video_time": 60.0, "cx": 285.0, "cy": 270.1},
+        {"video_time": 65.0, "cx": 285.1, "cy": 270.0},
+        {"video_time": 70.0, "cx": 285.2, "cy": 270.1}
+      ]
+    }
+  ],
+  "proximity_events": [],
+  "expected_alerts": []
+}

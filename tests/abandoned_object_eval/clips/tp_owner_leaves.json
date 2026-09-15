@@ -1,0 +1,42 @@
+{
+  "clip_id": "tp_owner_leaves",
+  "description": "TRUE POSITIVE: Object placed at t=0, owner visible within radius until t=5, then leaves. Object remains static and unattended. Alert must fire after ABANDON_DURATION_SEC.",
+  "detector": "abandoned_object",
+  "camera_id": "EVAL-CAM-01",
+  "requires_calibration_seed": true,
+  "segments": [
+    {
+      "segment_type": "object",
+      "object_track_id": "EVAL-CAM-01:obj:1",
+      "object_class": "suitcase",
+      "is_baseline": false,
+      "ticks": [
+        {"video_time": 0.0,  "cx": 320.0, "cy": 240.0},
+        {"video_time": 2.0,  "cx": 320.5, "cy": 240.2},
+        {"video_time": 4.0,  "cx": 320.1, "cy": 239.8},
+        {"video_time": 6.0,  "cx": 320.3, "cy": 240.1},
+        {"video_time": 8.0,  "cx": 320.2, "cy": 240.0},
+        {"video_time": 10.0, "cx": 320.0, "cy": 240.3},
+        {"video_time": 15.0, "cx": 320.1, "cy": 240.0},
+        {"video_time": 20.0, "cx": 320.2, "cy": 240.1},
+        {"video_time": 25.0, "cx": 320.0, "cy": 240.2},
+        {"video_time": 30.0, "cx": 320.3, "cy": 240.0},
+        {"video_time": 35.0, "cx": 320.1, "cy": 240.1},
+        {"video_time": 40.0, "cx": 320.2, "cy": 240.2},
+        {"video_time": 45.0, "cx": 320.0, "cy": 239.9},
+        {"video_time": 50.0, "cx": 320.1, "cy": 240.0},
+        {"video_time": 55.0, "cx": 320.3, "cy": 240.1},
+        {"video_time": 62.0, "cx": 320.0, "cy": 240.0},
+        {"video_time": 68.0, "cx": 320.2, "cy": 240.1}
+      ]
+    }
+  ],
+  "proximity_events": [
+    {"video_time": 0.0,  "object_track_ids_nearby": ["EVAL-CAM-01:obj:1"]},
+    {"video_time": 2.0,  "object_track_ids_nearby": ["EVAL-CAM-01:obj:1"]},
+    {"video_time": 4.0,  "object_track_ids_nearby": ["EVAL-CAM-01:obj:1"]}
+  ],
+  "expected_alerts": [
+    {"video_time_window": [60.0, 120.0]}
+  ]
+}

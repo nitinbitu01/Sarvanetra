@@ -1,0 +1,40 @@
+﻿TRAINING CORPUS WIDTH DISTRIBUTION
+  n = 98586   min 45   p10 79   median 131   p90 160   max 160
+    0-40px         0    0.0%
+    40-70px     5461    5.5%
+    70-90px     9965   10.1%
+    90px+      83160   84.4%
+
+CONTROL — same images, two checkpoints, raw CTC (no grammar)
+  checkpoint                       synthetic       real
+  best.pt (32x128)                     79.7%      25.7%
+  final_m0.pt (64x256)                  0.7%      80.0%
+  n = 300 synthetic, 300 real (real sample includes trained vehicles,
+  so its figure is optimistic — the held-out number is 59.0%)
+
+ensemble : 3 members @ 64x256 on cuda
+sample   : 400 clean synthetic plates
+
+  100/400
+  200/400
+  300/400
+  400/400
+
+==============================================================
+  CLEAN SYNTHETIC PLATES, SCORED AT CONTROLLED NATIVE WIDTH
+==============================================================
+  native width      n      exact       CER
+  as rendered     400       2.0%     55.7%
+  55 px           400       0.0%     63.7%
+  80 px           400       2.0%     56.9%
+  100 px          400       1.8%     54.8%
+  130 px          400       2.0%     55.8%
+==============================================================
+  Clean images: exact ground truth, no mud, motion or road grime.
+  Any loss here is caused by resolution alone.
+
+  Real footage, same model, for comparison:
+    40-70px  33.3%   70-90px  57.5%   90px+  75.0%
+
+  23s
+  written -> reports\scale_sensitivity_20260906.json

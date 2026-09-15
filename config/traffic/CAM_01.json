@@ -1,0 +1,79 @@
+{
+  "camera_id": "CAM_01",
+  "site": "Chiman bhai Bridge CSITMS-32_PTZ2, Ahmedabad",
+  "calibrated_by": "vehicle-width photogrammetry (automated)",
+  "calibrated_on": "2026-08-24",
+  "approximate": true,
+  "_method": "Across-road scale from known vehicle widths; validated on classes not used for scaling (motorcycle err 0.05 m, bus err 0.16 m). Along-road scale L is NOT determined by vehicle width (verified invariant for L=10..200) and was pinned by assuming ~35 km/h median urban traffic. DIRECTION is immune to that assumption because stretching the along-road axis preserves antiparallelism; SPEED is not, so reported km/h is indicative only.",
+  "_limitations": [
+    "No surveyed ground-control points; not a substitute for site survey.",
+    "Recovered vehicle width still correlates with depth (r=0.46), so the perspective is imperfect - accuracy degrades far from the quad.",
+    "Camera is labelled PTZ. Measured parked (48/48 samples, <0.1px drift over 993s), but an operator moving it silently invalidates this file. Re-verify before relying on it.",
+    "No held-out validation point: 'validation' is deliberately omitted so the loader logs an unverified-accuracy warning rather than passing a check against invented ground truth."
+  ],
+  "image_points": [
+    [
+      900.0,
+      900.0
+    ],
+    [
+      1450.0,
+      900.0
+    ],
+    [
+      1210.0,
+      620.0
+    ],
+    [
+      980.0,
+      620.0
+    ]
+  ],
+  "world_points_m": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      7.69,
+      0.0
+    ],
+    [
+      7.69,
+      60.0
+    ],
+    [
+      0.0,
+      60.0
+    ]
+  ],
+  "zones": [
+    {
+      "lane_id": "CHIMANBHAI_MAIN",
+      "polygon_world_m": [
+        [
+          0.12,
+          -11.74
+        ],
+        [
+          7.24,
+          -11.74
+        ],
+        [
+          9.07,
+          71.38
+        ],
+        [
+          -1.33,
+          71.38
+        ]
+      ],
+      "geometry_type": "straight",
+      "flow_vector": [
+        0.0383,
+        0.9993
+      ],
+      "speed_limit_kmh": 60.0
+    }
+  ]
+}

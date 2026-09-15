@@ -1,0 +1,49 @@
+{
+  "clip_id": "edge_bystander_near_object",
+  "description": "EDGE CASE: Owner drops object at t=0 and leaves immediately. A second person (NOT the owner) walks near the object from t=20 to t=50. Per the 'any person nearby' rule, the proximity flag is set for that window, suppressing the alert while the bystander is present. After the bystander leaves at t=50, the abandonment window restarts from t=50 (proximity reset). The clip ends at t=100 — only 50s of unattended time after bystander leaves, still under threshold. Must NOT fire.",
+  "detector": "abandoned_object",
+  "camera_id": "EVAL-CAM-06",
+  "requires_calibration_seed": false,
+  "segments": [
+    {
+      "segment_type": "object",
+      "object_track_id": "EVAL-CAM-06:obj:1",
+      "object_class": "suitcase",
+      "is_baseline": false,
+      "ticks": [
+        {"video_time": 0.0,  "cx": 500.0, "cy": 400.0},
+        {"video_time": 5.0,  "cx": 500.1, "cy": 400.0},
+        {"video_time": 10.0, "cx": 500.0, "cy": 400.1},
+        {"video_time": 15.0, "cx": 500.2, "cy": 400.0},
+        {"video_time": 20.0, "cx": 500.0, "cy": 400.0},
+        {"video_time": 25.0, "cx": 500.1, "cy": 400.1},
+        {"video_time": 30.0, "cx": 500.0, "cy": 400.0},
+        {"video_time": 35.0, "cx": 500.1, "cy": 400.0},
+        {"video_time": 40.0, "cx": 500.0, "cy": 400.1},
+        {"video_time": 45.0, "cx": 500.2, "cy": 400.0},
+        {"video_time": 50.0, "cx": 500.0, "cy": 400.0},
+        {"video_time": 55.0, "cx": 500.1, "cy": 400.0},
+        {"video_time": 60.0, "cx": 500.0, "cy": 400.1},
+        {"video_time": 65.0, "cx": 500.2, "cy": 400.0},
+        {"video_time": 70.0, "cx": 500.0, "cy": 400.0},
+        {"video_time": 75.0, "cx": 500.1, "cy": 400.1},
+        {"video_time": 80.0, "cx": 500.0, "cy": 400.0},
+        {"video_time": 85.0, "cx": 500.1, "cy": 400.0},
+        {"video_time": 90.0, "cx": 500.0, "cy": 400.1},
+        {"video_time": 95.0, "cx": 500.2, "cy": 400.0},
+        {"video_time": 100.0,"cx": 500.0, "cy": 400.0}
+      ]
+    }
+  ],
+  "proximity_events": [
+    {"video_time": 0.0,  "object_track_ids_nearby": ["EVAL-CAM-06:obj:1"]},
+    {"video_time": 20.0, "object_track_ids_nearby": ["EVAL-CAM-06:obj:1"]},
+    {"video_time": 25.0, "object_track_ids_nearby": ["EVAL-CAM-06:obj:1"]},
+    {"video_time": 30.0, "object_track_ids_nearby": ["EVAL-CAM-06:obj:1"]},
+    {"video_time": 35.0, "object_track_ids_nearby": ["EVAL-CAM-06:obj:1"]},
+    {"video_time": 40.0, "object_track_ids_nearby": ["EVAL-CAM-06:obj:1"]},
+    {"video_time": 45.0, "object_track_ids_nearby": ["EVAL-CAM-06:obj:1"]},
+    {"video_time": 50.0, "object_track_ids_nearby": []}
+  ],
+  "expected_alerts": []
+}

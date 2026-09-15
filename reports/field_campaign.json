@@ -1,0 +1,230 @@
+{
+ "cameras": {
+  "CAM_01": {
+   "state": "requested",
+   "blocker": "needs_height",
+   "district": "Ahmedabad",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_03": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Ahmedabad",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_05": {
+   "state": "requested",
+   "blocker": "not_one_road",
+   "district": "Ahmedabad",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_07": {
+   "state": "requested",
+   "blocker": "needs_height",
+   "district": "Gir Somnath",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_10": {
+   "state": "requested",
+   "blocker": "needs_height",
+   "district": "Junagadh",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_12": {
+   "state": "requested",
+   "blocker": "not_one_road",
+   "district": "Gandhinagar",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_13": {
+   "state": "requested",
+   "blocker": "needs_height",
+   "district": "Ahmedabad",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_14": {
+   "state": "requested",
+   "blocker": "needs_height",
+   "district": "Ahmedabad",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_18": {
+   "state": "requested",
+   "blocker": "needs_height",
+   "district": "Rajkot",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_19": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Navsari",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_20": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Patan",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_23": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Sabarkantha",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_24": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Gandhinagar",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_25": {
+   "state": "requested",
+   "blocker": "needs_height",
+   "district": "Navsari",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_26": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Navsari",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_27": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Navsari",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_28": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Navsari",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_29": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Navsari",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_30": {
+   "state": "requested",
+   "blocker": "no_vp1",
+   "district": "Kutch",
+   "note": "",
+   "updated": "2026-09-07T05:59:09",
+   "reason": "",
+   "needs": "height+points"
+  },
+  "CAM_02": {
+   "state": "requested",
+   "blocker": "needs_legs",
+   "district": "Ahmedabad",
+   "needs": "points",
+   "reason": "",
+   "note": "",
+   "updated": "2026-09-07T06:08:23"
+  },
+  "CAM_04": {
+   "state": "requested",
+   "blocker": "needs_legs",
+   "district": "Ahmedabad",
+   "needs": "points",
+   "reason": "",
+   "note": "",
+   "updated": "2026-09-07T06:08:23"
+  },
+  "CAM_06": {
+   "state": "requested",
+   "blocker": "needs_legs",
+   "district": "Junagadh",
+   "needs": "points",
+   "reason": "",
+   "note": "",
+   "updated": "2026-09-07T06:08:23"
+  },
+  "CAM_09": {
+   "state": "requested",
+   "blocker": "needs_legs",
+   "district": "Junagadh",
+   "needs": "points",
+   "reason": "",
+   "note": "",
+   "updated": "2026-09-07T06:08:23"
+  },
+  "CAM_16": {
+   "state": "requested",
+   "blocker": "needs_legs",
+   "district": "Ahmedabad",
+   "needs": "points",
+   "reason": "",
+   "note": "",
+   "updated": "2026-09-07T06:08:23"
+  },
+  "CAM_21": {
+   "state": "requested",
+   "blocker": "needs_legs",
+   "district": "Patan",
+   "needs": "points",
+   "reason": "",
+   "note": "",
+   "updated": "2026-09-07T06:08:23"
+  }
+ },
+ "history": []
+}

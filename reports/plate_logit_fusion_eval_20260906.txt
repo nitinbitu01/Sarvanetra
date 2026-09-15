@@ -1,0 +1,12 @@
+﻿held out: 55 vehicles, median 12 views each
+
+fusion                      n    exact      CER
+------------------------------------------------
+single view                55    49.1%    18.3%
+most confident view        55    50.9%    13.9%
+mean logprob               55    25.5%    24.6%
+width-weighted             55    25.5%    24.6%
+
+55 vehicles is a small holdout: one plate is 1.8 points, and the gap
+between two strategies has to clear roughly 13 points before it means
+anything. Read a large gap as real and a small one as noise.

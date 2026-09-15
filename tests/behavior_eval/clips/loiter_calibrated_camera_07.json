@@ -1,0 +1,25 @@
+{
+  "clip_id": "loiter_calibrated_camera_07",
+  "detector": "loitering",
+  "camera_id": "CAM-EVAL-LOITER-CALIBRATED",
+  "description": "Same shape as loiter_true_positive_01, but on a camera the eval runner pre-seeds a camera_calibration row for. Verifies the fired alert's calibration_method is 'manual_two_point' here vs 'uncalibrated' for clip 01's camera — the §2 checkpoint item ('uncalibrated cameras are visibly tagged').",
+  "requires_calibration_seed": true,
+  "segments": [
+    {
+      "track_id": 701,
+      "positions": [
+        {"video_time": 0,  "cx": 300, "cy": 300},
+        {"video_time": 10, "cx": 305, "cy": 305},
+        {"video_time": 20, "cx": 295, "cy": 295},
+        {"video_time": 30, "cx": 300, "cy": 300},
+        {"video_time": 40, "cx": 305, "cy": 295},
+        {"video_time": 50, "cx": 295, "cy": 305},
+        {"video_time": 60, "cx": 300, "cy": 300},
+        {"video_time": 70, "cx": 305, "cy": 300}
+      ]
+    }
+  ],
+  "expected_alerts": [
+    {"video_time_window": [58, 65]}
+  ]
+}

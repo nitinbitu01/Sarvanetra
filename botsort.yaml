@@ -1,0 +1,46 @@
+# botsort.yaml — BoT-SORT tracker configuration for Sentinel Gujarat Day 1
+# ───────────────────────────────────────────────────────────────────────────
+# This file is read by ultralytics' built-in BoT-SORT implementation via:
+#   model.track(..., tracker="botsort.yaml")
+#
+# IMPORTANT — Two distinct ReID concepts exist in this project:
+#
+#   1. BoT-SORT internal ReID (this file, `reid_weights`):
+#      Controls appearance features used for short-term re-association
+#      within a SINGLE camera feed. Set to null here for Day 1 — IoU-only
+#      association is sufficient for single-camera tracking.
+#
+#   2. Day 3 cross-camera ReID module (separate codebase, uses OSNet):
+#      Matches the SAME PERSON across DIFFERENT camera feeds by comparing
+#      crops stored in output/crops/. Reads the exact crop folder structure
+#      written by event_emitter.py. This is a completely separate system.
+#
+# These two systems are architecturally independent. Do NOT conflate them.
+# Setting reid_weights here to a non-null value does NOT enable Day 3 ReID.
+
+tracker_type: botsort
+
+# ── Association thresholds ───────────────────────────────────────────────
+track_high_thresh: 0.5     # Min confidence to initiate a new track
+track_low_thresh: 0.1      # Low-confidence detections used for matching only
+new_track_thresh: 0.6      # Min confidence to create a track without prior match
+track_buffer: 30           # Frames to keep a lost track alive (Kalman prediction)
+match_thresh: 0.8          # IoU threshold for track↔detection matching
+
+# ── Score fusion ────────────────────────────────────────────────────────
+fuse_score: true           # Fuse detection confidence with IoU distance
+
+# ── Appearance ReID — DISABLED for Day 1 ───────────────────────────────
+# Set to a model path (e.g. "osnet_x0_25_msmt17.pt") to enable internal
+# appearance re-association. Do NOT enable here — Day 3 handles cross-camera
+# appearance matching as a separate pipeline step.
+with_reid: false
+reid_weights: null         # Explicitly null — IoU-only association (legacy key)
+model: null                # Current ultralytics key for ReID model — also null
+
+# ── Kalman filter ───────────────────────────────────────────────────────
+gmc_method: sparseOptFlow  # Global motion compensation for camera shake
+
+# ── Proximity metric ────────────────────────────────────────────────────
+proximity_thresh: 0.5      # Minimum IoU for a valid match
+appearance_thresh: 0.25    # Appearance similarity threshold (unused when reid_weights=null)

@@ -1,0 +1,156 @@
+{
+  "clip_id": "crowd_true_positive_04",
+  "detector": "crowd",
+  "camera_id": "CAM-EVAL-CROWD-TP",
+  "description": "Steady low baseline (count=2) for 280s, then a sustained jump to 8 people held for 50s (well over CROWD_MIN_DURATION_SEC). Should fire once, after the surge has held for >= CROWD_MIN_DURATION_SEC.",
+  "ticks": [
+    {
+      "video_time": 0,
+      "count": 2
+    },
+    {
+      "video_time": 10,
+      "count": 2
+    },
+    {
+      "video_time": 20,
+      "count": 2
+    },
+    {
+      "video_time": 30,
+      "count": 2
+    },
+    {
+      "video_time": 40,
+      "count": 2
+    },
+    {
+      "video_time": 50,
+      "count": 2
+    },
+    {
+      "video_time": 60,
+      "count": 2
+    },
+    {
+      "video_time": 70,
+      "count": 2
+    },
+    {
+      "video_time": 80,
+      "count": 2
+    },
+    {
+      "video_time": 90,
+      "count": 2
+    },
+    {
+      "video_time": 100,
+      "count": 2
+    },
+    {
+      "video_time": 110,
+      "count": 2
+    },
+    {
+      "video_time": 120,
+      "count": 2
+    },
+    {
+      "video_time": 130,
+      "count": 2
+    },
+    {
+      "video_time": 140,
+      "count": 2
+    },
+    {
+      "video_time": 150,
+      "count": 2
+    },
+    {
+      "video_time": 160,
+      "count": 2
+    },
+    {
+      "video_time": 170,
+      "count": 2
+    },
+    {
+      "video_time": 180,
+      "count": 2
+    },
+    {
+      "video_time": 190,
+      "count": 2
+    },
+    {
+      "video_time": 200,
+      "count": 2
+    },
+    {
+      "video_time": 210,
+      "count": 2
+    },
+    {
+      "video_time": 220,
+      "count": 2
+    },
+    {
+      "video_time": 230,
+      "count": 2
+    },
+    {
+      "video_time": 240,
+      "count": 2
+    },
+    {
+      "video_time": 250,
+      "count": 2
+    },
+    {
+      "video_time": 260,
+      "count": 2
+    },
+    {
+      "video_time": 270,
+      "count": 2
+    },
+    {
+      "video_time": 280,
+      "count": 2
+    },
+    {
+      "video_time": 290,
+      "count": 8
+    },
+    {
+      "video_time": 300,
+      "count": 8
+    },
+    {
+      "video_time": 310,
+      "count": 8
+    },
+    {
+      "video_time": 320,
+      "count": 8
+    },
+    {
+      "video_time": 330,
+      "count": 8
+    },
+    {
+      "video_time": 340,
+      "count": 8
+    }
+  ],
+  "expected_alerts": [
+    {
+      "video_time_window": [
+        305,
+        320
+      ]
+    }
+  ]
+}

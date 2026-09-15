@@ -1,0 +1,127 @@
+{
+  "_README": [
+    "Surveyed ground control points, one entry per camera.",
+    "Fill lat/lon for each point from satellite imagery (Google Earth, or",
+    "Bhuvan at bhuvanmaps.nrsc.gov.in), then run:",
+    "    python -m backend.scripts.solve_gcp_calibration CAM_08",
+    "which reports the leave-one-out error, and --promote to write it.",
+    "",
+    "RULES that decide whether this works:",
+    " 1. Every point must be ON THE GROUND. A homography maps a single plane,",
+    "    so a rooftop, a sign, or the top of a pole will corrupt the fit. Use",
+    "    the point where a pole MEETS the road, not the pole.",
+    " 2. Spread the points across the area vehicles are tracked in. Points",
+    "    clustered in one corner leave the rest of the frame unconstrained.",
+    " 3. At least 5 points. Four determine the homography exactly, so with",
+    "    only four the measured error is zero by construction and tells you",
+    "    nothing. The 5th and beyond are what make the number real.",
+    " 4. Use 6-7 decimal places of lat/lon. Four decimals is ~11 m and would",
+    "    dominate the error you are trying to measure.",
+    " 5. Permanent features only, never a parked vehicle or a market stall.",
+    " 6. Prefer CORNERS and INTERSECTIONS over points along a line. A spot",
+    "    partway down a kerb is ambiguous from above; the corner where two",
+    "    kerbs meet is not.",
+    "",
+    "HOW ACCURATE DOES EACH READING HAVE TO BE? Measured by simulating this",
+    "solver on a synthetic junction, 25 trials per cell, worst leave-one-out",
+    "error in metres, with 1.5 px of click error on the image side:",
+    "",
+    "    satellite err   5 pts   6 pts   8 pts   10 pts",
+    "      0.05 m         0.61    0.80    0.42     0.30",
+    "      0.10 m         0.82    1.21    0.52     0.45",
+    "      0.15 m         1.29    1.60    0.69     0.60",
+    "      0.25 m         1.97    2.37    1.06     0.91",
+    "      0.40 m         3.66    3.31    1.58     1.38",
+    "",
+    "    gate: good < 0.50 m | degraded <= 1.00 m | else rejected",
+    "",
+    "So aim for TEN points read to about 0.10 m. Five points cannot reach",
+    "'good' at any precision \u2014 there are not enough of them to average the",
+    "reading error down."
+  ],
+  "CAM_08": {
+    "location": "Junagadh - Majevadi Gate",
+    "camera_gps_approx": [
+      21.522,
+      70.4579
+    ],
+    "frame_size": [
+      1920,
+      1080
+    ],
+    "reference_frame": "CAM_08_0830.mp4 frame 7571 (14-06-2026 08:36:11)",
+    "_status": "8 points with lat/lon supplied 2026-09-09",
+    "ground_control_points": [
+      {
+        "label": "P1",
+        "px": 622,
+        "py": 356,
+        "lat": 21.52233283580408,
+        "lon": 70.45819803665627,
+        "note": "zebra crossing, far LEFT outer corner"
+      },
+      {
+        "label": "P2",
+        "px": 898,
+        "py": 345,
+        "lat": 21.522354668723533,
+        "lon": 70.45817724953744,
+        "note": "zebra crossing, far RIGHT outer corner, at the median"
+      },
+      {
+        "label": "P3",
+        "px": 600,
+        "py": 393,
+        "lat": 21.522340945174545,
+        "lon": 70.45820742438734,
+        "note": "zebra crossing, near LEFT outer corner"
+      },
+      {
+        "label": "P4",
+        "px": 884,
+        "py": 379,
+        "lat": 21.522364025688013,
+        "lon": 70.45818999002962,
+        "note": "zebra crossing, near RIGHT outer corner"
+      },
+      {
+        "label": "P5",
+        "px": 988,
+        "py": 424,
+        "lat": 21.52238398721021,
+        "lon": 70.45820876549179,
+        "note": "median island, FAR tip"
+      },
+      {
+        "label": "P6",
+        "px": 944,
+        "py": 975,
+        "lat": 21.522430772017135,
+        "lon": 70.45829593728043,
+        "note": "central pole, BASE where it meets the road surface"
+      },
+      {
+        "label": "P7",
+        "px": 1012,
+        "py": 700,
+        "lat": 21.52240956290653,
+        "lon": 70.45824028144615,
+        "note": "median island kerb edge, midway down the frame"
+      },
+      {
+        "label": "P8",
+        "px": 253,
+        "py": 492,
+        "lat": 21.522344064163065,
+        "lon": 70.4582590569083,
+        "note": "left kerb, corner where the footpath edge turns"
+      }
+    ],
+    "independent_check": {
+      "description": "IRC:35 zebra stripes are 500 mm wide with 500 mm gaps, so consecutive stripe centres are 1.000 m apart across the road. Measured on a 90-frame median of CAM_08_0830.mp4: stripe pitch is 50.00 px (std 1.84) along the crossing axis. Any homography solved from these GCPs must reproduce ~1.0 m there. The calibration active on 2026-09-09 returned 1.61-5.44 m, i.e. ~3x wrong.",
+      "stripe_pitch_px": 50.0,
+      "stripe_pitch_m": 1.0,
+      "measured_on": "2026-09-09"
+    }
+  }
+}

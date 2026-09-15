@@ -1,0 +1,698 @@
+{
+  "timestamp": "20260901_2245",
+  "clips": 36,
+  "unique": 460,
+  "verified": 4,
+  "hit_pct": 0.8695652173913043,
+  "cam_summary": {
+    "CAM_06": {
+      "clips": 2,
+      "reads": 854,
+      "unique": 19,
+      "verified": 0
+    },
+    "CAM_07": {
+      "clips": 5,
+      "reads": 863,
+      "unique": 31,
+      "verified": 1
+    },
+    "CAM_08": {
+      "clips": 5,
+      "reads": 7821,
+      "unique": 125,
+      "verified": 1
+    },
+    "CAM_09": {
+      "clips": 5,
+      "reads": 481,
+      "unique": 14,
+      "verified": 2
+    },
+    "CAM_10": {
+      "clips": 5,
+      "reads": 7123,
+      "unique": 112,
+      "verified": 0
+    },
+    "CAM_18": {
+      "clips": 4,
+      "reads": 3222,
+      "unique": 66,
+      "verified": 0
+    },
+    "CAM_21": {
+      "clips": 5,
+      "reads": 2041,
+      "unique": 48,
+      "verified": 0
+    },
+    "CAM_27": {
+      "clips": 5,
+      "reads": 2640,
+      "unique": 45,
+      "verified": 0
+    }
+  },
+  "results": [
+    {
+      "clip": "CAM_06_0630.mp4",
+      "camera": "CAM_06",
+      "time": "morning",
+      "duration": 64.4,
+      "total_reads": 323,
+      "unique": 7,
+      "verified": 0,
+      "plates": [
+        "GJ1CQZ7769",
+        "GJ11M933",
+        "GJ03099",
+        "GJ11BH9384",
+        "GJ10DK4241",
+        "ML0H1907",
+        "GJ1I1973"
+      ]
+    },
+    {
+      "clip": "CAM_06_2200.mp4",
+      "camera": "CAM_06",
+      "time": "night",
+      "duration": 599.8,
+      "total_reads": 531,
+      "unique": 12,
+      "verified": 0,
+      "plates": [
+        "GJ3J3300",
+        "DL31181",
+        "GJ031387",
+        "GJ0HH9957",
+        "GJ14294",
+        "GJ19078",
+        "GJ03843",
+        "GJ1H499"
+      ]
+    },
+    {
+      "clip": "CAM_07_0100.mp4",
+      "camera": "CAM_07",
+      "time": "night",
+      "duration": 601.3,
+      "total_reads": 15,
+      "unique": 2,
+      "verified": 0,
+      "plates": [
+        "GJ03ZAA0034",
+        "GJ14OD0705"
+      ]
+    },
+    {
+      "clip": "CAM_07_0630.mp4",
+      "camera": "CAM_07",
+      "time": "morning",
+      "duration": 601.3,
+      "total_reads": 222,
+      "unique": 8,
+      "verified": 0,
+      "plates": [
+        "GJ34492",
+        "DL1Z484M",
+        "NL36341",
+        "DL1H8653",
+        "NL1Z484M",
+        "RJ11H668",
+        "GJ3I5377",
+        "GJ13854"
+      ]
+    },
+    {
+      "clip": "CAM_07_0730.mp4",
+      "camera": "CAM_07",
+      "time": "morning",
+      "duration": 608.5,
+      "total_reads": 217,
+      "unique": 8,
+      "verified": 0,
+      "plates": [
+        "AP38MMM684",
+        "GJ3J0931",
+        "GJ3G4475",
+        "WB1A0764",
+        "NL33O0824",
+        "GJ30N680",
+        "NL19648",
+        "GJ31IT9465"
+      ]
+    },
+    {
+      "clip": "CAM_07_0830.mp4",
+      "camera": "CAM_07",
+      "time": "morning",
+      "duration": 605.4,
+      "total_reads": 325,
+      "unique": 9,
+      "verified": 1,
+      "plates": [
+        "GJ09178",
+        "GJ14116",
+        "GJ0AM440",
+        "UP70JD0023",
+        "ML1P1WM",
+        "DL0AM440",
+        "HP03D0023",
+        "MP03H1640"
+      ]
+    },
+    {
+      "clip": "CAM_07_2200.mp4",
+      "camera": "CAM_07",
+      "time": "night",
+      "duration": 600.1,
+      "total_reads": 84,
+      "unique": 4,
+      "verified": 0,
+      "plates": [
+        "GJ33J9466",
+        "GJ34466",
+        "GJ034178",
+        "NL31378"
+      ]
+    },
+    {
+      "clip": "CAM_08_0100.mp4",
+      "camera": "CAM_08",
+      "time": "night",
+      "duration": 606.1,
+      "total_reads": 543,
+      "unique": 11,
+      "verified": 0,
+      "plates": [
+        "MH11687",
+        "GJ3I1998",
+        "AP01JI9594",
+        "NL16047",
+        "DL3I1998",
+        "NL11867",
+        "AP09IHI8542",
+        "DL1L1667"
+      ]
+    },
+    {
+      "clip": "CAM_08_0630.mp4",
+      "camera": "CAM_08",
+      "time": "morning",
+      "duration": 604.2,
+      "total_reads": 1715,
+      "unique": 28,
+      "verified": 0,
+      "plates": [
+        "GJ05AO6100",
+        "RJ94996",
+        "PB9PY51",
+        "GJ00HH99",
+        "GJ16W99",
+        "NL01719",
+        "DL94996",
+        "MH00HH99"
+      ]
+    },
+    {
+      "clip": "CAM_08_0730.mp4",
+      "camera": "CAM_08",
+      "time": "morning",
+      "duration": 604.2,
+      "total_reads": 2286,
+      "unique": 34,
+      "verified": 0,
+      "plates": [
+        "ML3I6223",
+        "GJ33038",
+        "GJ39H4699",
+        "GJ14H88",
+        "GJ15M4337",
+        "GJ1A4054",
+        "GJ36SN449",
+        "ML34F39"
+      ]
+    },
+    {
+      "clip": "CAM_08_0830.mp4",
+      "camera": "CAM_08",
+      "time": "morning",
+      "duration": 605.7,
+      "total_reads": 2079,
+      "unique": 31,
+      "verified": 1,
+      "plates": [
+        "GJ14AM5486",
+        "GJ14AA0307",
+        "GJ3I8037",
+        "GJ1A0849",
+        "MH31MIH57",
+        "GJ3I0413",
+        "GJ3TH98",
+        "GJ11CL2263"
+      ]
+    },
+    {
+      "clip": "CAM_08_2200.mp4",
+      "camera": "CAM_08",
+      "time": "night",
+      "duration": 606.9,
+      "total_reads": 1198,
+      "unique": 21,
+      "verified": 0,
+      "plates": [
+        "GJ11CJK9113",
+        "GJ1A7488",
+        "GJ21D4330",
+        "GJ3O0456",
+        "GJ11JH4",
+        "GJ01943",
+        "MH3O0456",
+        "MH31BL6977"
+      ]
+    },
+    {
+      "clip": "CAM_09_0100.mp4",
+      "camera": "CAM_09",
+      "time": "night",
+      "duration": 600.7,
+      "total_reads": 0,
+      "unique": 0,
+      "verified": 0,
+      "plates": []
+    },
+    {
+      "clip": "CAM_09_0630.mp4",
+      "camera": "CAM_09",
+      "time": "morning",
+      "duration": 602.4,
+      "total_reads": 203,
+      "unique": 4,
+      "verified": 1,
+      "plates": [
+        "GJ04AX7324",
+        "GJ04AA7324",
+        "MH04AA7324",
+        "NL31717"
+      ]
+    },
+    {
+      "clip": "CAM_09_0730.mp4",
+      "camera": "CAM_09",
+      "time": "morning",
+      "duration": 603.6,
+      "total_reads": 103,
+      "unique": 4,
+      "verified": 0,
+      "plates": [
+        "GJ33173",
+        "GJ02H4811",
+        "GJ32JN98",
+        "ML3871U"
+      ]
+    },
+    {
+      "clip": "CAM_09_0830.mp4",
+      "camera": "CAM_09",
+      "time": "morning",
+      "duration": 600.4,
+      "total_reads": 175,
+      "unique": 6,
+      "verified": 1,
+      "plates": [
+        "NL31111",
+        "GJ00AO6440",
+        "GJ03CRO4441",
+        "GJ03JC8802",
+        "GJ03DG3473",
+        "RJ09945"
+      ]
+    },
+    {
+      "clip": "CAM_09_2200.mp4",
+      "camera": "CAM_09",
+      "time": "night",
+      "duration": 600.1,
+      "total_reads": 0,
+      "unique": 0,
+      "verified": 0,
+      "plates": []
+    },
+    {
+      "clip": "CAM_10_0100.mp4",
+      "camera": "CAM_10",
+      "time": "night",
+      "duration": 601.6,
+      "total_reads": 624,
+      "unique": 14,
+      "verified": 0,
+      "plates": [
+        "GJ23RR4879",
+        "RJ03T8053",
+        "MH03T8053",
+        "ML096188",
+        "MH096188",
+        "NL13H80",
+        "GJ3FP4888",
+        "GJ049488"
+      ]
+    },
+    {
+      "clip": "CAM_10_0630.mp4",
+      "camera": "CAM_10",
+      "time": "morning",
+      "duration": 607.0,
+      "total_reads": 1314,
+      "unique": 19,
+      "verified": 0,
+      "plates": [
+        "GJ03HR4879",
+        "GJ1P5332",
+        "GJ0CDT9047",
+        "GJ05DF4063",
+        "NL10JM1311",
+        "GJ1J4900",
+        "DL05DF4063",
+        "GJ0CJ7907"
+      ]
+    },
+    {
+      "clip": "CAM_10_0730.mp4",
+      "camera": "CAM_10",
+      "time": "morning",
+      "duration": 607.0,
+      "total_reads": 1725,
+      "unique": 29,
+      "verified": 0,
+      "plates": [
+        "GJ23NR4879",
+        "GJ17BMH388",
+        "GJ07683",
+        "GJ07J6943",
+        "MH17M2665",
+        "AP09144",
+        "GA14OD8843",
+        "GJ0H457"
+      ]
+    },
+    {
+      "clip": "CAM_10_0830.mp4",
+      "camera": "CAM_10",
+      "time": "morning",
+      "duration": 607.0,
+      "total_reads": 2189,
+      "unique": 29,
+      "verified": 0,
+      "plates": [
+        "MP19T6623",
+        "AP030030",
+        "GJ38DHB4434",
+        "GJ02SN8843",
+        "GJ1P4964",
+        "GJ1M976",
+        "GJ07F1943",
+        "GJ03967"
+      ]
+    },
+    {
+      "clip": "CAM_10_2200.mp4",
+      "camera": "CAM_10",
+      "time": "night",
+      "duration": 601.6,
+      "total_reads": 1271,
+      "unique": 21,
+      "verified": 0,
+      "plates": [
+        "GJ08QO0934",
+        "ML04HHI0074",
+        "GJ31H6968",
+        "GJ37GFF94",
+        "GJ1MH778",
+        "GJ04QU464",
+        "GJ01P1148",
+        "MP04C49"
+      ]
+    },
+    {
+      "clip": "CAM_18_0100.mp4",
+      "camera": "CAM_18",
+      "time": "night",
+      "duration": 607.0,
+      "total_reads": 635,
+      "unique": 15,
+      "verified": 0,
+      "plates": [
+        "ML01S3640",
+        "TS1I3760",
+        "GJ1J7018",
+        "GJ10AH8",
+        "GJ031494",
+        "GJ05960",
+        "GJ38440",
+        "MH30TQ6808"
+      ]
+    },
+    {
+      "clip": "CAM_18_0630.mp4",
+      "camera": "CAM_18",
+      "time": "morning",
+      "duration": 608.5,
+      "total_reads": 872,
+      "unique": 18,
+      "verified": 0,
+      "plates": [
+        "GJ04378",
+        "GJ1M6813",
+        "GJ32978",
+        "GJ3I3923",
+        "GJ1CH2077",
+        "GJ10V2947",
+        "GJ08MP4570",
+        "GJ00XP4570"
+      ]
+    },
+    {
+      "clip": "CAM_18_0730.mp4",
+      "camera": "CAM_18",
+      "time": "morning",
+      "duration": 603.0,
+      "total_reads": 855,
+      "unique": 15,
+      "verified": 0,
+      "plates": [
+        "GJ14O8148",
+        "MH04JH367",
+        "ML36077",
+        "GJ012877",
+        "GJ033376",
+        "GJ094659",
+        "GJ03J6683",
+        "MH012877"
+      ]
+    },
+    {
+      "clip": "CAM_18_2200.mp4",
+      "camera": "CAM_18",
+      "time": "night",
+      "duration": 603.6,
+      "total_reads": 860,
+      "unique": 18,
+      "verified": 0,
+      "plates": [
+        "GJ18796",
+        "MH30MM080",
+        "GJ3SH97",
+        "MP1L6999",
+        "MH3M44L",
+        "GJ16120M",
+        "NL13997",
+        "ML1N886"
+      ]
+    },
+    {
+      "clip": "CAM_21_0100.mp4",
+      "camera": "CAM_21",
+      "time": "night",
+      "duration": 608.6,
+      "total_reads": 149,
+      "unique": 6,
+      "verified": 0,
+      "plates": [
+        "GJ0Q9883",
+        "GJ3J0884",
+        "GJ342H7J",
+        "RJ13IM918",
+        "RJ09M9937",
+        "MH3J0884"
+      ]
+    },
+    {
+      "clip": "CAM_21_0630.mp4",
+      "camera": "CAM_21",
+      "time": "morning",
+      "duration": 601.6,
+      "total_reads": 739,
+      "unique": 14,
+      "verified": 0,
+      "plates": [
+        "GJ36L1449",
+        "APMV434",
+        "AP074776",
+        "GJ19ZM2114",
+        "GJ07H776",
+        "GJ041111",
+        "GJ23762",
+        "GJ39407"
+      ]
+    },
+    {
+      "clip": "CAM_21_0730.mp4",
+      "camera": "CAM_21",
+      "time": "morning",
+      "duration": 600.2,
+      "total_reads": 589,
+      "unique": 12,
+      "verified": 0,
+      "plates": [
+        "GJ01LB6117",
+        "GJ3J0554",
+        "MH18M18",
+        "GJ34999",
+        "NL31XH6",
+        "GJ28JB8888",
+        "MH18O0966",
+        "AS04PM8866"
+      ]
+    },
+    {
+      "clip": "CAM_21_0830.mp4",
+      "camera": "CAM_21",
+      "time": "morning",
+      "duration": 607.8,
+      "total_reads": 521,
+      "unique": 12,
+      "verified": 0,
+      "plates": [
+        "GJ066038",
+        "GJ07XA0815",
+        "GJ03BI9841",
+        "MH07XA0815",
+        "GJ07MWT6680",
+        "GJ34391",
+        "GJ17TT7777",
+        "MH17TT7777"
+      ]
+    },
+    {
+      "clip": "CAM_21_2200.mp4",
+      "camera": "CAM_21",
+      "time": "night",
+      "duration": 610.0,
+      "total_reads": 43,
+      "unique": 4,
+      "verified": 0,
+      "plates": [
+        "GJ13032",
+        "GJ38LW16",
+        "NL31777",
+        "DL31S5771"
+      ]
+    },
+    {
+      "clip": "CAM_27_0100.mp4",
+      "camera": "CAM_27",
+      "time": "night",
+      "duration": 600.1,
+      "total_reads": 528,
+      "unique": 9,
+      "verified": 0,
+      "plates": [
+        "ML24486",
+        "GJ34498",
+        "MH3A4456",
+        "MH24446",
+        "ML3T4856",
+        "ML37486",
+        "NL0PH197",
+        "MH2A4485"
+      ]
+    },
+    {
+      "clip": "CAM_27_0630.mp4",
+      "camera": "CAM_27",
+      "time": "morning",
+      "duration": 600.1,
+      "total_reads": 528,
+      "unique": 9,
+      "verified": 0,
+      "plates": [
+        "ML24486",
+        "GJ34498",
+        "MH3A4456",
+        "MH24446",
+        "ML3T4856",
+        "ML37486",
+        "NL0PH197",
+        "MH2A4485"
+      ]
+    },
+    {
+      "clip": "CAM_27_0730.mp4",
+      "camera": "CAM_27",
+      "time": "morning",
+      "duration": 600.1,
+      "total_reads": 528,
+      "unique": 9,
+      "verified": 0,
+      "plates": [
+        "ML24486",
+        "GJ34498",
+        "MH3A4456",
+        "MH24446",
+        "ML3T4856",
+        "ML37486",
+        "NL0PH197",
+        "MH2A4485"
+      ]
+    },
+    {
+      "clip": "CAM_27_0830.mp4",
+      "camera": "CAM_27",
+      "time": "morning",
+      "duration": 600.1,
+      "total_reads": 528,
+      "unique": 9,
+      "verified": 0,
+      "plates": [
+        "ML24486",
+        "GJ34498",
+        "MH3A4456",
+        "MH24446",
+        "ML3T4856",
+        "ML37486",
+        "NL0PH197",
+        "MH2A4485"
+      ]
+    },
+    {
+      "clip": "CAM_27_2200.mp4",
+      "camera": "CAM_27",
+      "time": "night",
+      "duration": 600.1,
+      "total_reads": 528,
+      "unique": 9,
+      "verified": 0,
+      "plates": [
+        "ML24486",
+        "GJ34498",
+        "MH3A4456",
+        "MH24446",
+        "ML3T4856",
+        "ML37486",
+        "NL0PH197",
+        "MH2A4485"
+      ]
+    }
+  ]
+}

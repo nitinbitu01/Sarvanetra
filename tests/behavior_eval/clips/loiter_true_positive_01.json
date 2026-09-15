@@ -1,0 +1,35 @@
+{
+  "clip_id": "loiter_true_positive_01",
+  "detector": "loitering",
+  "camera_id": "CAM-EVAL-LOITER-TP",
+  "description": "Person stands in a small area (jitter well under the calibrated radius) for 90s of video_time. Should fire once at the instant the 60s window first becomes full.",
+  "segments": [
+    {
+      "track_id": 301,
+      "positions": [
+        {"video_time": 0,  "cx": 300, "cy": 300},
+        {"video_time": 5,  "cx": 310, "cy": 305},
+        {"video_time": 10, "cx": 290, "cy": 295},
+        {"video_time": 15, "cx": 305, "cy": 310},
+        {"video_time": 20, "cx": 295, "cy": 300},
+        {"video_time": 25, "cx": 300, "cy": 290},
+        {"video_time": 30, "cx": 310, "cy": 300},
+        {"video_time": 35, "cx": 290, "cy": 305},
+        {"video_time": 40, "cx": 300, "cy": 295},
+        {"video_time": 45, "cx": 305, "cy": 300},
+        {"video_time": 50, "cx": 295, "cy": 305},
+        {"video_time": 55, "cx": 300, "cy": 300},
+        {"video_time": 60, "cx": 305, "cy": 295},
+        {"video_time": 65, "cx": 295, "cy": 300},
+        {"video_time": 70, "cx": 300, "cy": 305},
+        {"video_time": 75, "cx": 310, "cy": 300},
+        {"video_time": 80, "cx": 290, "cy": 295},
+        {"video_time": 85, "cx": 300, "cy": 300},
+        {"video_time": 90, "cx": 305, "cy": 305}
+      ]
+    }
+  ],
+  "expected_alerts": [
+    {"video_time_window": [58, 65]}
+  ]
+}

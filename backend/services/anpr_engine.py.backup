@@ -1,0 +1,838 @@
+"""
+backend/services/anpr_engine.py — Production ANPR Engine (Final v4 — FALSE POSITIVE FIX)
+
+Architecture:
+  Stage 0: AdaptiveNightEnhancer    — 4-tier auto lighting enhancement
+  Stage 1: YOLOv8 Plate Detector    — tight plate bbox (plate_v3_ft)
+  Stage 2: PlatePreprocessorV2      — lighting-aware crop preprocessing
+  Stage 2b: PlateFrameSelector      — quality gate (sharpness/contrast/size)
+  Stage 3: EnsembleOCR              — CRNN primary + EasyOCR fallback
+  Stage 4: decode_plate() v2        — all-India grammar + state resolution
+  Stage 5: TemporalPlateVoter       — confidence-weighted multi-frame voting
+  Stage 6: WatchlistService         — fuzzy watchlist match + DB + alerts
+
+CHANGES IN V4:
+  - PLATE_DET_CONF raised from 0.15 → 0.75 (reject false positives)
+  - Added aspect ratio filtering (2.0–5.0) to reject square objects
+  - Added plate dimension validation (min 40x15px)
+"""
+from __future__ import annotations
+
+import os
+import re
+import sys
+import time
+import logging
+from collections import defaultdict, Counter
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import cv2
+import numpy as np
+import torch
+import torch.nn as nn
+
+# ── Path bootstrap ────────────────────────────────────────────────────────────
+_ENGINE_DIR  = Path(__file__).resolve().parent
+_BACKEND_DIR = _ENGINE_DIR.parent
+_ROOT_DIR    = _BACKEND_DIR.parent
+
+if str(_ROOT_DIR) not in sys.path:
+    sys.path.append(str(_ROOT_DIR))
+if str(_BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_DIR))
+
+# ── All imports use short paths (no 'backend.' prefix) ───────────────────────
+from scripts.indian_plate_grammar import (
+    decode_plate,
+    fix_plate,
+    apply_state_prior,
+    resolve_state_code,
+    STATE_CODES,
+    SPECIAL_PREFIX,
+)
+from scripts.train_plate_recognizer    import CRNN, ctc_decode, IMG_H, IMG_W
+from scripts.night_enhancer_v2         import AdaptiveNightEnhancer
+from services.frame_selector           import PlateFrameSelector
+from services.plate_utils_v2           import PlatePreprocessorV2
+from services.anpr_track_aggregator_v2 import TemporalPlateVoter
+from services.watchlist_service        import WatchlistService
+
+logger = logging.getLogger("anpr_engine")
+
+PROJECT_ROOT = _ROOT_DIR
+
+# ── CRNN checkpoint search order ─────────────────────────────────────────────
+RECOGNIZER_PATHS: List[Path] = [
+    PROJECT_ROOT / "models" / "plate_recognizer" / "best.pt",
+    PROJECT_ROOT / "models" / "plate_recognizer" / "night_finetuned.pt",
+    PROJECT_ROOT / "models" / "plate_recognizer" / "finetuned.pt",
+    PROJECT_ROOT / "models" / "plate_recognizer" / "final_m0.pt",
+]
+
+# ── YOLOv8 plate detector checkpoint search order ────────────────────────────
+PLATE_DETECTOR_PATHS: List[Path] = [
+    PROJECT_ROOT / "runs" / "detect" / "runs" / "plate" / "plate_v3_ft" / "weights" / "best.pt",
+    PROJECT_ROOT / "runs" / "detect" / "runs" / "plate_v3" / "recovered"  / "weights" / "best.pt",
+    PROJECT_ROOT / "runs" / "detect" / "runs" / "plate"    / "plate_v2"   / "weights" / "best.pt",
+    PROJECT_ROOT / "runs" / "detect" / "runs" / "plate"    / "plate_v1"   / "weights" / "best.pt",
+]
+
+# Secondary, small-plate-biased detector
+SMALL_PLATE_DETECTOR: Path = (
+    PROJECT_ROOT / "models" / "plate_detector" / "plate_v4_small.pt"
+)
+
+# ── Processing constants ──────────────────────────────────────────────────────
+MIN_VEHICLE_BBOX_PX     = 40
+
+# ✅ FIXED: Raised from 0.15 to 0.75 to reject false positives
+# Your detector was accepting 15% confidence detections → picking up grilles/badges
+PLATE_DET_CONF          = 0.75
+
+PLATE_DET_IMGSZ         = 320
+
+# ✅ FIXED: Added proper plate dimension minimums
+# Real Indian plates are ~120x40px (3:1 ratio), NOT square
+MIN_PLATE_WIDTH_PX      = 40
+MIN_PLATE_HEIGHT_PX     = 15
+MIN_PLATE_ASPECT_RATIO  = 2.0   # Width must be at least 2x height
+MAX_PLATE_ASPECT_RATIO  = 5.0   # Width must not exceed 5x height
+
+MIN_PLATE_CROP_PX       = 12
+SINGLE_FRAME_FLOOR_PX   = 70
+FUSION_FLOOR_PX         = 40
+FUSION_MAX_NATIVE_PX    = 65
+FUSION_MIN_VIEWS        = 4
+FUSION_MAX_VIEWS        = 12
+MIN_PLATE_NATIVE_PX     = FUSION_FLOOR_PX
+RELIABLE_PLATE_NATIVE_PX = 100
+MAX_TRACK_HISTORIES     = 2000
+TRACK_CLEANUP_INTERVAL  = 30.0
+MAX_VOTES_PER_TRACK     = 15
+MIN_VOTE_CONFIDENCE     = 0.40
+MIN_STRIP_QUALITY       = 12.0
+CRNN_FAST_PATH_CONF     = 0.85
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ANPREngine
+# ─────────────────────────────────────────────────────────────────────────────
+
+class ANPREngine:
+    """
+    Production ANPR Engine — fully upgraded with false positive filtering.
+    Thread-safe singleton via get_anpr_engine().
+    """
+
+    _instance: Optional["ANPREngine"] = None
+    INDIAN_PLATE_PATTERN = re.compile(r"^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$")
+
+    # ── Construction ──────────────────────────────────────────────────────────
+
+    def __init__(
+        self,
+        config_or_device: Any = None,
+        device: Optional[str] = None,
+        use_ensemble: bool = True,
+        local_state: str = "GJ",
+        watchlist_path: str = "watchlist.json",
+    ):
+        if isinstance(config_or_device, dict):
+            self.config = config_or_device
+            self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        elif isinstance(config_or_device, str):
+            self.config = {}
+            self.device = config_or_device
+        else:
+            self.config = {}
+            self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+
+        self.local_state  = local_state
+        self.use_ensemble = use_ensemble
+
+        # ── Model state ───────────────────────────────────────────────────────
+        self.recognizer: Optional[CRNN] = None
+        self.chars: List[str] = []
+        self.plate_detector = None
+        self._plate_det_available = False
+
+        # ── Sub-modules ───────────────────────────────────────────────────────
+        self._night_enhancer = AdaptiveNightEnhancer()
+        self._frame_selector = PlateFrameSelector(
+            min_sharpness=MIN_STRIP_QUALITY,
+            min_size=(MIN_PLATE_WIDTH_PX, MIN_PLATE_HEIGHT_PX),
+        )
+        self._preprocessor   = PlatePreprocessorV2(target_h=IMG_H, target_w=IMG_W)
+        self._watchlist_svc  = WatchlistService(watchlist_path=watchlist_path)
+        self._ensemble: Optional[Any] = None
+
+        # ── Per-track state ───────────────────────────────────────────────────
+        self._voters:            Dict[int, TemporalPlateVoter] = {}
+        self._confirmed_plates:  Dict[int, Dict[str, Any]]     = {}
+        self._fusion_crops: Dict[int, List[np.ndarray]] = {}
+        self._last_cleanup = time.time()
+
+        # ── Load models ───────────────────────────────────────────────────────
+        self._load_plate_detector()
+        self._load_recognizer()
+
+        # ── Ensemble (after CRNN ready) ──────────────────────────────────────
+        if self.use_ensemble and self.recognizer is not None:
+            try:
+                from services.ensemble_ocr import EnsembleOCR
+                self._ensemble = EnsembleOCR(crnn_engine=self)
+                logger.info("EnsembleOCR (CRNN + EasyOCR) initialised")
+            except Exception as exc:
+                logger.warning("EnsembleOCR init failed (%s) — CRNN only", exc)
+
+        logger.info(
+            "ANPREngine ready | device=%s | ensemble=%s | watchlist=%d plates",
+            self.device,
+            self._ensemble is not None,
+            len(self._watchlist_svc.watchlist),
+        )
+
+    @property
+    def model(self) -> Optional[CRNN]:
+        return self.recognizer
+
+    @classmethod
+    def get_instance(cls) -> "ANPREngine":
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
+    # =========================================================================
+    # Model loaders
+    # =========================================================================
+
+    def _load_plate_detector(self):
+        for det_path in PLATE_DETECTOR_PATHS:
+            if not det_path.exists():
+                continue
+            try:
+                from ultralytics import YOLO
+                self.plate_detector = YOLO(str(det_path))
+                if str(self.device).startswith("cuda"):
+                    try:
+                        dummy = np.zeros((64, 64, 3), dtype=np.uint8)
+                        self.plate_detector.predict(
+                            dummy, verbose=False,
+                            device=self.device,
+                            imgsz=PLATE_DET_IMGSZ,
+                        )
+                    except Exception:
+                        pass
+                self._plate_det_available = True
+                logger.info("Plate detector loaded: %s on %s",
+                            det_path.name, self.device)
+                break
+            except Exception as exc:
+                logger.warning("Plate detector load failed (%s): %s",
+                               det_path.name, exc)
+
+        if not self._plate_det_available:
+            logger.warning("No plate detector found — plate reads disabled.")
+
+        self.plate_detector_small = None
+        if (SMALL_PLATE_DETECTOR.exists()
+                and os.environ.get("SENTINEL_SMALL_PLATE_DETECTOR") == "1"):
+            try:
+                from ultralytics import YOLO
+                self.plate_detector_small = YOLO(str(SMALL_PLATE_DETECTOR))
+                if str(self.device).startswith("cuda"):
+                    try:
+                        self.plate_detector_small.predict(
+                            np.zeros((64, 64, 3), dtype=np.uint8),
+                            verbose=False, device=self.device,
+                            imgsz=PLATE_DET_IMGSZ)
+                    except Exception:
+                        pass
+                logger.info("Small-plate detector loaded: %s",
+                            SMALL_PLATE_DETECTOR.name)
+            except Exception as exc:
+                logger.warning("Small-plate detector load failed: %s", exc)
+                self.plate_detector_small = None
+
+    def _load_recognizer(self):
+        if self._load_ensemble_recognizer():
+            return
+
+        for ckpt_path in RECOGNIZER_PATHS:
+            if not ckpt_path.exists():
+                continue
+            try:
+                ck = torch.load(
+                    ckpt_path, map_location=self.device, weights_only=False
+                )
+                self.chars      = ck.get("chars", [])
+                n_classes       = len(self.chars) + 1
+                self.recognizer = CRNN(n_classes=n_classes).to(self.device)
+                self.recognizer.load_state_dict(ck["model"])
+                self.recognizer.eval()
+                self._rec_hw = (int(ck.get("img_h", IMG_H)),
+                                int(ck.get("img_w", IMG_W)))
+                exact = ck.get("exact", 0)
+                cer   = ck.get("cer",   0)
+                logger.info(
+                    "CRNN loaded: %s on %s (exact=%.1f%% CER=%.2f%%)",
+                    ckpt_path.name, self.device,
+                    float(exact) * 100,
+                    float(cer)   * 100,
+                )
+                return
+            except Exception as exc:
+                logger.warning("CRNN load failed (%s): %s",
+                               ckpt_path.name, exc)
+
+        if self.device != "cpu":
+            logger.warning("Retrying CRNN load on CPU...")
+            self.device = "cpu"
+            self._load_recognizer()
+
+    def _load_ensemble_recognizer(self) -> bool:
+        paths = sorted((PROJECT_ROOT / "models" / "plate_recognizer")
+                       .glob("final_m*.pt"))
+        if not paths:
+            return False
+
+        members, hw = [], None
+        for p in paths:
+            try:
+                ck = torch.load(p, map_location=self.device, weights_only=False)
+                h, w = int(ck.get("img_h", 64)), int(ck.get("img_w", 256))
+                chars = ck.get("chars", [])
+                if h == 32:
+                    m = CRNN(n_classes=len(chars) + 1)
+                else:
+                    from scripts.plate_final_model import PlateCRNN
+                    m = PlateCRNN(len(chars) + 1, img_h=h)
+                m.load_state_dict(ck["model"])
+                m.to(self.device).eval()
+                if hw is None:
+                    hw, self.chars = (h, w), chars
+                elif (h, w) != hw:
+                    logger.warning("Skipping %s: %dx%d does not match %s",
+                                   p.name, h, w, hw)
+                    continue
+                members.append(m)
+            except Exception as exc:
+                logger.warning("Ensemble member %s failed to load: %s",
+                               p.name, exc)
+
+        if not members:
+            return False
+
+        self._members = members
+        self.recognizer = members[0]
+        self._rec_hw = hw
+        self._preprocessor = PlatePreprocessorV2(target_h=hw[0], target_w=hw[1])
+        logger.info("CRNN ensemble loaded: %d members at %dx%d on %s",
+                    len(members), hw[0], hw[1], self.device)
+        return True
+
+    # =========================================================================
+    # Stage 0 — Night Enhancement
+    # =========================================================================
+
+    def _enhance_frame(
+        self, frame: np.ndarray
+    ) -> Tuple[np.ndarray, str]:
+        enhanced, condition = self._night_enhancer.enhance(frame)
+        return enhanced, condition
+
+    # =========================================================================
+    # Stage 1 — YOLOv8 Plate Detection (WITH FALSE POSITIVE FILTERING)
+    # =========================================================================
+
+    def detect_plate_bbox(
+        self, vehicle_crop: np.ndarray
+    ) -> Optional[List[float]]:
+        """
+        Locate the plate in a vehicle crop. Returns [x1, y1, x2, y2] or None.
+        
+        ✅ V4 FIX: Added aspect ratio and dimension filtering to reject false positives.
+        """
+        if vehicle_crop is None:
+            return None
+
+        h, w = vehicle_crop.shape[:2]
+        if h < MIN_VEHICLE_BBOX_PX or w < MIN_VEHICLE_BBOX_PX:
+            return None
+
+        for detector in (self.plate_detector,
+                         getattr(self, "plate_detector_small", None)):
+            if detector is None:
+                continue
+            try:
+                results = detector.predict(
+                    vehicle_crop,
+                    imgsz=PLATE_DET_IMGSZ,
+                    conf=PLATE_DET_CONF,  # ✅ Now 0.75 instead of 0.15
+                    verbose=False,
+                    device=self.device,
+                )
+                if (results
+                        and results[0].boxes is not None
+                        and len(results[0].boxes)):
+                    boxes    = results[0].boxes
+                    
+                    # ✅ V4 FIX: Filter detections by aspect ratio and size
+                    valid_boxes = []
+                    for i in range(len(boxes)):
+                        xyxy = boxes.xyxy[i].cpu().numpy()
+                        conf = float(boxes.conf[i].cpu().numpy())
+                        
+                        x1, y1, x2, y2 = xyxy
+                        width = x2 - x1
+                        height = y2 - y1
+                        
+                        # Skip if too small
+                        if width < MIN_PLATE_WIDTH_PX or height < MIN_PLATE_HEIGHT_PX:
+                            continue
+                        
+                        # ✅ Skip if wrong aspect ratio (plates are NOT square)
+                        aspect_ratio = width / height if height > 0 else 0
+                        if aspect_ratio < MIN_PLATE_ASPECT_RATIO or aspect_ratio > MAX_PLATE_ASPECT_RATIO:
+                            continue
+                        
+                        valid_boxes.append((xyxy, conf))
+                    
+                    if valid_boxes:
+                        # Return highest confidence valid box
+                        best_box = max(valid_boxes, key=lambda x: x[1])
+                        xyxy = best_box[0]
+                        return [
+                            float(xyxy[0]), float(xyxy[1]),
+                            float(xyxy[2]), float(xyxy[3]),
+                        ]
+            except Exception as exc:
+                logger.debug(
+                    "Plate detection failed on crop %dx%d: %s", w, h, exc
+                )
+        return None
+
+    # =========================================================================
+    # Stage 2 — Plate Crop Extraction + Quality Gate
+    # =========================================================================
+
+    def extract_plate_candidate(
+        self,
+        frame:    np.ndarray,
+        bbox:     List[float],
+        cls_id:   int,
+        lighting: str = "auto",
+        raw_frame: Optional[np.ndarray] = None,
+    ) -> Tuple[Optional[np.ndarray], Optional[np.ndarray], float]:
+        """
+        Extract, quality-gate, and preprocess the license plate strip.
+        
+        ✅ V4 FIX: Added aspect ratio validation on extracted crops.
+        """
+        h_frame, w_frame = frame.shape[:2]
+        x1, y1, x2, y2  = [int(v) for v in bbox]
+
+        x1 = max(0, min(w_frame - 1, x1))
+        y1 = max(0, min(h_frame - 1, y1))
+        x2 = max(0, min(w_frame,     x2))
+        y2 = max(0, min(h_frame,     y2))
+
+        bw = x2 - x1
+        bh = y2 - y1
+        if bw < MIN_VEHICLE_BBOX_PX or bh < MIN_VEHICLE_BBOX_PX:
+            return None, None, 0.0
+
+        vehicle_crop = frame[y1:y2, x1:x2]
+        raw_vehicle_crop = (
+            raw_frame[y1:y2, x1:x2]
+            if raw_frame is not None and raw_frame.shape[:2] == frame.shape[:2]
+            else vehicle_crop
+        )
+
+        vcrop_h = vehicle_crop.shape[0]
+        if cls_id == 2:
+            offset_y = int(vcrop_h * 0.20)
+        elif cls_id in (5, 7):
+            offset_y = int(vcrop_h * 0.35)
+        else:
+            offset_y = int(vcrop_h * 0.15)
+
+        plate_search_crop = raw_vehicle_crop[offset_y:, :]
+        raw_bgr_crop: Optional[np.ndarray] = None
+
+        # ── Tier 1: YOLOv8 plate detector ─────────────────────────────────────
+        if self._plate_det_available:
+            plate_box = self.detect_plate_bbox(plate_search_crop)
+            if plate_box is not None:
+                px1 = max(0,  int(round(plate_box[0])))
+                py1 = max(0,  int(round(plate_box[1])) + offset_y)
+                px2 = min(bw, int(round(plate_box[2])))
+                py2 = min(bh, int(round(plate_box[3])) + offset_y)
+                pw, ph = px2 - px1, py2 - py1
+                
+                # ✅ V4 FIX: Validate plate dimensions
+                if pw >= MIN_PLATE_WIDTH_PX and ph >= MIN_PLATE_HEIGHT_PX:
+                    # ✅ V4 FIX: Validate aspect ratio
+                    aspect_ratio = pw / ph if ph > 0 else 0
+                    if MIN_PLATE_ASPECT_RATIO <= aspect_ratio <= MAX_PLATE_ASPECT_RATIO:
+                        pad_w = int(0.08 * pw)
+                        pad_h = int(0.10 * ph)
+                        cx1 = max(0, px1 - pad_w)
+                        cy1 = max(0, py1 - pad_h)
+                        cx2 = min(bw, px2 + pad_w)
+                        cy2 = min(bh, py2 + pad_h)
+                        raw_bgr_crop = raw_vehicle_crop[cy1:cy2, cx1:cx2].copy()
+
+        if raw_bgr_crop is None:
+            return None, None, 0.0
+
+        native_w = raw_bgr_crop.shape[1]
+        if native_w < FUSION_FLOOR_PX:
+            return None, None, 0.0
+
+        quality = self._frame_selector.score(raw_bgr_crop)
+        if quality < MIN_STRIP_QUALITY:
+            return None, None, quality
+
+        if getattr(self, "_members", None):
+            preprocessed = cv2.resize(
+                cv2.cvtColor(raw_bgr_crop, cv2.COLOR_BGR2GRAY)
+                if raw_bgr_crop.ndim == 3 else raw_bgr_crop,
+                (self._rec_hw[1], self._rec_hw[0]),
+                interpolation=cv2.INTER_AREA,
+            )
+        else:
+            preprocessed = self._preprocessor.preprocess(
+                raw_bgr_crop, lighting=lighting
+            )
+        if preprocessed is None:
+            return None, None, quality
+
+        return preprocessed, raw_bgr_crop, quality
+
+    # =========================================================================
+    # Stage 3 — OCR (CRNN + Ensemble)
+    # =========================================================================
+
+    @torch.no_grad()
+    def _crnn_infer(
+        self, plate_strip: np.ndarray
+    ) -> Tuple[str, float]:
+        if self.recognizer is None or plate_strip is None:
+            return "", 0.0
+
+        want_h, want_w = getattr(self, "_rec_hw", (IMG_H, IMG_W))
+        if plate_strip.shape[:2] != (want_h, want_w):
+            plate_strip = cv2.resize(plate_strip, (want_w, want_h),
+                                     interpolation=cv2.INTER_AREA)
+
+        t = (
+            torch.from_numpy(plate_strip)
+            .float()
+            .div(127.5)
+            .sub(1.0)[None, None]
+            .to(self.device)
+        )
+
+        with torch.no_grad():
+            members = getattr(self, "_members", None)
+            if members and len(members) > 1:
+                lp = torch.stack([
+                    torch.log_softmax(m(t), dim=2) for m in members
+                ]).mean(dim=0)
+                probs = lp.exp()
+                logits = lp
+            else:
+                logits = self.recognizer(t)
+                probs = torch.softmax(logits, dim=2)
+
+            max_probs, _ = torch.max(probs, dim=2)
+            conf = float(torch.mean(max_probs).item())
+            raw_text = ctc_decode(logits)[0]
+        return (raw_text or ""), conf
+
+    def recognize(
+        self, plate_strip: np.ndarray
+    ) -> Tuple[str, float]:
+        return self._crnn_infer(plate_strip)
+
+    def recognize_plate(
+        self,
+        plate_strip:   np.ndarray,
+        raw_bgr_crop:  Optional[np.ndarray] = None,
+        agreement:     float = 0.5,
+        votes:         int   = 1,
+    ) -> Tuple[Optional[str], float, Optional[str]]:
+        if plate_strip is None:
+            return None, 0.0, None
+
+        if self._ensemble is not None and raw_bgr_crop is not None:
+            raw_text, conf, _src = self._ensemble.recognize(
+                plate_crop=raw_bgr_crop,
+                preprocessed_crop=plate_strip,
+            )
+        else:
+            raw_text, conf = self._crnn_infer(plate_strip)
+
+        if not raw_text or len(raw_text) < 4:
+            return None, 0.0, None
+
+        decoded = decode_plate(
+            raw_text,
+            local_state=self.local_state,
+            apply_prior=True,
+            prior_agreement=agreement,
+            prior_votes=votes,
+        )
+        plate         = decoded.get("plate")
+        grammar_score = float(decoded.get("score", 0.0))
+        state         = decoded.get("state")
+
+        combined_conf = (
+            conf * 0.6 + grammar_score * 0.4
+            if plate else conf * 0.5
+        )
+
+        if plate and grammar_score >= 0.55:
+            return plate, round(combined_conf, 3), state
+
+        clean = re.sub(r"[^A-Z0-9]", "", raw_text.upper())
+        if 7 <= len(clean) <= 11:
+            resolved_st, _ = resolve_state_code(
+                clean[:2], local_state=self.local_state
+            )
+            return resolved_st + clean[2:], round(conf * 0.5, 3), resolved_st
+
+        return None, 0.0, None
+
+    # =========================================================================
+    # Stage 4+5 — Temporal Voting + Watchlist
+    # =========================================================================
+
+    def _fuse_views(self, crops: List[np.ndarray]) -> Optional[np.ndarray]:
+        if len(crops) < FUSION_MIN_VIEWS:
+            return None
+        try:
+            from backend.scripts.plate_multiframe_fusion import fuse
+        except Exception:
+            return None
+        grays = []
+        for c in crops:
+            if c is None or c.size == 0:
+                continue
+            grays.append(cv2.cvtColor(c, cv2.COLOR_BGR2GRAY)
+                         if c.ndim == 3 and c.shape[2] >= 3
+                         else c.reshape(c.shape[0], c.shape[1]))
+        if len(grays) < FUSION_MIN_VIEWS:
+            return None
+        try:
+            fused, used = fuse(grays)
+        except Exception as exc:
+            logger.debug("Plate fusion failed on %d views: %s", len(grays), exc)
+            return None
+        if used < FUSION_MIN_VIEWS:
+            return None
+        return fused
+
+    def process_vehicle_track(
+        self,
+        frame:    np.ndarray,
+        bbox:     List[float],
+        cls_id:   int,
+        track_id: int,
+    ) -> Optional[Dict[str, Any]]:
+        now = time.time()
+        if now - self._last_cleanup > TRACK_CLEANUP_INTERVAL:
+            self._cleanup_stale_tracks()
+            self._last_cleanup = now
+
+        if cls_id not in (2, 3, 5, 7):
+            return None
+
+        if track_id in self._confirmed_plates:
+            confirmed = self._confirmed_plates[track_id]
+            if confirmed.get("locked"):
+                return confirmed
+
+        enhanced_frame, lighting = self._enhance_frame(frame)
+
+        preprocessed, raw_bgr, quality = self.extract_plate_candidate(
+            enhanced_frame, bbox, cls_id, lighting=lighting, raw_frame=frame
+        )
+        if preprocessed is None:
+            return self._confirmed_plates.get(track_id)
+
+        native_w = raw_bgr.shape[1] if raw_bgr is not None else 0
+        fused_from = 0
+        if native_w and native_w < FUSION_MAX_NATIVE_PX:
+            buf = self._fusion_crops.setdefault(track_id, [])
+            buf.append(raw_bgr)
+            if len(buf) > FUSION_MAX_VIEWS:
+                buf.sort(key=lambda c: c.shape[1], reverse=True)
+                del buf[FUSION_MAX_VIEWS:]
+
+            if len(buf) < FUSION_MIN_VIEWS:
+                return self._confirmed_plates.get(track_id)
+
+            fused = self._fuse_views(buf)
+            if fused is not None:
+                preprocessed = cv2.resize(
+                    fused, (self._rec_hw[1], self._rec_hw[0]),
+                    interpolation=cv2.INTER_AREA,
+                ) if getattr(self, "_rec_hw", None) else preprocessed
+                fused_from = len(buf)
+            elif native_w < SINGLE_FRAME_FLOOR_PX:
+                return self._confirmed_plates.get(track_id)
+
+        elif native_w < SINGLE_FRAME_FLOOR_PX:
+            return self._confirmed_plates.get(track_id)
+
+        voter   = self._get_voter(track_id)
+        reads   = voter.tracks.get(track_id, [])
+        n_reads = len(reads)
+
+        agreement = 0.5
+        if n_reads:
+            texts = [r["text"] for r in reads if r.get("text")]
+            if texts:
+                agreement = texts.count(max(set(texts), key=texts.count)) / len(texts)
+
+        plate_str, conf, state = self.recognize_plate(
+            preprocessed,
+            raw_bgr_crop=raw_bgr,
+            agreement=float(agreement),
+            votes=n_reads,
+        )
+
+        if not plate_str:
+            return self._confirmed_plates.get(track_id)
+
+        if conf >= MIN_VOTE_CONFIDENCE:
+            voter.add_reading(
+                track_id=track_id,
+                plate_text=plate_str,
+                confidence=conf,
+                quality_score=quality,
+            )
+
+        voted_plate, voted_conf = voter.vote(track_id)
+        if voted_plate is None:
+            voted_plate = plate_str
+            voted_conf  = conf
+
+        all_reads = voter.tracks.get(track_id, [])
+        total_v   = len(all_reads)
+        texts     = [r["text"] for r in all_reads]
+        agree_v   = (
+            texts.count(voted_plate) / max(total_v, 1)
+            if texts else 0.0
+        )
+
+        if state and total_v <= 2 and agree_v < 0.95:
+            voted_plate, state, _note = apply_state_prior(
+                voted_plate, state, agree_v, total_v
+            )
+
+        is_locked = (
+            (total_v >= 3 and agree_v >= 0.66)
+            or (conf >= 0.85 and total_v >= 2)
+        )
+
+        import datetime as _dt
+        detection_event = {
+            "cam_id":     0,
+            "plate":      voted_plate,
+            "confidence": round(voted_conf, 3),
+            "lighting":   lighting,
+            "quality":    round(quality, 1),
+            "timestamp":  _dt.datetime.now().isoformat(),
+        }
+        watchlist_hit = self._watchlist_svc.check_and_alert(detection_event)
+
+        result: Dict[str, Any] = {
+            "plate":          voted_plate,
+            "raw_read":       plate_str,
+            "confidence":     round(voted_conf, 3),
+            "state":          state or (
+                voted_plate[:2] if voted_plate and len(voted_plate) >= 2
+                else None
+            ),
+            "vote_agreement": round(agree_v, 3),
+            "total_votes":    total_v,
+            "locked":         is_locked,
+            "is_stolen":      watchlist_hit,
+            "alert_reason":   None,
+            "lighting":       lighting,
+            "quality_score":  round(quality, 1),
+            "detector_used":  "yolov8",
+            "plate_native_px": int(raw_bgr.shape[1]) if raw_bgr is not None else 0,
+            "read_grade": (
+                "reliable"
+                if raw_bgr is not None
+                and raw_bgr.shape[1] >= RELIABLE_PLATE_NATIVE_PX
+                else "marginal"
+            ),
+            "fused_views": fused_from,
+        }
+
+        if is_locked:
+            self._confirmed_plates[track_id] = result
+
+        return result
+
+    def check_watchlist(
+        self, plate_number: Optional[str]
+    ) -> Tuple[bool, Optional[str]]:
+        if not plate_number:
+            return False, None
+        clean = re.sub(r"[^A-Z0-9]", "", plate_number.upper())
+        match = self._watchlist_svc._fuzzy_match(clean)
+        if match:
+            return True, f"Watchlist hit: {match[0]} ({match[1]})"
+        return False, None
+
+    def _get_voter(self, track_id: int) -> TemporalPlateVoter:
+        if track_id not in self._voters:
+            self._voters[track_id] = TemporalPlateVoter(
+                min_reads=3,
+                min_confidence=MIN_VOTE_CONFIDENCE,
+            )
+        return self._voters[track_id]
+
+    def finalize_track(self, track_id: int) -> Optional[Dict[str, Any]]:
+        self._fusion_crops.pop(track_id, None)
+        voter = self._voters.pop(track_id, None)
+        if voter is None:
+            return self._confirmed_plates.pop(track_id, None)
+        result = voter.finalize(track_id)
+        self._confirmed_plates.pop(track_id, None)
+        return result
+
+    def _cleanup_stale_tracks(self):
+        if len(self._voters) > MAX_TRACK_HISTORIES:
+            keep     = set(list(self._voters.keys())[-MAX_TRACK_HISTORIES // 2:])
+            stale_v  = [k for k in self._voters          if k not in keep]
+            stale_c  = [k for k in self._confirmed_plates if k not in keep]
+            stale_f  = [k for k in self._fusion_crops     if k not in keep]
+            for k in stale_v:  del self._voters[k]
+            for k in stale_c:  del self._confirmed_plates[k]
+            for k in stale_f:  del self._fusion_crops[k]
+            logger.info(
+                "Track cleanup: removed %d voters + %d confirmed",
+                len(stale_v), len(stale_c),
+            )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Singleton accessor
+# ────────────────────────────────────────────────────────────────────────────
+
+_anpr_singleton: Optional[ANPREngine] = None
+
+
+def get_anpr_engine() -> ANPREngine:
+    global _anpr_singleton
+    if _anpr_singleton is None:
+        _anpr_singleton = ANPREngine()
+    return _anpr_singleton

@@ -1,0 +1,22 @@
+{
+  "clip_id": "loiter_negative_walkthrough_02",
+  "detector": "loitering",
+  "camera_id": "CAM-EVAL-LOITER-NEG-WALK",
+  "description": "Person walks steadily across the frame (not stopping). max-distance-from-centroid stays far above the calibrated radius for every 60s window, so it should never fire, even though the track is visible for the full 60s+ span.",
+  "segments": [
+    {
+      "track_id": 302,
+      "positions": [
+        {"video_time": 0,  "cx": 100,  "cy": 300},
+        {"video_time": 10, "cx": 260,  "cy": 300},
+        {"video_time": 20, "cx": 420,  "cy": 300},
+        {"video_time": 30, "cx": 580,  "cy": 300},
+        {"video_time": 40, "cx": 740,  "cy": 300},
+        {"video_time": 50, "cx": 900,  "cy": 300},
+        {"video_time": 60, "cx": 1060, "cy": 300},
+        {"video_time": 70, "cx": 1220, "cy": 300}
+      ]
+    }
+  ],
+  "expected_alerts": []
+}
