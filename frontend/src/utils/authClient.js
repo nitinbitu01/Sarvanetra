@@ -1,6 +1,7 @@
 // frontend/src/utils/authClient.js
 // Access token stored in MEMORY only — never in localStorage or sessionStorage.
 // On page refresh or expiry, /auth/refresh is called automatically using the HTTP-only cookie.
+import { getMockResponse } from '../data/mockData';
 
 let _accessToken = null;
 let _refreshTimer = null;
@@ -74,32 +75,47 @@ export async function apiFetch(url, options = {}) {
   const normalizedUrl = url.startsWith('/api/v1') ? url.slice(7) : url;
   const fullUrl = url.startsWith('http') ? url : `${API_BASE}${normalizedUrl.startsWith('/') ? '' : '/'}${normalizedUrl}`;
 
-  const res = await fetch(fullUrl, {
-    ...options,
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-      ...(options.headers || {}),
-    },
-  });
-
-  if (res.status === 401) {
-    const newToken = await refreshAccessToken();
-    if (!newToken) {
-      return res;
-    }
-
-    return fetch(fullUrl, {
+  try {
+    const res = await fetch(fullUrl, {
       ...options,
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${newToken}`,
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...(options.headers || {}),
       },
     });
-  }
 
-  return res;
+    if (res.status === 401) {
+      const newToken = await refreshAccessToken();
+      if (!newToken) {
+        return res;
+      }
+
+      return fetch(fullUrl, {
+        ...options,
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${newToken}`,
+          ...(options.headers || {}),
+        },
+      });
+    }
+
+    if (res.ok) {
+      const ct = res.headers.get('content-type') || '';
+      if (ct.includes('application/json') || ct.includes('octet-stream')) {
+        return res;
+      }
+    }
+
+    const mock = getMockResponse(fullUrl, options);
+    if (mock) return mock;
+    return res;
+  } catch {
+    const mock = getMockResponse(fullUrl, options);
+    if (mock) return mock;
+    return new Response(JSON.stringify({ error: 'Network error' }), { status: 503 });
+  }
 }

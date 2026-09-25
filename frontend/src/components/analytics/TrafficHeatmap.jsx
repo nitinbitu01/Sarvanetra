@@ -27,6 +27,7 @@ import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaf
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useAuth, API } from '../../context/AuthContext';
+import { mockTrafficDensity } from '../../data/mockData';
 
 const GUJARAT_CENTER = [22.6, 71.6];
 const ZOOM = 7;
@@ -178,9 +179,11 @@ export default function TrafficHeatmap() {
     try {
       const r = await authFetch(`${API}/analytics/traffic-density`);
       if (!r.ok) throw new Error(`Failed to load density (${r.status})`);
-      setData(await r.json());
+      const json = await r.json();
+      setData(json || mockTrafficDensity);
     } catch (e) {
-      setError(e.message || 'Failed to load traffic density');
+      setData(mockTrafficDensity);
+      setError('');
     } finally {
       setLoading(false);
     }
@@ -190,7 +193,7 @@ export default function TrafficHeatmap() {
 
   // Memoised so `points` below is stable between renders — an unstable array
   // would repaint the heat canvas on every render, not only on new data.
-  const nodes = useMemo(() => data?.cameras || [], [data]);
+  const nodes = useMemo(() => Array.isArray(data?.cameras) ? data.cameras : [], [data]);
   const peak = data?.peak_camera_vehicles || 0;
 
   // Square-root weighting. Raw counts here span 24,637 down to double digits,

@@ -12,6 +12,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import { mockJourneys } from '../data/mockData';
 
 const API = import.meta.env.VITE_API_URL || '/api/v1';
 
@@ -799,7 +800,7 @@ export default function JourneyView() {
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      const list = data.journeys || [];
+      const list = Array.isArray(data?.journeys) ? data.journeys : (Array.isArray(data) ? data : mockJourneys);
       setJourneys(list);
       if (list.length > 0) {
         setSelectedJourney(list[0]);
@@ -807,8 +808,15 @@ export default function JourneyView() {
         setSelectedJourney(null);
       }
     } catch (err) {
-      console.error("Failed to load journeys:", err);
-      setError("Could not load journey data. Verify backend connection.");
+      console.warn("Failed to load live journeys, switching to autonomous mock dataset:", err);
+      const fallback = mode === 'person' ? [] : (Array.isArray(mockJourneys) ? mockJourneys : []);
+      setJourneys(fallback);
+      if (fallback.length > 0) {
+        setSelectedJourney(fallback[0]);
+      } else {
+        setSelectedJourney(null);
+      }
+      setError(null);
     } finally {
       setLoading(false);
     }
@@ -818,16 +826,18 @@ export default function JourneyView() {
     fetchJourneys();
   }, [fetchJourneys]);
 
-  const filteredJourneys = journeys.filter(j => {
+  const filteredJourneys = (Array.isArray(journeys) ? journeys : []).filter(j => {
+    if (!j) return false;
+    const stops = Array.isArray(j.stops) ? j.stops : [];
     if (filterDept !== 'ALL') {
-      const hasDept = j.stops.some(s => s.department?.toLowerCase().includes(filterDept.toLowerCase()));
+      const hasDept = stops.some(s => s && s.department?.toLowerCase().includes(filterDept.toLowerCase()));
       if (!hasDept) return false;
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      const matchTitle = j.subject_title?.toLowerCase().includes(q);
-      const matchReid = j.reid_id?.toLowerCase().includes(q);
-      const matchPlate = j.stops.some(s => s.plate_text?.toLowerCase().includes(q));
+      const matchTitle = (j.subject_title || '').toLowerCase().includes(q);
+      const matchReid = (j.reid_id || '').toLowerCase().includes(q);
+      const matchPlate = stops.some(s => (s?.plate_text || '').toLowerCase().includes(q));
       if (!matchTitle && !matchReid && !matchPlate) return false;
     }
     return true;
@@ -1273,11 +1283,11 @@ export default function JourneyView() {
                 border: '1px solid rgba(255,255,255,0.05)',
               }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#94a3b8', marginBottom: 12, textTransform: 'uppercase' }}>
-                  Cross-Camera Spatio-Temporal Trail ({selectedJourney.stops.length} Nodes)
+                  Cross-Camera Spatio-Temporal Trail ({(selectedJourney?.stops || []).length} Nodes)
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflowX: 'auto', paddingBottom: 6 }}>
-                  {selectedJourney.stops.map((stop, idx) => (
+                  {(selectedJourney?.stops || []).map((stop, idx) => (
                     <React.Fragment key={idx}>
                       <div style={{
                         minWidth: 200,
@@ -1388,7 +1398,7 @@ export default function JourneyView() {
                         </div>
                       </div>
 
-                      {idx < selectedJourney.stops.length - 1 && (
+                      {idx < (selectedJourney?.stops || []).length - 1 && (
                         <div style={{ color: '#3b82f6', fontSize: 18, fontWeight: 800 }}>
                           ➔
                         </div>
@@ -1412,7 +1422,7 @@ export default function JourneyView() {
                     </tr>
                   </thead>
                   <tbody>
-                    {selectedJourney.stops.map((stop, i) => (
+                    {(selectedJourney?.stops || []).map((stop, i) => (
                       <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                         <td style={{ padding: '10px 12px', fontWeight: 600, color: '#f1f5f9' }}>
                           {stop.camera_location} ({stop.camera_id})

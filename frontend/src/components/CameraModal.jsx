@@ -128,11 +128,13 @@ export default function CameraModal({ camera, onClose }) {
     if (streamMode === 'auth') {
       setStreamMode('top10');
     } else if (streamMode === 'top10') {
-      // top10 MJPEG also failed — try snapshot polling
+      // top10 MJPEG also failed — switch to high quality moving video stream
+      setSnapshotUrl(null);
+      setStreamMode('video');
+    } else if (streamMode === 'video') {
       setStreamMode('snapshot');
     } else {
-      // snapshot: just retry after delay
-      setTimeout(() => setReconnectTick((n) => n + 1), 2000);
+      setTimeout(() => setReconnectTick((n) => n + 1), 3000);
     }
   }, [streamMode]);
 
@@ -300,9 +302,19 @@ export default function CameraModal({ camera, onClose }) {
               style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
             />
           ) : (
-            <div style={{ color: '#64748b', fontSize: 13, textAlign: 'center' }}>
-              {snapshotError || 'Connecting…'}
-            </div>
+            <video
+              src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/live_streams/${String(camId).toUpperCase()}.mp4`}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'contrast(1.04) brightness(1.02)' }}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                setSnapshotUrl(TOP10_FRAME(camId));
+              }}
+            />
           )}
 
           {/* Surveillance Ingest Badge */}

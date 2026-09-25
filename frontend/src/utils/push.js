@@ -156,8 +156,10 @@ export function registerServiceWorker() {
     );
     return;
   }
+  const swUrl = `${import.meta.env.BASE_URL || '/'}sw.js`.replace(/\/{2,}/g, '/');
+  const swScope = import.meta.env.BASE_URL || '/';
   navigator.serviceWorker
-    .register('/sw.js', { scope: '/' })
+    .register(swUrl, { scope: swScope })
     .then((reg) => console.log('[SentinelIQ] SW registered, scope:', reg.scope))
-    .catch((err) => console.error('[SentinelIQ] SW registration failed:', err));
+    .catch((err) => console.warn('[SentinelIQ] SW registration notice:', err.message));
 }

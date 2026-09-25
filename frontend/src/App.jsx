@@ -40,6 +40,7 @@ import TrajectoryEnginePanel from './components/TrajectoryEnginePanel';
 import TrajectoryProofPanel from './components/TrajectoryProofPanel';
 import Icon, { BrandMark } from './components/Icon';
 import Top10CommandCentre from './pages/Top10CommandCentre';
+import PanelErrorBoundary from './components/PanelErrorBoundary';
 
 // â”€â”€ Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Grouped by what the operator is trying to DO. Sixteen items in one flat list
@@ -465,6 +466,7 @@ function Dashboard() {
 
         {/* Main */}
         <main className={`main-content ${(page === 'control' || page === 'map') ? 'c2-control-main' : ''}`}>
+          <PanelErrorBoundary panelName={`Section (${page})`} resetKey={page}>
           {page === 'map' && (
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <div className="c2-panel-header" style={{ padding: '0 14px', height: 36 }}>
@@ -743,6 +745,7 @@ function Dashboard() {
               </div>
             </div>
           )}
+          </PanelErrorBoundary>
         </main>
       </div>
     </div>

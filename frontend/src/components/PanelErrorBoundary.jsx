@@ -40,32 +40,40 @@ export class PanelErrorBoundary extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ hasError: false, error: null });
+    }
+  }
+
   handleRetry = () => this.setState({ hasError: false, error: null });
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="panel-error" title={this.state.error?.message}>
-          <div>⚠ {this.props.panelName} unavailable</div>
-          {import.meta.env.DEV && this.state.error?.message && (
-            <div style={{ fontSize: 11, color: 'var(--accent-red, #ef4444)' }}>
-              {this.state.error.message}
-            </div>
-          )}
-          {/* Retry rather than requiring a full reload: most panel failures
-              here are a transient fetch, and reloading the page would also
-              drop every other panel's live state. */}
+        <div className="panel-error" style={{
+          padding: 24, margin: '16px 0',
+          background: 'var(--bg-elevated, #1e293b)',
+          border: '1px solid var(--border, #334155)',
+          borderRadius: 12,
+        }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--accent-red, #ef4444)', marginBottom: 8 }}>
+            ⚠️ {this.props.panelName || 'Section'} encountered an error
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted, #94a3b8)', marginBottom: 16 }}>
+            {this.state.error?.message || 'An unexpected rendering error occurred in this view.'}
+          </div>
           <button
             onClick={this.handleRetry}
             style={{
-              alignSelf: 'flex-start', marginTop: 2, padding: '3px 9px',
-              fontSize: 11, borderRadius: 6, cursor: 'pointer',
+              padding: '8px 16px',
+              fontSize: 12, borderRadius: 6, cursor: 'pointer',
               border: '1px solid var(--border, #334155)',
-              background: 'var(--bg-elevated, #1e293b)',
-              color: 'var(--text-muted, #94a3b8)',
+              background: '#3b82f6',
+              color: '#fff', fontWeight: 600,
             }}
           >
-            Retry
+            🔄 Reload Section
           </button>
         </div>
       );

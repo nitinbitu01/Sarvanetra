@@ -1,5 +1,6 @@
 // frontend/src/context/AuthContext.jsx
 import { createContext, useContext, useState, useCallback } from 'react';
+import { getMockResponse } from '../data/mockData';
 
 const AuthContext = createContext(null);
 
@@ -38,14 +39,30 @@ export function AuthProvider({ children }) {
   }, []);
 
   const authFetch = useCallback(async (url, opts = {}) => {
-    const res = await fetch(url, {
-      ...opts,
-      headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}` },
-    });
-    if (res.status === 401) {
-      logout();
+    try {
+      const res = await fetch(url, {
+        ...opts,
+        headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}` },
+      });
+      if (res.status === 401) {
+        logout();
+        return res;
+      }
+      if (res.ok) {
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('application/json') || ct.includes('octet-stream') || ct.includes('pdf')) {
+          return res;
+        }
+      }
+      // If 404 or HTML (e.g. GitHub Pages static fallback)
+      const mock = getMockResponse(url, opts);
+      if (mock) return mock;
+      return res;
+    } catch {
+      const mock = getMockResponse(url, opts);
+      if (mock) return mock;
+      throw new Error('Network error');
     }
-    return res;
   }, [token, logout]);
 
   return (

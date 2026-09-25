@@ -46,12 +46,14 @@ export default function UnroutedBanner({ refreshSignal }) {
       const res = await authFetch(`${API}/routing/unrouted`);
       if (!res.ok) return;
       const data = await res.json();
-      setItems(data);
+      const list = Array.isArray(data) ? data : [];
+      setItems(list);
 
-      const live = new Set(data.map(d => d.routed_alert_id));
+      const live = new Set(list.map(d => d.routed_alert_id));
       setDismissed(prev => {
-        const pruned = prev.filter(id => live.has(id));
-        if (pruned.length !== prev.length) writeDismissed(pruned);
+        const safePrev = Array.isArray(prev) ? prev : [];
+        const pruned = safePrev.filter(id => live.has(id));
+        if (pruned.length !== safePrev.length) writeDismissed(pruned);
         return pruned;
       });
     } catch {
@@ -61,18 +63,21 @@ export default function UnroutedBanner({ refreshSignal }) {
 
   useEffect(() => { load(); }, [load, refreshSignal]);
 
-  const visible = items.filter(i => !dismissed.includes(i.routed_alert_id));
+  const safeItems = Array.isArray(items) ? items : [];
+  const safeDismissed = Array.isArray(dismissed) ? dismissed : [];
+  const visible = safeItems.filter(i => i && !safeDismissed.includes(i.routed_alert_id));
 
   const dismissOne = (id) => {
     setDismissed(prev => {
-      const next = [...new Set([...prev, id])];
+      const safePrev = Array.isArray(prev) ? prev : [];
+      const next = [...new Set([...safePrev, id])];
       writeDismissed(next);
       return next;
     });
   };
 
   const dismissAll = () => {
-    const allIds = items.map(i => i.routed_alert_id);
+    const allIds = safeItems.map(i => i.routed_alert_id);
     setDismissed(allIds);
     writeDismissed(allIds);
   };
