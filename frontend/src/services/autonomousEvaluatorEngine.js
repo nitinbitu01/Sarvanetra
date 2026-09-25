@@ -36,7 +36,8 @@ export function initAutonomousEvaluatorEngine() {
 
       const res = await originalFetch(input, { ...init, signal: combinedSignal });
       clearTimeout(timeoutId);
-      if (res && res.status < 500) {
+      const cType = res ? (res.headers.get('content-type') || '') : '';
+      if (res && res.ok && cType.includes('application/json')) {
         return res;
       }
     } catch (networkErr) {
