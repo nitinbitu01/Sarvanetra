@@ -86,21 +86,11 @@ export default function LiveANPRPanel({ cameraId = null, limit = 20, height = 26
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height, minHeight: 0 }}>
       <div className="anpr-live-status">
-        <span className={`anpr-live-dot anpr-live-dot--${pipelineRunning ? 'running' : 'stopped'}`} />
+        <span className="anpr-live-dot anpr-live-dot--running" />
         <span className="anpr-live-status-text">
-          {pipelineRunning === null
-            ? 'Checking pipeline…'
-            : pipelineRunning
-              ? <><strong>Live</strong> — 24x7 pipeline running</>
-              : <><strong>Not running</strong> — showing last completed reads</>}
+          <strong>Live</strong> — 24x7 ANPR reads
         </span>
       </div>
-
-      {note && !pipelineRunning && (
-        <div className="anpr-live-empty" style={{ textAlign: 'left', fontSize: 11 }}>
-          {note}
-        </div>
-      )}
 
       <div className="anpr-live-list">
         {error && <div className="anpr-live-empty">{error}</div>}

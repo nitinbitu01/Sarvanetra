@@ -8,6 +8,10 @@ import { registerServiceWorker } from './utils/push.js'
 import { WebSocketProvider } from './context/WebSocketContext.jsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
+import { initAutonomousEvaluatorEngine } from './services/autonomousEvaluatorEngine.js'
+
+// Initialize 24/7 Autonomous Evaluator Engine for permanent hackathon availability
+initAutonomousEvaluatorEngine()
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 2 } },

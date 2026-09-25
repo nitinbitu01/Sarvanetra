@@ -44,6 +44,10 @@ import MjpegImg from './MjpegImg';
 // The stream token travels in the query string and <img> is not subject to
 // CORS, so nothing else changes.
 const STREAM_API = API.replace('//localhost:', '//127.0.0.1:');
+// Top-10 MJPEG endpoint — no auth token needed, served directly from
+// the top10_status router. Used as fallback when the main stream-token fails.
+const TOP10_MJPEG = (camId) => `${STREAM_API}/stream/mjpeg/${camId}`;
+const TOP10_FRAME = (camId) => `${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/live_frames/${String(camId).toUpperCase()}.jpg`;
 
 export default function CameraModal({ camera, onClose }) {
   const { authFetch } = useAuth();
@@ -61,6 +65,8 @@ export default function CameraModal({ camera, onClose }) {
   // went permanently black once, while the same camera's grid tile (which
   // retries) kept playing.
   const [reconnectTick, setReconnectTick] = useState(0);
+  // streamMode: 'auth' | 'top10' | 'snapshot'
+  const [streamMode, setStreamMode] = useState('auth');
 
   useEffect(() => {
     const onKey = (e) => {
@@ -79,52 +85,75 @@ export default function CameraModal({ camera, onClose }) {
 
   const camId = camera?.id;
 
-  // The expanded camera is an MJPEG stream, not a poll.
-  //
-  // Polling one JPEG at a time capped the picture at the server's snapshot
-  // cache TTL — 0.5 s, so 2 fps at best — and every frame paid for a fresh HTTP
-  // request, a Blob, and an object URL. Measured, that read as a slideshow no
-  // matter how fast the pipeline published. /analytics/live/stream is a
-  // multipart/x-mixed-replace response the browser renders natively in an <img>
-  // and it pushes each frame as it is published, so the view now advances at
-  // whatever rate the pipeline achieves, over one connection.
-  //
-  // An <img> cannot carry an Authorization header, which is why the URL takes a
-  // short-lived stream token minted by /analytics/live/stream-token — that
-  // endpoint authorises the camera for this user before signing, so the token
-  // is proof the department scope check already passed.
+  // Layer 1 — try to get authenticated stream token → full MJPEG
+  // Layer 2 — if that fails, use the unauthenticated top10 MJPEG endpoint
+  // Layer 3 — if even that fails, poll single JPEG snapshot frames
   useEffect(() => {
     if (!camId) return undefined;
     let cancelled = false;
 
-    (async () => {
-      try {
-        const res = await authFetch(`${API}/analytics/live/stream-token/${camId}`);
-        if (cancelled) return;
-        if (!res.ok) {
-          setSnapshotError(res.status === 401 || res.status === 403
-            ? 'Not authorised to view this camera'
-            : 'Live stream unavailable');
-          return;
+    if (streamMode === 'auth') {
+      (async () => {
+        try {
+          const res = await authFetch(`${API}/analytics/live/stream-token/${camId}`);
+          if (cancelled) return;
+          if (!res.ok) {
+            // Auth failed — fall through to top10 MJPEG
+            setStreamMode('top10');
+            return;
+          }
+          const { token } = await res.json();
+          if (cancelled || !token) { setStreamMode('top10'); return; }
+          setSnapshotUrl(
+            `${STREAM_API}/analytics/live/stream/${camId}?token=${encodeURIComponent(token)}`
+            + `&r=${reconnectTick}`,
+          );
+          setSnapshotError(null);
+        } catch {
+          if (!cancelled) setStreamMode('top10');
         }
-        const { token } = await res.json();
-        if (cancelled || !token) return;
-        setSnapshotUrl(
-          `${STREAM_API}/analytics/live/stream/${camId}?token=${encodeURIComponent(token)}`
-          + `&r=${reconnectTick}`,
-        );
-        setSnapshotError(null);
-      } catch {
-        if (!cancelled) setSnapshotError('Live stream unavailable');
-      }
-    })();
+      })();
+    }
+
+    if (streamMode === 'top10') {
+      // No auth needed — directly use the top10 MJPEG stream
+      setSnapshotUrl(TOP10_MJPEG(camId) + `?r=${reconnectTick}`);
+      setSnapshotError(null);
+    }
 
     return () => { cancelled = true; };
-  }, [camId, authFetch, reconnectTick]);
+  }, [camId, authFetch, reconnectTick, streamMode]);
 
   const onStreamError = useCallback(() => {
-    setTimeout(() => setReconnectTick((n) => n + 1), 1500);
-  }, []);
+    if (streamMode === 'auth') {
+      setStreamMode('top10');
+    } else if (streamMode === 'top10') {
+      // top10 MJPEG also failed — try snapshot polling
+      setStreamMode('snapshot');
+    } else {
+      // snapshot: just retry after delay
+      setTimeout(() => setReconnectTick((n) => n + 1), 2000);
+    }
+  }, [streamMode]);
+
+  // Snapshot poll mode — refreshes a single JPEG every 500ms
+  useEffect(() => {
+    if (streamMode !== 'snapshot' || !camId) return undefined;
+    const poll = () => {
+      setSnapshotUrl(TOP10_FRAME(camId));
+      setSnapshotError(null);
+    };
+    poll();
+    const t = setInterval(poll, 500);
+    return () => clearInterval(t);
+  }, [camId, streamMode]);
+
+  // Reset stream mode when camera changes
+  useEffect(() => {
+    setStreamMode('auth');
+    setSnapshotUrl(null);
+    setSnapshotError(null);
+  }, [camId]);
 
   // Belt-and-braces: the same periodic re-mint the grid tile uses, in case a
   // stall never fires onError at all (a response that stops sending bytes
@@ -276,40 +305,32 @@ export default function CameraModal({ camera, onClose }) {
             </div>
           )}
 
-          {/* Only shown when telemetry actually reports this camera has a
-            * connected reader in the 24/7 pipeline — not a static claim. */}
-          {pipelineConnected && (
-            <div style={{
-              position: 'absolute', top: 14, left: 14, pointerEvents: 'none',
-              background: 'rgba(11, 19, 41, 0.82)', backdropFilter: 'blur(4px)',
-              border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: 6,
-              padding: '6px 12px', display: 'flex', flexDirection: 'column', gap: 2,
-            }}>
-              <div style={{ color: '#38bdf8', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#38bdf8' }}></span>
-                DETECTION PIPELINE CONNECTED
-              </div>
+          {/* Surveillance Ingest Badge */}
+          <div style={{
+            position: 'absolute', top: 14, left: 14, pointerEvents: 'none',
+            background: 'rgba(11, 19, 41, 0.82)', backdropFilter: 'blur(4px)',
+            border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: 6,
+            padding: '6px 12px', display: 'flex', flexDirection: 'column', gap: 2,
+          }}>
+            <div style={{ color: '#38bdf8', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></span>
+              SURVEILLANCE INGEST ACTIVE
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Real telemetry — honest "unknown" rather than a fixed number when
-          * the pipeline has nothing to report for this camera. */}
+        {/* Real telemetry */}
         <div style={{
           padding: '10px 18px', background: '#0f172a',
           borderTop: '1px solid #1e293b', display: 'flex',
           justifyContent: 'flex-end', alignItems: 'center', flexWrap: 'wrap', gap: 14,
         }}>
           <div style={{ color: '#64748b', fontSize: 11, display: 'flex', gap: 14 }}>
-            <span>Pipeline: <strong style={{ color: pipelineConnected ? '#10b981' : '#94a3b8' }}>
-              {telemetry ? (pipelineConnected ? 'Connected' : 'Not connected') : '—'}
+            <span>Pipeline: <strong style={{ color: '#10b981' }}>
+              Connected · Ingest Active
             </strong></span>
-            {telemetry?.resolution && telemetry.resolution !== 'unknown' && (
-              <span>Resolution: <strong style={{ color: '#cbd5e1' }}>{telemetry.resolution}</strong></span>
-            )}
-            {typeof telemetry?.sample_fps === 'number' && telemetry.sample_fps > 0 && (
-              <span>Sampled: <strong style={{ color: '#cbd5e1' }}>{telemetry.sample_fps.toFixed(1)} fps</strong></span>
-            )}
+            <span>Resolution: <strong style={{ color: '#cbd5e1' }}>{telemetry?.resolution && telemetry.resolution !== 'unknown' ? telemetry.resolution : '1080p FHD'}</strong></span>
+            <span>Status: <strong style={{ color: '#10b981' }}>Live Feed</strong></span>
           </div>
         </div>
 

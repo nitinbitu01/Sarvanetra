@@ -20,10 +20,14 @@ import MjpegImg from './MjpegImg';
 // clip is ~70 px wide inside a 16:9 tile, too small to see a box or read a
 // label, so the proof is shown here at a size where it can be read.
 const LIVE_CAMERAS = ['CAM_M1', 'CAM_M2', 'CAM_M3', 'CAM_M4'];
-// Separate host name from the page's API calls and <video> downloads, so the
-// four long-lived streams get their own browser connection pool (see
-// CameraModal for the measurement behind this).
-const STREAM_API = API.replace('//localhost:', '//127.0.0.1:');
+// Origin partitioning for local development to prevent Chrome's 6-connection pool limit per host,
+// while dynamically falling back to relative proxy paths on public HTTPS domains (e.g. ngrok / cloud).
+const isRemoteOrHttps = typeof window !== 'undefined' && (
+  window.location.protocol === 'https:' ||
+  (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
+);
+const STREAM_API = isRemoteOrHttps ? (API || '/api/v1') : 'http://127.0.0.1:8000/api/v1';
+const VIDEO_API = isRemoteOrHttps ? (API || '/api/v1') : 'http://localhost:8000/api/v1';
 
 function LiveProofTile({ camId }) {
   const { authFetch } = useAuth();
@@ -177,12 +181,13 @@ export default function ReIDProofPanel() {
                         borderRadius: 8, overflow: 'hidden',
                         background: 'rgba(15,23,42,0.55)' }}>
             <video
-              src={`${API}/reid-demo/video/${c.camera}`}
+              src={`${VIDEO_API}/reid-demo/video/${c.camera}`}
               controls
+              autoPlay
               loop
               muted
               playsInline
-              preload="metadata"
+              preload="auto"
               style={{ width: '100%', display: 'block', background: '#000',
                        maxHeight: 380 }}
             />

@@ -25,13 +25,14 @@ const API = import.meta.env.VITE_API_URL || '/api/v1';
 function EvidenceLightbox({ shot, onClose }) {
   const [data, setData] = useState(null);
   useEffect(() => {
+    setData(null);
     if (!shot) return undefined;
     let alive = true;
     fetch(`${API}/journeys/evidence?camera=${encodeURIComponent(shot.camera)}`
       + `&plate=${encodeURIComponent(shot.plate)}`)
       .then(r => (r.ok ? r.json() : null))
       .then(d => { if (alive) setData(d); })
-      .catch(() => {});
+      .catch(() => { if (alive) setData(null); });
     return () => { alive = false; };
   }, [shot]);
 
@@ -73,9 +74,9 @@ function EvidenceLightbox({ shot, onClose }) {
           }}>Close</button>
         </div>
 
-        {!data && <div style={{ color: '#94a3b8' }}>Loading evidence…</div>}
+        {!data && <div style={{ color: '#94a3b8', padding: '20px 0' }}>Loading evidence frames…</div>}
 
-        {data && (
+        {data && data.frames?.length > 0 && (
           <>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {data.frames.map(f => (
@@ -100,6 +101,11 @@ function EvidenceLightbox({ shot, onClose }) {
             </div>
           </>
         )}
+        {data && (!data.frames || data.frames.length === 0) && (
+          <div style={{ color: '#64748b', fontSize: 12, padding: '16px 0' }}>
+            No verified evidence crops archived on disk for this camera sighting.
+          </div>
+        )}
       </div>
     </div>
   );
@@ -108,24 +114,53 @@ function EvidenceLightbox({ shot, onClose }) {
 /**
  * The frames behind one camera hit, shown small and inline.
  *
- * Fetched per sighting rather than inlined with the journey: a route with a
- * dozen stops would otherwise ship several megabytes of base64 before the
- * operator has asked to look at anything. Failure is silent by design - an
- * evidence strip that cannot load should not break the timeline around it.
+ * Fetched per sighting rather than inlined with the journey.
+ * Immediately clears previous state when camera or plate changes.
  */
 function EvidenceStrip({ camera, plate }) {
   const [frames, setFrames] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     let alive = true;
+    setFrames(null);
+    setLoading(true);
     fetch(`${API}/journeys/evidence?camera=${encodeURIComponent(camera)}`
       + `&plate=${encodeURIComponent(plate)}`)
       .then(r => (r.ok ? r.json() : null))
-      .then(d => { if (alive && d) setFrames(d); })
-      .catch(() => {});
+      .then(d => {
+        if (!alive) return;
+        setLoading(false);
+        if (d && d.frames && d.frames.length > 0) {
+          setFrames(d);
+        } else {
+          setFrames({ empty: true });
+        }
+      })
+      .catch(() => {
+        if (!alive) return;
+        setLoading(false);
+        setFrames({ empty: true });
+      });
     return () => { alive = false; };
   }, [camera, plate]);
 
-  if (!frames?.frames?.length) return null;
+  if (loading) {
+    return (
+      <div style={{ marginTop: 8, height: 42, display: 'flex', alignItems: 'center', color: '#475569', fontSize: 10 }}>
+        Loading evidence…
+      </div>
+    );
+  }
+
+  if (!frames || frames.empty || !frames.frames?.length) {
+    return (
+      <div style={{ marginTop: 6, color: '#475569', fontSize: 10, fontStyle: 'italic' }}>
+        No archived crops for {camera}
+      </div>
+    );
+  }
+
   const base = API.replace(/\/api\/v1$/, '');
   return (
     <div style={{ marginTop: 8 }}>
@@ -1033,7 +1068,8 @@ export default function JourneyView() {
               // score: how confident the match is and how dangerous the
               // vehicle is are different questions, and the old danger_score
               // conflated them with a number nothing measured.
-              const flagColor = j.watchlist_match ? '#ef4444' : '#64748b';
+              const hasConflict = Boolean(j.concurrent_conflict || j.cloned_plate_suspect);
+              const flagColor = j.watchlist_match ? '#ef4444' : hasConflict ? '#f59e0b' : '#3b82f6';
               return (
                 <div
                   key={j.reid_id}
@@ -1060,10 +1096,10 @@ export default function JourneyView() {
                       fontSize: 11,
                       fontWeight: 700,
                     }}>
-                      {j.watchlist_match ? 'WATCHLIST' : (
+                      {j.watchlist_match ? 'WATCHLIST' : hasConflict ? '⚠️ CONFLICT' : (
                         j.route_confidence != null
                           ? `${Math.round(j.route_confidence * 100)}% match`
-                          : 'unscored'
+                          : `${j.stops_count} ${j.stops_count === 1 ? 'sighting' : 'stops'}`
                       )}
                     </span>
                   </div>
@@ -1126,6 +1162,22 @@ export default function JourneyView() {
                 </div>
 
                 <div style={{ display: 'flex', gap: 10 }}>
+                  {(selectedJourney.concurrent_conflict || selectedJourney.cloned_plate_suspect) && (
+                    <div style={{
+                      textAlign: 'right',
+                      padding: '6px 14px',
+                      borderRadius: 8,
+                      background: 'rgba(245, 158, 11, 0.15)',
+                      border: '1px solid #f59e0b',
+                    }}>
+                      <div style={{ fontSize: 10, color: '#fcd34d', fontWeight: 800, textTransform: 'uppercase' }}>
+                        Cross-Camera Audit
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: '#f59e0b' }}>
+                        ⚠️ Concurrent Sighting Conflict
+                      </div>
+                    </div>
+                  )}
                   <div style={{
                     textAlign: 'right',
                     padding: '6px 14px',
@@ -1134,7 +1186,15 @@ export default function JourneyView() {
                     border: `1px solid ${selectedJourney.watchlist_match ? '#ef444455' : 'rgba(255,255,255,0.10)'}`,
                   }}>
                     <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase' }}>Priority</div>
-                    <div style={{ fontSize: 15, fontWeight: 800, color: selectedJourney.watchlist_match ? '#f87171' : '#94a3b8' }}>
+                    <div style={{
+                      fontSize: 15,
+                      fontWeight: 800,
+                      color: selectedJourney.watchlist_match
+                        ? '#f87171'
+                        : (selectedJourney.concurrent_conflict || selectedJourney.cloned_plate_suspect)
+                        ? '#fbbf24'
+                        : '#94a3b8',
+                    }}>
                       {selectedJourney.priority}
                     </div>
                   </div>
@@ -1289,14 +1349,23 @@ export default function JourneyView() {
                             )}
                           </div>
                           {(stop.color || stop.subtype) && (
-                            <div style={{ color: '#a78bfa', fontSize: 10 }}>
-                              🏷️ {stop.color} {stop.subtype}
+                            <div style={{ color: '#a78bfa', fontSize: 10, fontWeight: 600 }}>
+                              {(() => {
+                                const sub = (stop.subtype || '').toLowerCase();
+                                const icon = sub === 'truck' ? '🚚 ' :
+                                             sub === 'motorcycle' ? '🏍️ ' :
+                                             sub === 'car' ? '🚗 ' :
+                                             sub === 'bus' ? '🚌 ' :
+                                             sub === 'person' ? '🚶 ' : '';
+                                return `${icon}${stop.color || ''} ${stop.subtype || ''}`.trim();
+                              })()}
                             </div>
                           )}
                           {/* The frames the vote was actually taken over. A
                               match an officer cannot look at is not evidence,
                               and a court will ask for the image. */}
                           <EvidenceStrip
+                            key={`${selectedJourney.reid_id}_${stop.camera_id}_${stop.plate_text || ''}_${idx}`}
                             camera={stop.camera_id}
                             plate={stop.plate_text || selectedJourney.reid_id}
                           />
@@ -1358,11 +1427,17 @@ export default function JourneyView() {
                             color: '#e2e8f0',
                             fontSize: 11,
                           }}>
-                            {/* Blank where no appearance model determined it,
-                                rather than a guess. */}
-                            {(stop.color || stop.subtype)
-                              ? `${stop.color || ''} ${stop.subtype || ''}`.trim()
-                              : <span style={{ color: '#64748b' }}>not determined</span>}
+                            {(() => {
+                              const sub = (stop.subtype || '').toLowerCase();
+                              const icon = sub === 'truck' ? '🚚 ' :
+                                           sub === 'motorcycle' ? '🏍️ ' :
+                                           sub === 'car' ? '🚗 ' :
+                                           sub === 'bus' ? '🚌 ' :
+                                           sub === 'person' ? '🚶 ' : '';
+                              return (stop.color || stop.subtype)
+                                ? `${icon}${stop.color || ''} ${stop.subtype || ''}`.trim()
+                                : <span style={{ color: '#64748b' }}>not determined</span>;
+                            })()}
                           </span>
                         </td>
                         <td style={{ padding: '10px 12px' }}>
@@ -1388,18 +1463,42 @@ export default function JourneyView() {
                           )}
                         </td>
                         <td style={{ padding: '10px 12px' }}>
-                          {/* Was a hardcoded green tick on every row. Only the
-                              legs BETWEEN sightings get a speed check, and the
-                              first sighting has nothing to be checked against. */}
                           {i === 0 ? (
                             <span style={{ color: '#64748b', fontSize: 11 }}>
                               first sighting
                             </span>
-                          ) : (
-                            <span style={{ color: '#34d399', fontSize: 11, fontWeight: 700 }}>
-                              ✅ speed plausible
-                            </span>
-                          )}
+                          ) : (() => {
+                            const leg = selectedJourney.legs && selectedJourney.legs[i - 1];
+                            if (!leg || leg.speed_kmh == null) {
+                              return <span style={{ color: '#64748b', fontSize: 11 }}>—</span>;
+                            }
+                            if (leg.flag === 'OVERSPEED' && leg.speed_kmh > 150) {
+                              return (
+                                <span style={{ color: '#f43f5e', fontSize: 11, fontWeight: 700 }} title={leg.flag_reason || ''}>
+                                  ⚠️ Kinematic Discrepancy ({leg.speed_kmh} km/h)
+                                </span>
+                              );
+                            }
+                            if (leg.flag === 'OVERSPEED') {
+                              return (
+                                <span style={{ color: '#f59e0b', fontSize: 11, fontWeight: 700 }} title={leg.flag_reason || ''}>
+                                  ⚠️ Overspeed ({leg.speed_kmh} km/h)
+                                </span>
+                              );
+                            }
+                            if (leg.flag === 'STOPOVER') {
+                              return (
+                                <span style={{ color: '#38bdf8', fontSize: 11, fontWeight: 700 }} title={leg.flag_reason || ''}>
+                                  ⏸️ Stopover ({leg.duration_min} min)
+                                </span>
+                              );
+                            }
+                            return (
+                              <span style={{ color: '#34d399', fontSize: 11, fontWeight: 700 }}>
+                                ✅ Plausible ({leg.speed_kmh} km/h)
+                              </span>
+                            );
+                          })()}
                         </td>
                       </tr>
                     ))}

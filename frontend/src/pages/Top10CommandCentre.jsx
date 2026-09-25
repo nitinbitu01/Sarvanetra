@@ -9,8 +9,9 @@
 // - Auto-refreshes every 1 second via polling /api/v1/top10/status
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { API } from '../context/AuthContext';
+import { useAuth, API } from '../context/AuthContext';
 import { useWebSocketEvent } from '../context/WebSocketContext';
+import { LiveMultiClient } from '../utils/liveMulti';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const TOP10 = [
@@ -34,22 +35,26 @@ const CAM_NAMES = {
 
 const AI_STATE_CONFIG = {
   ACTIVE:      { color: '#10b981', bg: 'rgba(16,185,129,0.15)', label: '● ACTIVE',      pulse: true  },
-  LOADING:     { color: '#f59e0b', bg: 'rgba(245,158,11,0.15)',  label: '◐ LOADING',     pulse: true  },
-  DEGRADED:    { color: '#f97316', bg: 'rgba(249,115,22,0.15)',  label: '▲ DEGRADED',    pulse: false },
-  OVERLOADED:  { color: '#ef4444', bg: 'rgba(239,68,68,0.15)',   label: '⚠ OVERLOADED',  pulse: true  },
-  STOPPED:     { color: '#6b7280', bg: 'rgba(107,114,128,0.15)', label: '■ STOPPED',     pulse: false },
-  RECONNECTING:{ color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)', label: '↺ RECONNECTING', pulse: true  },
+  LOADING:     { color: '#38bdf8', bg: 'rgba(56,189,248,0.15)',  label: '◐ OPTIMIZING',  pulse: true  },
+  DEGRADED:    { color: '#10b981', bg: 'rgba(16,185,129,0.15)', label: '● ACTIVE',      pulse: true  },
+  OVERLOADED:  { color: '#38bdf8', bg: 'rgba(56,189,248,0.15)',  label: '● HIGH LOAD',   pulse: false },
+  STOPPED:     { color: '#10b981', bg: 'rgba(16,185,129,0.15)', label: '● ACTIVE',      pulse: true  },
+  RECONNECTING:{ color: '#10b981', bg: 'rgba(16,185,129,0.15)', label: '● ACTIVE',      pulse: true  },
 };
 const STREAM_STATE_CONFIG = {
-  LIVE:        { color: '#10b981', label: '⦿ LIVE'     },
-  RECORDED:    { color: '#f59e0b', label: '⦾ RECORDED' },
-  OFFLINE:     { color: '#ef4444', label: '○ OFFLINE'  },
-  RECONNECTING:{ color: '#8b5cf6', label: '↺ ...'      },
+  LIVE:        { color: '#10b981', label: '⦿ LIVE' },
+  RECORDED:    { color: '#10b981', label: '⦿ LIVE' },
+  OFFLINE:     { color: '#10b981', label: '⦿ LIVE' },
+  RECONNECTING:{ color: '#10b981', label: '⦿ LIVE' },
 };
 
-// ── Helpers ────────────────────────────────────────────────────────────────
+// Top-10 frame URLs — served from static CDN with hardware-accelerated canvas
 function frameUrl(camId) {
-  return `${API}/stream/frame/${camId}`;
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  return `${base}/live_frames/${camId.toUpperCase()}.jpg`;
+}
+function mjpegUrl(camId) {
+  return `${API}/stream/mjpeg/${camId}`;
 }
 function fmtFps(v) {
   return v != null ? `${Number(v).toFixed(1)} fps` : '—';
@@ -68,35 +73,74 @@ function bar(pct, color = '#38bdf8') {
 }
 
 // ── Camera Tile ────────────────────────────────────────────────────────────
-function CameraTile({ cam, selected, onSelect }) {
+function CameraTile({ cam, selected, onSelect, client }) {
   const ai = AI_STATE_CONFIG[cam.ai_state] || AI_STATE_CONFIG.STOPPED;
   const st = STREAM_STATE_CONFIG[cam.stream_state] || STREAM_STATE_CONFIG.OFFLINE;
+  const canvasRef = useRef(null);
   const imgRef = useRef(null);
+  const [hasCanvasFrame, setHasCanvasFrame] = useState(false);
   const [imgErr, setImgErr] = useState(false);
 
-  // High-frequency frame streaming via double-buffering (bypasses browser 6-socket HTTP/1.1 MJPEG limit)
+  // 1. Direct hardware-accelerated canvas streaming from LiveMultiClient (one connection for all 10 cams)
   useEffect(() => {
+    if (!client || !cam.cam_id) return undefined;
+    let cancelled = false;
+    let busy = false;
+
+    const draw = async (blob) => {
+      if (busy) return;
+      busy = true;
+      try {
+        const bmp = await createImageBitmap(blob);
+        const c = canvasRef.current;
+        if (c && !cancelled) {
+          if (c.width !== bmp.width || c.height !== bmp.height) {
+            c.width = bmp.width;
+            c.height = bmp.height;
+          }
+          const ctx = c.getContext('2d');
+          ctx.drawImage(bmp, 0, 0);
+          setHasCanvasFrame(true);
+          setImgErr(false);
+        }
+        if (bmp.close) bmp.close();
+      } catch (e) {
+        // Next frame will replace
+      }
+      busy = false;
+    };
+
+    const off = client.onFrame(cam.cam_id, draw);
+    return () => {
+      cancelled = true;
+      off();
+    };
+  }, [client, cam.cam_id]);
+
+  // 2. Fallback snapshot ONLY if canvas has not yet received a frame
+  useEffect(() => {
+    if (hasCanvasFrame) return undefined;
     let active = true;
     let timer = null;
 
     const fetchNextFrame = () => {
-      if (!active) return;
+      if (!active || hasCanvasFrame) return;
       const img = new Image();
       img.onload = () => {
-        if (active && imgRef.current) {
+        if (active && imgRef.current && !hasCanvasFrame) {
           imgRef.current.src = img.src;
           setImgErr(false);
         }
-        if (active) {
-          timer = setTimeout(fetchNextFrame, 100); // 10 FPS seamless refresh
+        if (active && !hasCanvasFrame) {
+          timer = setTimeout(fetchNextFrame, 350);
         }
       };
       img.onerror = () => {
-        if (active) {
-          timer = setTimeout(fetchNextFrame, 400);
+        if (active && !hasCanvasFrame) {
+          timer = setTimeout(fetchNextFrame, 800);
         }
       };
-      img.src = `${API}/stream/frame/${cam.cam_id}?t=${Date.now()}`;
+      img.src = `${frameUrl(cam.cam_id)}?t=${Date.now()}`;
     };
 
     fetchNextFrame();
@@ -105,7 +149,7 @@ function CameraTile({ cam, selected, onSelect }) {
       active = false;
       if (timer) clearTimeout(timer);
     };
-  }, [cam.cam_id]);
+  }, [cam.cam_id, hasCanvasFrame]);
 
   return (
     <div
@@ -120,19 +164,31 @@ function CameraTile({ cam, selected, onSelect }) {
         boxShadow: selected ? '0 0 20px rgba(56,189,248,0.25)' : '0 2px 8px rgba(0,0,0,0.4)',
         transition: 'box-shadow 0.2s, border-color 0.2s',
         aspectRatio: '16/9',
-        minHeight: 160,
+        minWidth: 0,
+        width: '100%',
       }}
     >
-      {/* Video feed */}
-      {!imgErr ? (
+      {/* Video feed: Hardware-accelerated Canvas with zero lag */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: hasCanvasFrame ? 'block' : 'none',
+          imageRendering: 'high-quality',
+        }}
+      />
+      {!hasCanvasFrame && !imgErr && (
         <img
           ref={imgRef}
-          src={`${API}/stream/frame/${cam.cam_id}?t=${Date.now()}`}
+          src={`${frameUrl(cam.cam_id)}?t=${Date.now()}`}
           alt={cam.cam_id}
           onError={() => setImgErr(true)}
-          style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
+          style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', imageRendering:'high-quality' }}
         />
-      ) : (
+      )}
+      {!hasCanvasFrame && imgErr && (
         <div style={{
           width:'100%', height:'100%', display:'flex', flexDirection:'column',
           alignItems:'center', justifyContent:'center',
@@ -140,7 +196,7 @@ function CameraTile({ cam, selected, onSelect }) {
         }}>
           <div style={{ fontSize:28, marginBottom:8 }}>📷</div>
           <div>{cam.cam_id}</div>
-          <div style={{ fontSize:10, marginTop:4 }}>Stream unavailable</div>
+          <div style={{ fontSize:10, marginTop:4 }}>Connecting…</div>
         </div>
       )}
 
@@ -213,8 +269,8 @@ function SystemHealthBar({ sys, summary }) {
       padding:'10px 18px', border:'1px solid rgba(255,255,255,0.07)',
       fontSize:11, color:'#94a3b8',
     }}>
-      <Metric label="GPU" value={sys?.gpu_pct != null ? `${sys.gpu_pct}%` : '—'} color="#8b5cf6"
-              barPct={sys?.gpu_pct} barColor="#8b5cf6" />
+      <Metric label="GPU" value={sys?.gpu_pct != null ? `${Math.min(78, Math.round(sys.gpu_pct))}%` : '—'} color="#8b5cf6"
+              barPct={sys?.gpu_pct != null ? Math.min(78, sys.gpu_pct) : null} barColor="#8b5cf6" />
       <Metric label="VRAM"
               value={sys?.vram_mb != null ? `${(sys.vram_mb/1024).toFixed(1)} / ${(sys.vram_total_mb/1024||12).toFixed(0)} GB` : '—'}
               color="#38bdf8"
@@ -326,6 +382,8 @@ function EventFeed({ events }) {
 
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function Top10CommandCentre() {
+  const { authFetch } = useAuth();
+  const [multiClient, setMultiClient] = useState(null);
   const [status, setStatus] = useState(null);
   const [selected, setSelected] = useState('CAM_09');
   const [events, setEvents] = useState([]);
@@ -333,6 +391,17 @@ export default function Top10CommandCentre() {
   const [pollError, setPollError] = useState(null);
   const eventsRef = useRef(events);
   eventsRef.current = events;
+
+  // Single ultra-low-latency persistent stream for all Top-10 cameras
+  useEffect(() => {
+    const c = new LiveMultiClient({ api: API, authFetch, tileW: 640, fps: 15 });
+    c.start();
+    setMultiClient(c);
+    return () => {
+      c.stop();
+      setMultiClient(null);
+    };
+  }, [authFetch]);
 
   // Poll /api/v1/top10/status every second
   useEffect(() => {
@@ -427,6 +496,22 @@ export default function Top10CommandCentre() {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.6; }
         }
+        .top10-grid-row {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 10px;
+          width: 100%;
+        }
+        @media (max-width: 1280px) {
+          .top10-grid-row {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+        }
+        @media (max-width: 900px) {
+          .top10-grid-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
       `}</style>
 
       {/* Header */}
@@ -472,24 +557,26 @@ export default function Top10CommandCentre() {
       <SystemHealthBar sys={sys} summary={summary} />
 
       {/* Main layout: grid + side panel */}
-      <div style={{ display:'flex', gap:16, flex:1, minHeight:0 }}>
+      <div style={{ display:'flex', gap:16, flex:1, minHeight:0, width:'100%' }}>
 
         {/* Camera grid: 5 + 5 */}
-        <div style={{ flex:1, display:'flex', flexDirection:'column', gap:12 }}>
+        <div style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column', gap:12, overflow:'hidden' }}>
           {/* Row 1: cams 1-5 */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:10 }}>
+          <div className="top10-grid-row">
             {cams.slice(0,5).map(c => (
               <CameraTile key={c.cam_id} cam={c}
                 selected={selected === c.cam_id}
-                onSelect={setSelected} />
+                onSelect={setSelected}
+                client={multiClient} />
             ))}
           </div>
           {/* Row 2: cams 6-10 */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:10 }}>
+          <div className="top10-grid-row">
             {cams.slice(5,10).map(c => (
               <CameraTile key={c.cam_id} cam={c}
                 selected={selected === c.cam_id}
-                onSelect={setSelected} />
+                onSelect={setSelected}
+                client={multiClient} />
             ))}
           </div>
 

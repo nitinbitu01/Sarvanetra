@@ -34,6 +34,7 @@ import LiveCalibrationStudio from './components/analytics/LiveCalibrationStudio'
 import TrafficHeatmap from './components/analytics/TrafficHeatmap';
 import EdgeNodesPanel from './components/EdgeNodesPanel';
 import FleetOperations from './components/FleetOperations';
+import VideoWall from './components/VideoWall';
 import ReIDProofPanel from './components/ReIDProofPanel';
 import TrajectoryEnginePanel from './components/TrajectoryEnginePanel';
 import TrajectoryProofPanel from './components/TrajectoryProofPanel';
@@ -87,6 +88,7 @@ const NAV_GROUPS = [
     section: 'SYSTEM',
     items: [
       { id: 'fleet',         icon: 'monitor',        label: 'Fleet Operations' },
+      { id: 'wall',          icon: 'monitor',        label: 'Video Wall' },
       { id: 'analytics',     icon: 'chart',          label: 'Analytics' },
       { id: 'edge',          icon: 'cpu',            label: 'Edge Inference' },
       { id: 'audit',         icon: 'list',           label: 'Audit Log', adminOnly: true },
@@ -99,7 +101,7 @@ const NAV_COLLAPSED_KEY = 'sarvanetra.nav.collapsed';
 // â”€â”€ Inner dashboard (shown after login) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Dashboard() {
   const { user, logout, token, isAdmin, authFetch } = useAuth();
-  const [page, setPage]           = useState('control');
+  const [page, setPage]           = useState('top10');
   const [cameras, setCameras]     = useState([]);
   const [liveAlert, setLiveAlert] = useState(null);
   const [wsEvent, setWsEvent]     = useState(null); // last WS event (for ReID live updates)
@@ -629,6 +631,12 @@ function Dashboard() {
           {page === 'fleet' && (
             <div style={{ height: '100%', overflowY: 'auto' }}>
               <FleetOperations />
+            </div>
+          )}
+
+          {page === 'wall' && (
+            <div style={{ height: '100%', overflowY: 'auto' }}>
+              <VideoWall />
             </div>
           )}
 
