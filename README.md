@@ -4,7 +4,7 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61DAFB.svg)](https://reactjs.org/)
-[![YOLOv8 + BoT-SORT](https://img.shields.io/badge/CV-YOLOv8s%20%7C%20BoT--SORT-FF6F00.svg)](https://github.com/ultralytics/ultralytics)
+[![YOLOv8 + BoT-SORT](https://img.shields.io/badge/CV-YOLOv8l%20%7C%20BoT--SORT-FF6F00.svg)](https://github.com/ultralytics/ultralytics)
 [![OSNet ReID](https://img.shields.io/badge/ReID-OSNet--IBN%20%2B%20FAISS-green.svg)](https://github.com/KaiyangZhou/deep-person-reid)
 [![Indian Evidence Act](https://img.shields.io/badge/Legal-Section%2065B%20Certified-red.svg)](#-forensic-evidence-locker--section-65b-admissibility)
 [![Test Suite](https://img.shields.io/badge/Verification-51%2F51%20Tests%20Passed%20(100%25)-brightgreen.svg)](#-rigorous-empirical-evidence-zero-mock-benchmark)
