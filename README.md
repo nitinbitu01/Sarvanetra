@@ -350,24 +350,9 @@ python -m backend.scripts.calibrate_camera --camera-id CAM-01 --point1 120,400 -
 
 ---
 
-## ⏱️ 3-Minute Walkthrough Script for Hackathon Judges
 
-Follow this sequence to evaluate the platform in 3 minutes:
 
-1. **Minute 0:00 – 0:45 | 30-Camera Live Video Wall & State Heatmap**
-   * Navigate to `http://localhost:5173/#/dashboard` and `http://localhost:5173/#/analytics`.
-   * *Highlight:* 30 camera feeds monitored simultaneously. The city traffic volume heatmap shows 161,064 vehicle passages with zero double-counting.
-2. **Minute 0:45 – 1:30 | Real Crime Intercept & AI Forensic Reticle Proof**
-   * Go to `http://localhost:5173/#/alerts`. Click on the top alert: `Wanted Fugitive / Stolen Vehicle` and press **`🎬 View Proof`**.
-   * *Highlight:* Authentic CCTV footage plays with dynamic target reticles, ground ellipses, FIR details, and legal charges overlaid.
-3. **Minute 1:30 – 2:15 | Cryptographic Evidence Sealing & Section 65B Certificate**
-   * Inside the Proof Modal, click **`🛡️ Verify Hash`** to demonstrate `✅ Sealed & Intact`.
-   * Click **`📄 Custody PDF`** to download the court-admissible certificate under Section 65B of the Indian Evidence Act.
-4. **Minute 2:15 – 3:00 | Dial-112 CAD Patrol Dispatch & Multi-Operator Live Sync**
-   * Review the Dial-112 patrol dispatch card (`GARUDA-4 Dispatched · ETA 2.5 min`).
-   * Acknowledge or dismiss an alert; observe that connected operator sessions immediately update over WebSockets without page reload.
 
----
 
 ## ⚖️ License & Ethical Surveillance Compliance
 
