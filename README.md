@@ -18,7 +18,7 @@ Evaluators can access the live command centre immediately:
 * **Live Deployment URL:** [https://backer-thicket-denim.ngrok-free.dev](https://backer-thicket-denim.ngrok-free.dev)
 * **Access Credentials:**
   * **Username:** `admin`
-  * **Password:** `admin`
+  * **Password:** `admin123`
 * **Local One-Click Launcher:** Double-click `start_hackathon_live.bat` (launches Backend, AI Fleet, UI, and secure tunnel).
 
 ---
